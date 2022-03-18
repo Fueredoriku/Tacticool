@@ -19,7 +19,7 @@ public class Tile { //Might extend / implement texture handler in the future
      * Constructor for an occupied Tile with custom move cost.
      * 
      * @param actor The Actor that will occupy this Tile. Can be null if Tile should be empty.
-     * @param Terrain The type of terrain this tile is. This specifies movement cost and texture.
+     * @param terrain The type of terrain this tile is. This specifies movement cost and texture.
      */
     public Tile(Actor actor, Terrain terrain) {
         this.actor = actor;
