@@ -1,5 +1,7 @@
 package please.tacticool.models;
 
+import please.tacticool.models.Actors.Actor;
+
 public class Tile { //Might extend / implement texture handler in the future
     
     private Actor actor;
