@@ -1,9 +1,7 @@
-package please.tacticool.controllers;
+package please.tacticool.models;
 
 import java.util.ArrayList;
 import java.util.List;
-
-import please.tacticool.models.Tile;
 
 public class Playfield {
     private final int width;
