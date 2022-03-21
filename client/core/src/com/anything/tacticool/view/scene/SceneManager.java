@@ -32,14 +32,14 @@ public class SceneManager {
     }
 
     public Scene Pop(){
-        if (scenes.empty()){
+        if (scenes.isEmpty()){
             throw new IllegalStateException("Can't pop scene from stack when stack is empty.");
         }
         return scenes.pop();
     }
 
     public Scene Peek(){
-        if (scenes.empty()){
+        if (scenes.isEmpty()){
             throw new IllegalStateException("No Scenes to peek at in stack.");
         }
         return scenes.peek();
