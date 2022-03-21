@@ -22,9 +22,20 @@ public class TerrainGrid {
         grid.get(x).set(y, newTile);
     }
 
-    public void populateStart(Object[] args){
-        // do something
+    // Populates an empty board with tiles based on a set of terrains
+    /**
+    public void populateStartingTerrain(Terrain[] terrains) {
+        try {
+            int i = 0;
+            for (int y = 0; y < grid.get(0).size(); y++) {
+                for (int x = 0; x < grid.size(); x++) {
+                    grid.get(x).get(y) = new Tile(null, terrains[i]);
+                }
+            }
+        } catch (Exception e) {
+        }
     }
+     */
 
     public Tile getTile(int x, int y) {
         return grid.get(x).get(y);
