@@ -4,10 +4,14 @@ import please.tacticool.models.Coordinate;
 
 public class Obstacle extends Actor {
 
-    public Obstacle(Coordinate position) {
-        super(position);
-        
-    }
-    
+    private boolean destroyable;
 
+    public Obstacle(Coordinate position, boolean destroyable) {
+        super(position);
+        this.destroyable = destroyable;
+    }
+
+    public boolean getDestroyable() {
+        return destroyable;
+    }
 }

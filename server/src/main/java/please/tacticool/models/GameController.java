@@ -3,8 +3,6 @@ package please.tacticool.models;
 import java.util.ArrayList;
 import java.util.List;
 
-import please.tacticool.controllers.Playfield;
-
 /**
  * Game controller takes care of making everything happen in the grid. Create the actors
  * and place them in the playfield. Also takes care of updating (and checking validity of)
