@@ -1,6 +1,6 @@
 package please.tacticool.models;
-
 import please.tacticool.enums.Terrain;
+import please.tacticool.models.Actors.Actor;
 
 public class Tile { //Might extend / implement texture handler in the future
     
