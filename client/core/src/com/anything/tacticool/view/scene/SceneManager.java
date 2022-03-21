@@ -40,7 +40,7 @@ public class SceneManager {
 
     public Scene Peek(){
         if (scenes.empty()){
-            throw new IllegalStateException("No Scenes to peek at in Stack.");
+            throw new IllegalStateException("No Scenes to peek at in stack.");
         }
         return scenes.peek();
     }
