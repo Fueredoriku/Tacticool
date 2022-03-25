@@ -14,5 +14,22 @@ public class Bazooka extends Weapon{
     public Projectile fire(Coordinate position, Coordinate direction) {
         return new Rocket(position, direction, damage);
     }
-    
+
+    @Override
+    public int getCost() {
+
+        return 0;
+    }
+
+    @Override
+    public int getTargetRadius() {
+
+        return 0;
+    }
+
+    @Override
+    public int getPriority() {
+
+        return 0;
+    }
 }

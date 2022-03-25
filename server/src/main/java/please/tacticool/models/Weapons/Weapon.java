@@ -1,13 +1,16 @@
 package please.tacticool.models.Weapons;
 
+import please.tacticool.models.Action;
 import please.tacticool.models.Coordinate;
 import please.tacticool.models.Actors.Projectiles.Projectile;
 
-public abstract class Weapon {
+public abstract class Weapon implements Action {
 
     protected int ammunitions;
     protected final int maxAmmo;
     protected final int damage;
+
+    protected static final String actionType = "weapon";
 
     /**
      * Constructs a weapon dealing the specified amount of damage with the given ammo
@@ -50,5 +53,13 @@ public abstract class Weapon {
     public int getDamage(){
         return damage;
     }
-    
+
+
+    /**
+     * Getter for the action type
+     * @return : type of action
+     */
+    public String getType() {
+        return actionType;
+    }
 }
