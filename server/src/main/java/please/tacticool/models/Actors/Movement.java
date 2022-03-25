@@ -1,6 +1,7 @@
 package please.tacticool.models.Actors;
 
 import please.tacticool.models.Action;
+import please.tacticool.models.Coordinate;
 
 public interface Movement extends Action {
 
@@ -43,5 +44,5 @@ public interface Movement extends Action {
     /**
      * Moves the affected Actor object
      */
-    public void move(); //TODO: implement actual movement
+    public void move(Coordinate destination); //TODO: implement actual movement
 }

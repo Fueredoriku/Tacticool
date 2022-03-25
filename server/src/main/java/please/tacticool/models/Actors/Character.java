@@ -32,7 +32,7 @@ public class Character extends Actor implements Movement{
     }
 
     @Override
-    public void move() { //TODO: Implement movement for character
-
+    public void move(Coordinate destination) { //TODO: Implement movement for character
+        this.setPosition(destination);
     }
 }

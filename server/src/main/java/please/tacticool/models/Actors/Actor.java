@@ -22,4 +22,8 @@ public abstract class Actor {
     public Coordinate getPosition(){
         return position;
     }
+
+    public void setPosition(Coordinate newPosition) {
+        position = newPosition;
+    }
 }
