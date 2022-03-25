@@ -24,7 +24,7 @@ public class Rifle extends Weapon {
     @Override
     public int getTargetRadius() {
 
-        return 0;
+        return 1;
     }
 
     @Override

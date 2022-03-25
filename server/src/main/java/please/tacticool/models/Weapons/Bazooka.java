@@ -24,7 +24,7 @@ public class Bazooka extends Weapon{
     @Override
     public int getTargetRadius() {
 
-        return 0;
+        return 2;
     }
 
     @Override
