@@ -64,14 +64,28 @@ public class GameController {
     }
 
     public void registerPlayerMoves(int playerId, List<Action> actions){
+        if(state != GameState.Live){
+            throw new IllegalStateException("Can't register player move if the game has not started or is finished");
+        }
         playerActions.putIfAbsent(playerId, actions);
     }
 
     public void simulateRound(){
+        if(state != GameState.Live){
+            throw new IllegalStateException("Can't simulate a round if the game has not started or is finishde");
+        }
         /**
          * TODO : simulate the round based on the list of actions of each players and 
          * return the state of list of calls to transmit to the clients
          */ 
+    }
+
+    public GameState getState(){
+        return state;
+    }
+
+    public int getNbPlayers(){
+        return nbPlayers;
     }
 
 
