@@ -14,5 +14,22 @@ public class Rifle extends Weapon {
     public Projectile fire(Coordinate position, Coordinate direction){
         return new Bullet(position, direction, damage);
     }
-    
+
+    @Override
+    public int getCost() {
+
+        return 0;
+    }
+
+    @Override
+    public int getTargetRadius() {
+
+        return 1;
+    }
+
+    @Override
+    public int getPriority() {
+
+        return 0;
+    }
 }
