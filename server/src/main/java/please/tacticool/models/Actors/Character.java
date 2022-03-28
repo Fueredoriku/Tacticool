@@ -2,7 +2,7 @@ package please.tacticool.models.Actors;
 
 import please.tacticool.models.Coordinate;
 
-public class Character extends Actor {
+public class Character extends Actor implements Movement{
     // Characters health
     private int healthPoint;
     // Unique ID of the player to whom the character belongs
@@ -29,5 +29,10 @@ public class Character extends Actor {
 
     public int getPlayerID(){
         return playerID;
+    }
+
+    @Override
+    public void move(Coordinate destination) { //TODO: Implement movement for character
+        this.setPosition(destination);
     }
 }
