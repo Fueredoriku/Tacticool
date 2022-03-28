@@ -31,6 +31,10 @@ public class Character extends Actor implements Movement{
         return playerID;
     }
 
+    public boolean isDead() {
+        return this.healthPoint <= 0;
+    }
+
     @Override
     public void move(Coordinate destination) { //TODO: Implement movement for character
         this.setPosition(destination);
