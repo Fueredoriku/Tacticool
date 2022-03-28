@@ -10,10 +10,11 @@ import please.tacticool.models.Actors.Character;
 public class TerrainGrid {
 
     private List<List<Tile>> grid;
-
+    private Coordinate dimensions;
 
     // Instantiates empty board of correct size
     public TerrainGrid(int width, int depth) {
+        dimensions = new Coordinate(width, depth);
         for (int x = 0; x < width; x++) {
             grid.add(new ArrayList<Tile>());
             for (int y = 0; y < depth; y++) {
@@ -40,8 +41,8 @@ public class TerrainGrid {
     }
 
     public void movePlayer(int playerID, Coordinate targetLocation) {
-        for (List<Tile> l : grid) {
-            for (Tile tile : l) {
+        for (List<Tile> row : grid) {
+            for (Tile tile : row) {
                 Actor actor = tile.getActor();
 
                 if (actor instanceof Character) {
@@ -56,6 +57,10 @@ public class TerrainGrid {
 
     public Tile getTile(Coordinate coordinate) {
         return grid.get(coordinate.getX()).get(coordinate.getY());
+    }
+
+    public boolean isValidCoordinate(Coordinate coordinate) {
+        return (coordinate.getX() > 0 && coordinate.getX() < dimensions.getX()) && (coordinate.getY() > 0 && coordinate.getY() < dimensions.getY());
     }
 
 }

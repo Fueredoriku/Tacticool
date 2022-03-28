@@ -35,4 +35,9 @@ public class Character extends Actor implements Movement{
     public void move(Coordinate destination) { //TODO: Implement movement for character
         this.setPosition(destination);
     }
+
+    @Override
+    public void getHit(int dmg) {
+        this.healthPoint -= dmg;
+    }
 }
