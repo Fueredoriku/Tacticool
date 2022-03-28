@@ -3,8 +3,6 @@ package please.tacticool.models.Weapons;
 import please.tacticool.models.Coordinate;
 import please.tacticool.models.TerrainGrid;
 import please.tacticool.models.Actors.Actor;
-import please.tacticool.models.Actors.Obstacle;
-import please.tacticool.models.Actors.Player;
 
 public class Rifle extends Weapon {
 

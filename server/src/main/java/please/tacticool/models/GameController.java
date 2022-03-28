@@ -13,7 +13,7 @@ import please.tacticool.models.Actors.Player;
  * the movement of the players and projectiles, damage dealt by projectiles and so on
  */
 public class GameController {
-    private final Playfield playfield;
+    private final TerrainGrid playfield;
     private final List<Player> characters;
     
     private int nbPlayers;
@@ -36,7 +36,7 @@ public class GameController {
 
 
     private GameController(int width, int height){
-        this.playfield = new Playfield(width, height);
+        this.playfield = new TerrainGrid(width, height);
         characters = new ArrayList<>();
         state = GameState.Lobby;
         nbPlayers = 0;
