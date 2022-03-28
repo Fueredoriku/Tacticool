@@ -5,7 +5,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import please.tacticool.models.Actors.Character;
+import please.tacticool.models.Actors.Player;
 
 /**
  * Game controller takes care of making everything happen in the grid. Create the actors
@@ -14,7 +14,7 @@ import please.tacticool.models.Actors.Character;
  */
 public class GameController {
     private final Playfield playfield;
-    private final List<Character> characters;
+    private final List<Player> characters;
     
     private int nbPlayers;
     // Map playerId to a list of actions
@@ -51,7 +51,7 @@ public class GameController {
         if(state != GameState.Lobby){
             throw new IllegalStateException("Can't add a player if the game has already started");
         }
-        Character newPlayer = new Character(playerId, defaultSpawnPoints.get(0), defaultHealthPoint);
+        Player newPlayer = new Player(playerId, defaultSpawnPoints.get(0), defaultHealthPoint);
         characters.add(newPlayer);
         nbPlayers += 1;
     }

@@ -2,7 +2,7 @@ package please.tacticool.models.Actors;
 
 import please.tacticool.models.Coordinate;
 
-public class Character extends Actor implements Movement{
+public class Player extends Actor implements Movement{
     // Characters health
     private int healthPoint;
     // Unique ID of the player to whom the character belongs
@@ -14,7 +14,7 @@ public class Character extends Actor implements Movement{
      * @param position : initial position of the character.
      * @param healthPoint : initial life points of the character.
      */
-    public Character(int playerID, Coordinate position, int healthPoint){
+    public Player(int playerID, Coordinate position, int healthPoint){
         super(position);
         this.playerID = playerID;
         if(healthPoint < 0){

@@ -3,6 +3,8 @@ package please.tacticool.models.Weapons;
 import please.tacticool.models.Coordinate;
 import please.tacticool.models.TerrainGrid;
 import please.tacticool.models.Actors.Actor;
+import please.tacticool.models.Actors.Obstacle;
+import please.tacticool.models.Actors.Player;
 
 public class Rifle extends Weapon {
 
@@ -14,23 +16,25 @@ public class Rifle extends Weapon {
      * Fires the rifle in a straight line, dealing damage to anything it hits.
      * 
      * @param position  where the shot is fired from
-     * @param direction the direction of the shot. [0, 1], [0, -1], [1, 0] or [-1, 0] are the valid directions
+     * @param target    the target of the shot. Must be in a straight line from the position
      * @param grid      the grid where the shot takes place
      */
     @Override
-    public void fire(Coordinate position, Coordinate direction, TerrainGrid grid) {
-        if (Math.abs(direction.getX()) + Math.abs(direction.getY()) != 1) {
-            throw new IllegalArgumentException("Direction can only be [0, 1], [0, -1], [1, 0] or [-1, 0], not: " + direction);
+    public void fire(Coordinate position, Coordinate target, TerrainGrid grid) {
+        Coordinate direction = new Coordinate(target.getX() - position.getX(), target.getY() - position.getY());
+        if ((direction.getX() == 0 && direction.getY() == 0) || (direction.getX() != 0 && direction.getY() != 0)) {
+            throw new IllegalArgumentException("Must be in a straight line from the position. Position: " + position + "vs target" + target);
         }
-        
-        Coordinate target = position.add(direction);
-        while (grid.isValidCoordinate(position.add(target))) {
-            Actor actor = grid.getTile(position.add(target)).getActor();
+        direction = direction.getX() != 0 ? new Coordinate(direction.getX() / Math.abs(direction.getX()), 0) : new Coordinate(0, direction.getY() / Math.abs(direction.getY()));
+
+        Coordinate newTarget = position.add(direction);
+        while (grid.isValidCoordinate(newTarget)) {
+            Actor actor = grid.getTile(newTarget).getActor();
             if (actor != null) {
                 actor.getHit(this.damage);
                 break;
             }
-            target = target.add(direction);
+            newTarget = newTarget.add(direction);
         }
     }
 
