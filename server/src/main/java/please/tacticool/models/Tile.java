@@ -39,7 +39,18 @@ public class Tile { //Might extend / implement texture handler in the future
         return terrain.getMoveCost();
     }
 
+    public boolean hasActor(){
+        return actor != null;
+    }
+
+    public void removeActor(){
+        actor = null;
+    }
+
     public void setActor(Actor actor) {
+        if(hasActor()){
+            throw new IllegalStateException("Can't set the actor if the tile is already taken by another");
+        }
         this.actor = actor;
     }
 }

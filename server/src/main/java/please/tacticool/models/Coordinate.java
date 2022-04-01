@@ -12,8 +12,20 @@ public class Coordinate {
         this.y = y;
     }
 
-    public Coordinate add(Coordinate that){
+    public Coordinate plus(Coordinate that){
         return new Coordinate(this.x + that.x, this.y + that.y);
+    }
+
+    public Coordinate invert(){
+        return new Coordinate(-x, -y);
+    }
+
+    /**
+     * Get the length. Since you can only move from tile to tile, the length is equal to x + y
+     * @return : the length of the vector
+     */
+    public int getLength(){
+        return x + y;
     }
 
     public int getX(){
@@ -22,4 +34,5 @@ public class Coordinate {
     public int getY(){
         return y;
     }
+
 }

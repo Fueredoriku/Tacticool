@@ -9,7 +9,10 @@ import java.util.Queue;
 import java.util.UUID;
 
 import please.tacticool.models.Actors.Character;
-import please.tacticool.models.Weapons.Action;
+import please.tacticool.models.Actors.Movement;
+import please.tacticool.models.Weapons.Attack;
+import please.tacticool.models.Action;
+import please.tacticool.models.Action.ActionType;
 
 /**
  * Game controller takes care of making everything happen in the grid. Create the actors
@@ -23,7 +26,7 @@ public class GameController {
     
     private int nbPlayers;
     // Map playerId to a list of actions
-    private Map<Integer, List<Action>> playerActions;
+    private Map<Integer, Queue<Action>> playersActions;
     private Queue<Integer> playersOrder;
     private GameState state;
 
@@ -46,7 +49,7 @@ public class GameController {
         characters = new ArrayList<>();
         state = GameState.Lobby;
         nbPlayers = 0;
-        playerActions = new HashMap<Integer, List<Action>>();
+        playersActions = new HashMap<Integer, Queue<Action>>();
         playersOrder = new PriorityQueue<>();
         gameUID = UUID.randomUUID();
     }
@@ -71,14 +74,14 @@ public class GameController {
         state = GameState.Live;
     }
 
-    public void registerPlayerMoves(int playerId, List<Action> actions){
+    public void registerPlayerMoves(int playerId, Queue<Action> actions){
         if(state != GameState.Live){
             throw new IllegalStateException("Can't register player move if the game has not started or is finished");
         }
-        if(playerActions.containsKey(playerId)){
+        if(playersActions.containsKey(playerId)){
             throw new IllegalStateException("Can't change a player moves when it's already been registered");
         }
-        playerActions.putIfAbsent(playerId, actions);
+        playersActions.putIfAbsent(playerId, actions);
         playersOrder.add(playerId);
     }
 
@@ -87,18 +90,56 @@ public class GameController {
             throw new IllegalStateException("Can't simulate a round if the game has not started or is finishde");
         }
 
-        for(int playerId : playersOrder){
-            List<Action> playerAction = playerActions.get(playerId);
+        for(int playerID : playersOrder){
+            Character player = getPlayerByID(playerID);
+            Queue<Action> playerActions = playersActions.get(playerID);
 
-            // TODO : simulate each player's passive actions
+            // /!\ ASSUMES THAT ALL MOVEMENT (passive actions) ARE FIRST AND THEN 
+            // ALL WEAPONS (aggressive actions) ACTIONS
+            while(!playerActions.isEmpty() &&
+                     playerActions.peek().getType() == ActionType.MOVEMENT){
+                Movement mvmt = (Movement)playerActions.poll();
+                if(player.getPosition() != mvmt.getFrom()){
+                    throw new IllegalArgumentException("The given move starts from a different position than the player's position");
+                }
+                Coordinate endTile = moveFromTo(player.getPosition(), mvmt.getTo());
+                playfield.move(player, endTile);
+            }
         }
-        for(int playerId : playersOrder){
+
+        for(int playerID : playersOrder){
             // TODO : simulate each player's aggressive actions
+            Character player = getPlayerByID(playerID); 
+            Queue<Action> playerActions = playersActions.get(playerID);
+            while(!playerActions.isEmpty()){
+                Attack attack = (Attack)playerActions.poll();
+                Coordinate conflictTile = moveUntilConflict(player.getPosition(), attack.getDirection());
+                // TODO : inflict damages to target in the conflicting tile
+            }
         }
-        /**
-         * TODO : simulate the round based on the list of actions of each players and 
-         * return the state of list of calls to transmit to the clients
-         */ 
+
+
+    }
+
+    private Coordinate moveUntilConflict(Coordinate from, Coordinate direction){
+        // TODO : keep moving by adding the direction vector to the position until
+        // conflict and return the tile of conflict
+        return null;
+    }
+    
+    private Coordinate moveFromTo(Coordinate from, Coordinate to){
+        // TODO : execute the given movement and stop when a tile in the way has a 
+        // conflict end return the end tile
+        return null;
+    }
+
+    private Character getPlayerByID(int playerID){
+        for(Character player : characters){
+            if(player.getPlayerID() == playerID){
+                return player;
+            }
+        }
+        return null;
     }
 
     public GameState getState(){

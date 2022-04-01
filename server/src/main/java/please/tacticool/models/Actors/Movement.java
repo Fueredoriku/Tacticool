@@ -3,17 +3,24 @@ package please.tacticool.models.Actors;
 import please.tacticool.models.Action;
 import please.tacticool.models.Coordinate;
 
-public interface Movement extends Action {
+public class Movement implements Action {
 
-    String actionType = "movement";
-    int targetRadius = 1;
-    int defaultCost = 1;
+    private ActionType actionType = ActionType.MOVEMENT;
+    private final int cost;
+    private final int radius = 1;
+    private final Coordinate from, to;
+
+    public Movement(Coordinate from, Coordinate to){
+        this.from = from;
+        this.to = to;
+        this.cost = getVector().getLength();
+    }   
 
     /**
      * Gets the type of action this is
      * @return : type of action
      */
-    default String getType() {
+    public ActionType getType() {
         return actionType;
     }
 
@@ -21,28 +28,39 @@ public interface Movement extends Action {
      * Gets the radius of the tiles this action affects
      * @return : radius of action target
      */
-    default int getTargetRadius() {
-        return targetRadius;
+    public int getTargetRadius() {
+        return radius;
     }
 
     /**
      * Gets the cost of performing this action
      * @return : cost of action
      */
-    default int getCost() {
-        return defaultCost;
+    public int getCost() {
+        return cost;
     } // Throw in Terrain in some way so we can get cost per tile?
 
     /**
      * Gets the priority this action will take
      * @return : priority of action
      */
-    default int getPriority() {
+    public int getPriority() {
         return 0;
     }
 
     /**
-     * Moves the affected Actor object
+     * Return the vector of the movement from from to to (huh)
+     * @return
      */
-    void move(Coordinate destination); //TODO: implement actual movement
+    public Coordinate getVector(){
+        return to.plus(from.invert());
+    }
+
+    public Coordinate getFrom(){
+        return from;
+    }
+
+    public Coordinate getTo(){
+        return to;
+    }
 }
