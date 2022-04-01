@@ -20,7 +20,7 @@ import please.tacticool.models.Action.ActionType;
  * the movement of the players and projectiles, damage dealt by projectiles and so on
  */
 public class GameController {
-    private final Playfield playfield;
+    private final TerrainGrid terrainGrid;
     private final List<Character> characters;
     private final UUID gameUID; // Unique ID to represent the game
     
@@ -45,7 +45,7 @@ public class GameController {
 
 
     private GameController(int width, int height){
-        this.playfield = new Playfield(width, height);
+        this.terrainGrid = new TerrainGrid(width, height);
         characters = new ArrayList<>();
         state = GameState.Lobby;
         nbPlayers = 0;
@@ -90,6 +90,8 @@ public class GameController {
             throw new IllegalStateException("Can't simulate a round if the game has not started or is finishde");
         }
 
+        Map<Integer, List<Action>> resultingAction = new HashMap<>();
+
         for(int playerID : playersOrder){
             Character player = getPlayerByID(playerID);
             Queue<Action> playerActions = playersActions.get(playerID);
@@ -102,8 +104,15 @@ public class GameController {
                 if(player.getPosition() != mvmt.getFrom()){
                     throw new IllegalArgumentException("The given move starts from a different position than the player's position");
                 }
-                Coordinate endTile = moveFromTo(player.getPosition(), mvmt.getTo());
-                playfield.move(player, endTile);
+                if(terrainGrid.move(player, mvmt.getTo())){
+                    // Add the movement done to the list of resulting movements
+                    List<Action> done = resultingAction.get(playerID);
+                    done.add(mvmt);
+                    resultingAction.put(playerID, done);
+                } else {
+                    // TODO :
+                }
+                
             }
         }
 
@@ -113,24 +122,11 @@ public class GameController {
             Queue<Action> playerActions = playersActions.get(playerID);
             while(!playerActions.isEmpty()){
                 Attack attack = (Attack)playerActions.poll();
-                Coordinate conflictTile = moveUntilConflict(player.getPosition(), attack.getDirection());
-                // TODO : inflict damages to target in the conflicting tile
+                // TODO : do the attack
             }
         }
 
 
-    }
-
-    private Coordinate moveUntilConflict(Coordinate from, Coordinate direction){
-        // TODO : keep moving by adding the direction vector to the position until
-        // conflict and return the tile of conflict
-        return null;
-    }
-    
-    private Coordinate moveFromTo(Coordinate from, Coordinate to){
-        // TODO : execute the given movement and stop when a tile in the way has a 
-        // conflict end return the end tile
-        return null;
     }
 
     private Character getPlayerByID(int playerID){
