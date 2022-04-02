@@ -42,4 +42,14 @@ public class Tile { //Might extend / implement texture handler in the future
     public void setActor(Actor actor) {
         this.actor = actor;
     }
+
+    public boolean hasActor(){
+        return actor != null;
+    }
+
+    // Remove the actor from this tile
+    public void actorExits(){
+        actor = null;
+    }
+
 }

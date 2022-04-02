@@ -10,7 +10,7 @@ public abstract class Weapon implements Action {
     protected final int maxAmmo;
     protected final int damage;
 
-    protected static final String actionType = "weapon";
+    protected static final ActionType actionType = ActionType.ATTACK;
 
     /**
      * Constructs a weapon dealing the specified amount of damage with the given ammo
@@ -59,7 +59,7 @@ public abstract class Weapon implements Action {
      * Getter for the action type
      * @return : type of action
      */
-    public String getType() {
+    public ActionType getType() {
         return actionType;
     }
 }

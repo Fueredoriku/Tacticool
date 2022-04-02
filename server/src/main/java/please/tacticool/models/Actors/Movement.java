@@ -3,17 +3,22 @@ package please.tacticool.models.Actors;
 import please.tacticool.models.Action;
 import please.tacticool.models.Coordinate;
 
-public interface Movement extends Action {
+public class Movement implements Action {
 
-    String actionType = "movement";
-    int targetRadius = 1;
-    int defaultCost = 1;
+    private final ActionType actionType = ActionType.MOVEMENT;
+    private final int targetRadius = 1;
+    private final int defaultCost = 1;
+    private final Coordinate target;
+
+    public Movement(Coordinate to){
+        this.target = to;
+    }
 
     /**
      * Gets the type of action this is
      * @return : type of action
      */
-    default String getType() {
+    public ActionType getType() {
         return actionType;
     }
 
@@ -21,7 +26,7 @@ public interface Movement extends Action {
      * Gets the radius of the tiles this action affects
      * @return : radius of action target
      */
-    default int getTargetRadius() {
+    public int getTargetRadius() {
         return targetRadius;
     }
 
@@ -29,7 +34,7 @@ public interface Movement extends Action {
      * Gets the cost of performing this action
      * @return : cost of action
      */
-    default int getCost() {
+    public int getCost() {
         return defaultCost;
     } // Throw in Terrain in some way so we can get cost per tile?
 
@@ -37,12 +42,11 @@ public interface Movement extends Action {
      * Gets the priority this action will take
      * @return : priority of action
      */
-    default int getPriority() {
+    public int getPriority() {
         return 0;
     }
 
-    /**
-     * Moves the affected Actor object
-     */
-    void move(Coordinate destination); //TODO: implement actual movement
+    public Coordinate getTarget(){
+        return target;
+    }
 }

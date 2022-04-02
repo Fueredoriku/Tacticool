@@ -16,6 +16,15 @@ public class Coordinate {
         return new Coordinate(this.x + that.x, this.y + that.y);
     }
 
+    public Coordinate invert(){
+        return new Coordinate(-x, -y);
+    }
+
+    // Since you can't move from in diagonale, length of a vector is x + y
+    public int length(){
+        return x + y;
+    }
+
     public int getX(){
         return x;
     }

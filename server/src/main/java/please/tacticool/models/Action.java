@@ -12,7 +12,7 @@ public interface Action {
      * Gets the type of action this is
      * @return : type of action
      */
-    public String getType();
+    public ActionType getType();
 
     /**
      * Gets the radius of the tiles this action affects
@@ -25,4 +25,8 @@ public interface Action {
      * @return : priority of action
      */
     public int getPriority();
+
+    enum ActionType {
+        MOVEMENT, ATTACK;
+    }
 }
