@@ -110,7 +110,7 @@ public class TerrainGrid {
      * @return              true if the new position is free (null), false otherwise.  
      */
     public boolean moveActor(Player player, Coordinate newPosition) {
-        return moveActor(player.getPlayerID(), newPosition);
+        return moveActor(player.getPosition(), newPosition);
     }
 
 }
