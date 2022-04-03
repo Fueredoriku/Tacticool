@@ -1,31 +1,25 @@
 package com.anything.tacticool.view.util;
 
 public enum SpriteConnector {
-    GRASS("G", "terrain1.png", 0),
-    PLAYER("P", "player.png", 1),
-    BULLET("B", "", 2),
-    EXPLOSION("E", "", 2);
+    GRASS("terrain1.png", 0),
+    PLAYER("player.png", 1),
+    BULLET("", 2),
+    EXPLOSION("", 2);
 
-    private final String type;
-    private final String path;
-    private final int priority;
+    private final String filePath;
+    private final int layer;
 
-    private SpriteConnector(final String type, final String path, final int priority) {
-        this.type = type;
-        this.path = path;
-        this.priority = priority;
+    private SpriteConnector(final String filePath, final int layer) {
+        this.filePath = filePath;
+        this.layer = layer;
     }
 
-    public String getType() {
-        return type;
+    public String getFilePath() {
+        return filePath;
     }
 
-    public String getPath() {
-        return path;
-    }
-
-    public int getPriority() {
-        return priority;
+    public int getLayer() {
+        return layer;
     }
 
 }

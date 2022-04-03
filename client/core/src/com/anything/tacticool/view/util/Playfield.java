@@ -23,6 +23,7 @@ public class Playfield {
      * Proposed method to be called when updating the internal gamestate with new information from the server.
      * One call of this method should update the internal model with ONE step from the changeLog given by the server.
      * After each time this is called from the GameView we should call TextureHandler.renderBoard from the GameView.
+     * Handling updates this way simplifies the process of rendering the actions step by step.
      *
      * @param changeLog is the log of changes given by the server. I propose that this is an iterator, allowing us to parse through it step by step, since we can't use loops
      * @return Should return a boolean to tell GameView when we have made the final change in the changeLog.

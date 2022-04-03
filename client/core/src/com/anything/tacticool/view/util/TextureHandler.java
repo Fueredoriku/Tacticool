@@ -32,6 +32,12 @@ public class TextureHandler {
     /**
      * Currently loads each texture seperately from memory each time this is called.
      * Should be changed to use TextureRegion to avoid this.
+     *
+     * Method adds all elements in the client-side model of the gamestate to a SpriteBatch.
+     * It should be called in GameView's render function.
+     *
+     * This method is also used to animate the results of a round.
+     * To do so, we simply have to make sure that the changes made to the gamestate is made step by step with a few frames delay instead of all at the same frame
      */
 
     public void renderBoard(Playfield playfield, SpriteBatch batch) {
@@ -57,7 +63,7 @@ public class TextureHandler {
      * Adds all sprites from the inputs to the SpriteBatch, but makes them translucent
      */
 
-    public void renderInputPreview(Input[] inputs, SpriteBatch batch) {
+    public void renderInput(Input[] inputs, SpriteBatch batch) {
         batch.setColor(1,1,1,0.5f);
         for (Input input : inputs) {
             batch.draw(prepareSprite(input.getSpriteConnector()), input.getX(), input.getY());
@@ -65,18 +71,9 @@ public class TextureHandler {
         batch.setColor(Color.WHITE);
     }
 
-    /**
-     *  Method for rendering the steps in the results given from the server.
-     *  If the results are stored in an internal iterable, we can simply iteratevly make changes to Playfield, calling renderBoard after each change!
-     *  Then we don't need this anymore
-     */
-
-    public void renderTurnResults() {
-
-    }
 
     private Sprite prepareSprite(SpriteConnector spriteConnector) {
-        Texture texture = new Texture(spriteConnector.getPath());
+        Texture texture = new Texture(spriteConnector.getFilePath());
         Sprite sprite = new Sprite(texture);
         sprite.setSize(tileScale, tileScale);
         return sprite;
