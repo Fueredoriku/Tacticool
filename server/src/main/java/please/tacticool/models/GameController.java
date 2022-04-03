@@ -15,6 +15,7 @@ import please.tacticool.models.Actors.Player;
  * and place them in the playfield. Also takes care of updating (and checking validity of)
  * the movement of the players and projectiles, damage dealt by projectiles and so on
  */
+public class GameController {
     private final TerrainGrid playfield;
     private final List<Player> characters;
     private final UUID gameUID; // Unique ID to represent the game
