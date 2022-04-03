@@ -1,100 +1,115 @@
 package please.tacticool.models;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-
-import please.tacticool.enums.Terrain;
 import please.tacticool.models.Actors.Actor;
+import please.tacticool.models.Actors.Player;
 
 public class TerrainGrid {
 
-    private final List<List<Tile>> grid;
-    private final int width, height;
+    private Tile[] grid;
+    private Coordinate dimensions;
 
-
-    // Instantiates empty board of correct size
-    public TerrainGrid(int width, int height) {
-        this.height = height;
-        this.width = width;
-        grid = new ArrayList<>();
-        for (int x = 0; x < height; x++) {
-            grid.add(new ArrayList<Tile>());
-            for (int y = 0; y < height; y++) {
-                grid.get(x).add(new Tile());
-            }
+    
+    public TerrainGrid(int width, int depth) {
+        dimensions = new Coordinate(width, depth);
+        grid = new Tile[width*depth];
+        
+        populateGrid();
+    }
+    
+    private void validateCoordinate(Coordinate coordinate) {
+        if (!isValidCoordinate(coordinate)) {
+            throw new IndexOutOfBoundsException("Tried to change tile out of bounds");
         }
     }
 
-    public void changeTile(Coordinate coordinate, Tile newTile) {
-        grid.get(coordinate.getX()).set(coordinate.getY(), newTile);
-    }
-
-    // Populates an empty board with tiles based on a set of terrains
-    public void populateStartingTerrain(Terrain[] terrains) {
-        try {
-            int i = 0;
-            for (int y = 0; y < grid.get(0).size(); y++) {
-                for (int x = 0; x < grid.size(); x++) {
-                    grid.get(x).set(y, new Tile(null, terrains[i]));
-                    i++;
-                }
-            }
-        } catch (Exception e) { }
+    private void populateGrid() {
+        for (int i = 0; i < grid.length; i++) {
+            grid[i] = new Tile();
+        }
     }
 
     /**
-     * Move an actor from its tile to the given tile. A movement can't be greater than
-     * one tile, if it is greater then the movement is not executed. 
-     * If anything blocks the target tile the move is also canceled.
-     * @param actor : actor to move
-     * @param pos : position of the actor after the move
-     * @return : the tile the actor ended up in
+     * Checks if coordinate is in bounds of grid.
+     * 
+     * @param coordinate to check
+     * @return result
      */
-    public Coordinate move(Actor actor, Coordinate target){
-        if(actor.getPosition().add(target).length() > 1){
-            // Can't move the actor is not moved
-            return actor.getPosition();
-        }
-
-        Tile from =  getTile(actor.getPosition());
-        Tile to = getTile(target);
-
-        if(!from.getActor().equals(actor)){
-            throw new IllegalStateException("There's a bug... an Actor is not in the tile it is supposed to ...");
-        }
-        if(to.hasActor()){
-            // Tile is occupied so the actor is not moved
-            return actor.getPosition();
-        }
-
-        // remove the actor from its current tile and place it to the new one and change the actor's position
-        from.actorExits();
-        to.setActor(actor);
-        actor.setPosition(target);
-        return target;
+    public boolean isValidCoordinate(Coordinate coordinate) {
+        return coordinate.getX() >= 0 && coordinate.getX() < dimensions.getX() && coordinate.getY() >= 0 && coordinate.getY() < dimensions.getY();
+    }
+    
+    public Tile getTile(Coordinate coordinate) {
+        validateCoordinate(coordinate);
+        return grid[coordinate.getX() + coordinate.getY() * dimensions.getY()];
+    }
+    
+    public void setTile(Coordinate coordinate, Tile tile) {
+        validateCoordinate(coordinate);
+        grid[coordinate.getX() + coordinate.getY() * dimensions.getY()] = tile;
     }
 
     /**
-     * Add an actor to the grid at the specified position if possible
-     * @param actor : actor to add
-     * @param pos : position of the actor in the grid
-     * @return : true if the actor could be placed or false if the tile was occupied and 
-     *           nothing is added in the grid
+     * Sets the actor of a tile.
+     * 
+     * @param coordinate    of tile to set actor.
+     * @param actor         to set on tile
      */
-    public boolean put(Actor actor, Coordinate pos){
-        if(getTile(pos).hasActor()){
+    public void setActor(Coordinate coordinate, Actor actor) {
+        validateCoordinate(coordinate);
+        getTile(coordinate).setActor(actor);
+    }
+
+    /**
+     * Moves actor to position by platerId.
+     * 
+     * @param playerId     of player to move.
+     * @param newPosition  to move the actor to.
+     * @return             true if the actor can be found and the new position is free (null), false otherwise.
+     */
+    public boolean moveActor(int playerId, Coordinate newPosition) {
+        validateCoordinate(newPosition);
+        if (getTile(newPosition).getActor() != null) {
             return false;
         }
-        getTile(pos).setActor(actor);
-        actor.setPosition(pos);
+        for (int i = 0; i < grid.length; i++) {
+            Actor actor = grid[i].getActor();
+            if (actor instanceof Player && ((Player) actor).getPlayerID() == playerId) {
+                grid[i].setActor(null);
+                setActor(newPosition, actor);
+                return true;
+            }
+        }
+        return false;
+    }
+
+    /**
+     * Moves an actor from one tile to another.
+     * 
+     * @param position      current position of an actor
+     * @param newPosition   target position of selected actor
+     * @return              true if there is an actor on position and newPosition is free, false otherwise.
+     */
+    public boolean moveActor(Coordinate position, Coordinate newPosition) {
+        validateCoordinate(position);
+        validateCoordinate(newPosition);
+        Actor actor = getTile(position).getActor();
+        if (getTile(newPosition).getActor() != null || actor == null) {
+            return false;
+        }
+        setActor(position, null);
+        setActor(newPosition, actor);
         return true;
     }
 
-    public Tile getTile(Coordinate coordinate) {
-        return grid.get(coordinate.getX()).get(coordinate.getY());
+    /**
+     * Moves a player to a new position
+     * 
+     * @param player        the player to move.
+     * @param newPosition   target position of player.
+     * @return              true if the new position is free (null), false otherwise.  
+     */
+    public boolean moveActor(Player player, Coordinate newPosition) {
+        return moveActor(player.getPosition(), newPosition);
     }
 
     public int getWidth(){

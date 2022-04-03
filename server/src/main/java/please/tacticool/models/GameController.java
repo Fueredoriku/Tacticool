@@ -8,18 +8,15 @@ import java.util.PriorityQueue;
 import java.util.Queue;
 import java.util.UUID;
 
-import please.tacticool.models.Actors.Character;
-import please.tacticool.models.Actors.Movement;
-import please.tacticool.models.Action.ActionType;
+import please.tacticool.models.Actors.Player;
 
 /**
  * Game controller takes care of making everything happen in the grid. Create the actors
  * and place them in the playfield. Also takes care of updating (and checking validity of)
  * the movement of the players and projectiles, damage dealt by projectiles and so on
  */
-public class GameController {
-    private final TerrainGrid terrainGrid;
-    private final List<Character> characters;
+    private final TerrainGrid playfield;
+    private final List<Player> characters;
     private final UUID gameUID; // Unique ID to represent the game
     
     private int nbPlayers;
@@ -43,7 +40,7 @@ public class GameController {
 
 
     private GameController(int width, int height){
-        this.terrainGrid = new TerrainGrid(width, height);
+        this.playfield = new TerrainGrid(width, height);
         characters = new ArrayList<>();
         state = GameState.Lobby;
         nbPlayers = 0;
@@ -60,7 +57,7 @@ public class GameController {
         if(state != GameState.Lobby){
             throw new IllegalStateException("Can't add a player if the game has already started");
         }
-        Character newPlayer = new Character(playerId, defaultSpawnPoints.get(0), defaultHealthPoint);
+        Player newPlayer = new Player(playerId, defaultSpawnPoints.get(0), defaultHealthPoint);
         characters.add(newPlayer);
         nbPlayers += 1;
     }

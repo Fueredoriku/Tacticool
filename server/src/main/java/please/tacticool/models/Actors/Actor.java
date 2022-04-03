@@ -26,4 +26,8 @@ public abstract class Actor {
     public void setPosition(Coordinate newPosition) {
         position = newPosition;
     }
+
+    public void getHit(int dmg) {
+        return;
+    }
 }

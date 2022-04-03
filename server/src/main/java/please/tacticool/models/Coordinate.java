@@ -12,6 +12,11 @@ public class Coordinate {
         this.y = y;
     }
 
+    public Coordinate(Coordinate coordinate) {
+        this.x = coordinate.x;
+        this.y = coordinate.y;
+    }
+
     public Coordinate add(Coordinate that){
         return new Coordinate(this.x + that.x, this.y + that.y);
     }
@@ -30,5 +35,10 @@ public class Coordinate {
     }
     public int getY(){
         return y;
+    }
+
+    @Override
+    public String toString() {
+        return String.format("[%s, %s]", this.x, this.y);
     }
 }
