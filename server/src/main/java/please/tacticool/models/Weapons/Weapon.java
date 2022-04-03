@@ -2,49 +2,25 @@ package please.tacticool.models.Weapons;
 
 import please.tacticool.models.Action;
 import please.tacticool.models.Coordinate;
-import please.tacticool.models.Actors.Projectiles.Projectile;
+import please.tacticool.models.TerrainGrid;
 
 public abstract class Weapon implements Action {
 
-    protected int ammunitions;
-    protected final int maxAmmo;
     protected final int damage;
 
     protected static final String actionType = "weapon";
 
     /**
      * Constructs a weapon dealing the specified amount of damage with the given ammo
-     * capacity and load
+     * capacity and load.
      * @param damage : damage dealt by the weapon
-     * @param maxAmmo : maximum amount of ammo in the weapon
-     * @param ammunitions : current count of ammo in the weapon
      */
-    public Weapon(int damage, int maxAmmo, int ammunitions){
-        this.maxAmmo = maxAmmo;
-        if(ammunitions > maxAmmo){
-            throw new IllegalArgumentException("Can't have more ammo than the max");
-        }
-        this.ammunitions = ammunitions;
+    public Weapon(int damage){
         this.damage = damage;
     }
 
-    public abstract Projectile fire(Coordinate position, Coordinate direction);
+    public abstract void fire(Coordinate position, Coordinate target, TerrainGrid grid);
 
-    /**
-     * Getter for the max amount of ammo in the weapon
-     * @return : the max ammo possible in the weapon
-     */
-    public int getMaxAmmunitions(){
-        return maxAmmo;
-    }
-
-    /**
-     * Getter for the amount of ammunitions remaining in the weapon
-     * @return : ammunitions left in the weapon
-     */
-    public int getAmmunitions(){
-        return ammunitions;
-    }
 
     /**
      * Getter for the amount of damage the weapons inflicts
