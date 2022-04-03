@@ -64,22 +64,16 @@ public class TerrainGrid {
      * 
      * @param playerId     of player to move.
      * @param newPosition  to move the actor to.
-     * @return             true if the actor can be found and the new position is free (null), false otherwise.
+     * @return             the posotion where the actor ended in after trying to move it 
      */
-    public boolean moveActor(int playerId, Coordinate newPosition) {
-        validateCoordinate(newPosition);
-        if (getTile(newPosition).getActor() != null) {
-            return false;
-        }
-        for (int i = 0; i < grid.length; i++) {
+    public Coordinate moveActor(int playerId, Coordinate newPosition) {
+        for(int i = 0; i < grid.length; i++){
             Actor actor = grid[i].getActor();
-            if (actor instanceof Player && ((Player) actor).getPlayerID() == playerId) {
-                grid[i].setActor(null);
-                setActor(newPosition, actor);
-                return true;
+            if(actor instanceof Player && ((Player) actor).getPlayerID() == playerId){
+                return moveActor(actor.getPosition(), newPosition);
             }
         }
-        return false;
+        throw new IllegalArgumentException("The specified playerID was not found in the grid");
     }
 
     /**
@@ -87,18 +81,18 @@ public class TerrainGrid {
      * 
      * @param position      current position of an actor
      * @param newPosition   target position of selected actor
-     * @return              true if there is an actor on position and newPosition is free, false otherwise.
+     * @return              the posotion where the actor ended in after trying to move it 
      */
-    public boolean moveActor(Coordinate position, Coordinate newPosition) {
+    public Coordinate moveActor(Coordinate position, Coordinate newPosition) {
         validateCoordinate(position);
         validateCoordinate(newPosition);
         Actor actor = getTile(position).getActor();
         if (getTile(newPosition).getActor() != null || actor == null) {
-            return false;
+            return position; // Could not be moved so the position remains the same
         }
         setActor(position, null);
         setActor(newPosition, actor);
-        return true;
+        return newPosition;
     }
 
     /**
@@ -106,16 +100,16 @@ public class TerrainGrid {
      * 
      * @param player        the player to move.
      * @param newPosition   target position of player.
-     * @return              true if the new position is free (null), false otherwise.  
+     * @return              the posotion where the actor ended in after trying to move it   
      */
-    public boolean moveActor(Player player, Coordinate newPosition) {
+    public Coordinate moveActor(Player player, Coordinate newPosition) {
         return moveActor(player.getPosition(), newPosition);
     }
 
     public int getWidth(){
-        return width;
+        return dimensions.getX();
     }
     public int getHeight(){
-        return height;
+        return dimensions.getY();
     }
 }
