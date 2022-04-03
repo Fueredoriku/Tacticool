@@ -49,42 +49,68 @@ public class TerrainGrid {
     }
 
     /**
-     * Updates the actor of a tile on the specified coordinate.
+     * Sets the actor of a tile.
      * 
-     * @param coordinate    of the tile to update
-     * @param actor         to put on the selected tile
+     * @param coordinate    of tile to set actor.
+     * @param actor         to set on tile
      */
-    public void updateActor(Coordinate coordinate, Actor actor) {
+    public void setActor(Coordinate coordinate, Actor actor) {
         validateCoordinate(coordinate);
         getTile(coordinate).setActor(actor);
     }
 
+
     /**
-     * Moves a player to a new tile on the grid by player id.
+     * Moves actor to position by platerId.
      * 
-     * @param playerId  the id of the player to move.
-     * @param position  the new position the player should be in.
+     * @param playerId     of player to move.
+     * @param newPosition  to move the actor to.
+     * @return             true if the actor can be found and the new position is free (null), false otherwise.
      */
-    public void movePlayer(int playerId, Coordinate position) {
+    public boolean moveActor(int playerId, Coordinate newPosition) {
+        validateCoordinate(newPosition);
+        if (getTile(newPosition).getActor() != null) {
+            return false;
+        }
         for (int i = 0; i < grid.length; i++) {
             Actor actor = grid[i].getActor();
             if (actor instanceof Player && ((Player) actor).getPlayerID() == playerId) {
                 grid[i].setActor(null);
-                updateActor(position, actor);
-                break;
+                setActor(newPosition, actor);
+                return true;
             }
         }
+        return false;
     }
 
     /**
-     * Moves player on give position to a new tile on the grid.
+     * Moves an actor from one tile to another.
      * 
-     * @param position  where the player currently is
-     * @param newPosition  the new position the player should be in
+     * @param position      current position of an actor
+     * @param newPosition   target position of selected actor
+     * @return              true if there is an actor on position and newPosition is free, false otherwise.
      */
-    public void movePlayerBy(Coordinate position, Coordinate newPosition) {
-        Player player = (Player) getTile(position).getActor();
-        updateActor(position, null);
-        updateActor(newPosition, player);
+    public boolean moveActor(Coordinate position, Coordinate newPosition) {
+        validateCoordinate(position);
+        validateCoordinate(newPosition);
+        Actor actor = getTile(position).getActor();
+        if (getTile(newPosition).getActor() != null || actor == null) {
+            return false;
+        }
+        setActor(position, null);
+        setActor(newPosition, actor);
+        return true;
     }
+
+    /**
+     * Moves a player to a new position
+     * 
+     * @param player        the player to move.
+     * @param newPosition   target position of player.
+     * @return              true if the new position is free (null), false otherwise.  
+     */
+    public boolean moveActor(Player player, Coordinate newPosition) {
+        return moveActor(player.getPlayerID(), newPosition);
+    }
+
 }

@@ -9,7 +9,6 @@ import java.util.Queue;
 import java.util.UUID;
 
 import please.tacticool.models.Actors.Player;
-import please.tacticool.models.Weapons.Action;
 
 /**
  * Game controller takes care of making everything happen in the grid. Create the actors
