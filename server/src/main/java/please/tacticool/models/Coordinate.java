@@ -21,6 +21,10 @@ public class Coordinate {
         return new Coordinate(this.x + that.x, this.y + that.y);
     }
 
+    public int distance(Coordinate coordinate) {
+        return Math.abs((coordinate.getX() - this.getX()) + (coordinate.getY() - this.getY()));
+    }
+
     public int getX(){
         return x;
     }
