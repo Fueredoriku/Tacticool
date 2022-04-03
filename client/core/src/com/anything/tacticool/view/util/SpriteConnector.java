@@ -2,7 +2,9 @@ package com.anything.tacticool.view.util;
 
 public enum SpriteConnector {
     GRASS("G", "terrain1.png", 0),
-    PLAYER("P", "player.png", 1);
+    PLAYER("P", "player.png", 1),
+    BULLET("B", "", 2),
+    EXPLOSION("E", "", 2);
 
     private final String type;
     private final String path;
