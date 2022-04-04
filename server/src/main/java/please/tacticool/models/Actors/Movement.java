@@ -1,7 +1,10 @@
 package please.tacticool.models.Actors;
 
+import java.util.List;
+
 import please.tacticool.models.Action;
 import please.tacticool.models.Coordinate;
+import please.tacticool.models.TerrainGrid;
 
 public interface Movement extends Action {
 
@@ -44,5 +47,5 @@ public interface Movement extends Action {
     /**
      * Moves the affected Actor object
      */
-    void move(Coordinate destination); //TODO: implement actual movement
+    List<Coordinate> move(List<Coordinate> path, TerrainGrid grid);
 }

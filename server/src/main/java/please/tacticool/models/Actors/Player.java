@@ -1,6 +1,9 @@
 package please.tacticool.models.Actors;
 
+import java.util.List;
+
 import please.tacticool.models.Coordinate;
+import please.tacticool.models.TerrainGrid;
 
 public class Player extends Actor implements Movement{
     // Characters health
@@ -36,8 +39,33 @@ public class Player extends Actor implements Movement{
     }
 
     @Override
-    public void move(Coordinate destination) { //TODO: Implement movement for character
-        this.setPosition(destination);
+    public List<Coordinate> move(List<Coordinate> movement, TerrainGrid grid) { //TODO: Implement movement for character
+        boolean collision = false;
+        List<Coordinate> path = null;
+
+        if (movement.isEmpty()) {
+            throw new IllegalArgumentException("Could not process empty coordinate list");
+        }
+
+        while (movement != null && !movement.isEmpty() && !collision) {
+            for (Coordinate coord : movement) {
+                try{
+                    if (!grid.isEmptyTile(coord)) {
+                        collision = true;
+                        break;
+                    }
+                    path.add(coord);
+                } catch (IndexOutOfBoundsException e) {
+                    throw new IllegalArgumentException("Tried to move to invalid coordinate");
+                }
+            }
+        }
+
+        if (path != null && !path.isEmpty()) {
+            this.setPosition(path.get(path.size() - 1));
+        }
+
+        return path;
     }
 
     @Override
