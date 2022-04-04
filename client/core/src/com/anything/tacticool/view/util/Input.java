@@ -13,6 +13,10 @@ public class Input {
     private int y;
     private SpriteConnector spriteConnector;
 
+    /**
+     * @param x represents the X position in the playfield. Starts at 0, which is to the left of the playfield.
+     * @param y represents the Y position in the playfield. Starts at 0, which is at the top of the playfield.
+     */
     public Input(int x, int y, SpriteConnector spriteConnector) {
         this.x = x;
         this.y = y;

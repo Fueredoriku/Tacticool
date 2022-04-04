@@ -2,7 +2,6 @@ package com.anything.tacticool.view.util;
 
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
@@ -60,15 +59,15 @@ public class TextureHandler {
     }
 
     /**
-     * Adds all sprites from the inputs to the SpriteBatch, but makes them translucent
+     * Adds all sprites from the inputs to the SpriteBatch, and makes them translucent
      */
 
     public void renderInput(Input[] inputs, SpriteBatch batch) {
         batch.setColor(1,1,1,0.5f);
         for (Input input : inputs) {
-            batch.draw(prepareSprite(input.getSpriteConnector()), input.getX(), input.getY());
+            batch.draw(prepareSprite(input.getSpriteConnector()), input.getX()*tileScale, Gdx.graphics.getHeight() - input.getY()*tileScale);
         }
-        batch.setColor(Color.WHITE);
+        batch.setColor(1,1,1,1);
     }
 
 
