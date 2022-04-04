@@ -84,6 +84,9 @@ public class TerrainGrid {
      * @return              the posotion where the actor ended in after trying to move it 
      */
     public Coordinate moveActor(Coordinate position, Coordinate newPosition) {
+        if(newPosition.distance(position) > 1){
+            return position; // Can't move further than one tile
+        }
         validateCoordinate(position);
         validateCoordinate(newPosition);
         Actor actor = getTile(position).getActor();
