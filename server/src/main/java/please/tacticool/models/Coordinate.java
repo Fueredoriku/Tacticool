@@ -29,6 +29,10 @@ public class Coordinate {
     public int length(){
         return x + y;
     }
+  
+    public int distance(Coordinate coordinate) {
+        return Math.abs((coordinate.getX() - this.getX()) + (coordinate.getY() - this.getY()));
+    }
 
     public int getX(){
         return x;
