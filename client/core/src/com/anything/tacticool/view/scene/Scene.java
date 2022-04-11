@@ -10,7 +10,12 @@ public abstract class Scene extends ApplicationAdapter {
 
     public void render(SpriteBatch batch) {
         batch.begin();
+        onRender(batch);
         batch.end();
+    }
+
+    protected void onRender(SpriteBatch batch){
+
     }
 
     public void dispose(SpriteBatch batch){
