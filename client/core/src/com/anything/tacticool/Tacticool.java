@@ -10,14 +10,12 @@ import com.badlogic.gdx.utils.ScreenUtils;
 public class Tacticool extends ApplicationAdapter {
 	SpriteBatch batch;
 	private SceneManager sm;
-	private MainView mainMenu;
 
 	@Override
 	public void create () {
 		batch = new SpriteBatch();
 		sm = SceneManager.getInstance();
-		mainMenu = new MainView();
-		sm.Push(mainMenu);
+		sm.Push(new MainView());
 	}
 
 	@Override
