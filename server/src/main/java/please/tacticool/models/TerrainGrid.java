@@ -37,12 +37,19 @@ public class TerrainGrid {
     public boolean isValidCoordinate(Coordinate coordinate) {
         return coordinate.getX() >= 0 && coordinate.getX() < dimensions.getX() && coordinate.getY() >= 0 && coordinate.getY() < dimensions.getY();
     }
-    
+
+    public boolean isEmptyTile(Coordinate coordinate) {
+        if (getTile(coordinate).isEmpty()) {
+            return true;
+        }
+        return false;
+    }
+
     public Tile getTile(Coordinate coordinate) {
         validateCoordinate(coordinate);
         return grid[coordinate.getX() + coordinate.getY() * dimensions.getY()];
     }
-    
+
     public void setTile(Coordinate coordinate, Tile tile) {
         validateCoordinate(coordinate);
         grid[coordinate.getX() + coordinate.getY() * dimensions.getY()] = tile;
@@ -50,7 +57,7 @@ public class TerrainGrid {
 
     /**
      * Sets the actor of a tile.
-     * 
+     *
      * @param coordinate    of tile to set actor.
      * @param actor         to set on tile
      */
@@ -62,7 +69,7 @@ public class TerrainGrid {
 
     /**
      * Moves actor to position by platerId.
-     * 
+     *
      * @param playerId     of player to move.
      * @param newPosition  to move the actor to.
      * @return             true if the actor can be found and the new position is free (null), false otherwise.
@@ -85,7 +92,7 @@ public class TerrainGrid {
 
     /**
      * Moves an actor from one tile to another.
-     * 
+     *
      * @param position      current position of an actor
      * @param newPosition   target position of selected actor
      * @return              true if there is an actor on position and newPosition is free, false otherwise.
@@ -104,10 +111,10 @@ public class TerrainGrid {
 
     /**
      * Moves a player to a new position
-     * 
+     *
      * @param player        the player to move.
      * @param newPosition   target position of player.
-     * @return              true if the new position is free (null), false otherwise.  
+     * @return              true if the new position is free (null), false otherwise.
      */
     public boolean moveActor(Player player, Coordinate newPosition) {
         return moveActor(player.getPosition(), newPosition);
