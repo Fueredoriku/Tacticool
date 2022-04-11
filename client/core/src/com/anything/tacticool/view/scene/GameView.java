@@ -1,10 +1,10 @@
 package com.anything.tacticool.view.scene;
 
+
 import com.anything.tacticool.view.util.Input;
 import com.anything.tacticool.view.util.Playfield;
 import com.anything.tacticool.view.util.TextureHandler;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-
 import java.util.Stack;
 
 public class GameView extends Scene {
@@ -26,5 +26,4 @@ public class GameView extends Scene {
     public void onRender(SpriteBatch batch){
         textureHandler.renderBoard(playfield, batch);
     }
-
 }
