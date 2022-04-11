@@ -120,4 +120,18 @@ public class TerrainGrid {
         return moveActor(player.getPosition(), newPosition);
     }
 
+    @Override
+    public String toString() {
+        String result = "";
+
+        for (int i = 0; i < dimensions.getY(); i++) {
+            for (int j = 0; j < dimensions.getX(); j++) {
+                result += String.format(" %s", getTile(new Coordinate(j, i)));
+            }
+            result += "\n";
+        }
+
+        return result;
+    }
+
 }

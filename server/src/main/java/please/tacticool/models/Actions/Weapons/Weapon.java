@@ -1,10 +1,12 @@
 package please.tacticool.models.Actions.Weapons;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import please.tacticool.models.Coordinate;
 import please.tacticool.models.TerrainGrid;
 import please.tacticool.models.Actions.Action;
+import please.tacticool.models.Actors.Player;
 
 public abstract class Weapon extends Action {
 
@@ -15,10 +17,10 @@ public abstract class Weapon extends Action {
      * capacity and load.
      * @param damage : damage dealt by the weapon
      */
-    public Weapon(Coordinate playerPosition, List<Coordinate> path, int damage){
-        super(playerPosition, path);
-        if (getPath().size() != 1) {
-            throw new IllegalArgumentException("Target is not correctly defined: " + getPath());
+    public Weapon(Player player, List<Coordinate> path, int damage, int actionCost){
+        super(player, path, actionCost);
+        if (path.size() != 1) {
+            throw new IllegalArgumentException("Target is not correctly defined: " + path);
         }
         this.damage = damage;
     }
@@ -36,6 +38,10 @@ public abstract class Weapon extends Action {
 
     @Override
     public List<Coordinate> execute(TerrainGrid grid) {
-        return fire(getPlayerPosition(), getPath().get(0), grid);
+        if (player.getActionPoints() < getActionCost()) {
+            return new ArrayList<Coordinate>();
+        }
+        player.useActionPoints(getActionCost());
+        return fire(player.getPosition(), path.get(0), grid);
     }
 }

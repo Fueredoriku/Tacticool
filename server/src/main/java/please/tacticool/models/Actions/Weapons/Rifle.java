@@ -6,11 +6,12 @@ import java.util.List;
 import please.tacticool.models.Coordinate;
 import please.tacticool.models.TerrainGrid;
 import please.tacticool.models.Actors.Actor;
+import please.tacticool.models.Actors.Player;
 
 public class Rifle extends Weapon {
 
-    public Rifle(Coordinate playerPosition, List<Coordinate> path, int damage) {
-        super(playerPosition, path, damage);
+    public Rifle(Player player, List<Coordinate> path, int damage) {
+        super(player, path, damage, 2);
     }
 
     /**

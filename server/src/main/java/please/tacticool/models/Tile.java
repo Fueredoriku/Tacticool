@@ -1,6 +1,7 @@
 package please.tacticool.models;
 import please.tacticool.enums.Terrain;
 import please.tacticool.models.Actors.Actor;
+import please.tacticool.models.Actors.Player;
 
 public class Tile { //Might extend / implement texture handler in the future
     
@@ -48,5 +49,10 @@ public class Tile { //Might extend / implement texture handler in the future
             return false;
         }
         return true;
+    }
+
+    @Override
+    public String toString() {
+        return actor == null ? "-" : (actor instanceof Player ? Integer.toString(((Player) actor).getPlayerID()) : "A");
     }
 }

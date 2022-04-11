@@ -8,6 +8,8 @@ public class Player extends Actor {
     private int healthPoint;
     // Unique ID of the player to whom the character belongs
     private final int playerID;
+    private static final int maxActionPoints = 4;
+    private int actionPoints = maxActionPoints;
 
     /**
      *  Constructs a character with a given position and life points binded to the given player's ID.
@@ -30,6 +32,19 @@ public class Player extends Actor {
 
     public int getPlayerID(){
         return playerID;
+    }
+
+    public int getActionPoints() {
+        return actionPoints;
+    }
+
+    public void resetActionPoints() {
+        this.actionPoints = maxActionPoints;
+    }
+
+    public boolean useActionPoints(int amount) {
+        actionPoints -= amount;
+        return actionPoints > 0;
     }
 
     public boolean isDead() {

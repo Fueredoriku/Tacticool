@@ -51,6 +51,7 @@ public class GameController {
         playersOrder = new PriorityQueue<>();
         gameUID = UUID.randomUUID();
     }
+
     
     public GameController newGame(){
         return new GameController(defaultWidth, defaultHeight);
@@ -119,5 +120,9 @@ public class GameController {
 
     enum GameState {
         Lobby, Live, Finished;
+    }
+
+    public static void main(String[] args) {
+
     }
 }
