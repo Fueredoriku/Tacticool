@@ -13,6 +13,7 @@ public class Playfield {
 
     public Playfield(String[] args) {
         //TODO implement constructor
+
     }
 
     public List<List<SpriteConnector[]>> getGrid() {
