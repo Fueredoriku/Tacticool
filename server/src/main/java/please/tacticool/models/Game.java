@@ -26,14 +26,21 @@ public class Game {
     private TerrainGrid grid;
     private int turnCounter = 1;
 
+    /**
+     * Creates a game with a custom list of players.
+     * @param players the players to instantiate the game with.
+     */
     public Game(Player... players) {
         this.players = new ArrayList<Player>(Arrays.asList(players));
         instantiateGame();
     }
 
+    /**
+     * Creates a new game from scratch, using default start positions.
+     */
     public Game() {
         players = new ArrayList<Player>();
-        List<Coordinate> startPositions = new ArrayList<Coordinate>(List.of(
+        List<Coordinate> startPositions = new ArrayList<Coordinate>(List.of( // Current default start positions.
             new Coordinate(0, 0),
             new Coordinate(0, depth - 1),
             new Coordinate(width - 1, 0),
@@ -45,6 +52,9 @@ public class Game {
         instantiateGame();
     }
 
+    /**
+     * Instantiates all necessary variables.
+     */
     private void instantiateGame() {
         actions = new HashMap<Integer, List<Action>>();
         playerOrder = new ArrayList<Integer>();
@@ -55,6 +65,12 @@ public class Game {
         }
     }
 
+    /**
+     * Adds a players actions for this turn. The order of submission in kept, and on a resubmission the
+     * prevous one is overwritten.
+     * @param playerId  the id of the player submitting actions.
+     * @param actions   the actions the player is submitting.
+     */
     public void addPlayerActions(int playerId, List<Action> actions) {
         if (playerOrder.contains(playerId)) {
             playerOrder.remove(playerId);
@@ -63,6 +79,12 @@ public class Game {
         this.actions.put(playerId, actions);
     }
 
+    /**
+     * Performs a turn of the game by executing all actions submitted by players. Actions 
+     * are sorted by priority and executed in submission order (e.g. if p1 and p2 submits an action
+     * with priority 1, the one who submitted first goes first). 
+     * @return a list of the actions executed this turn.
+     */
     public List<Action> performTurn() {
         List<Action> allActions = new ArrayList<Action>();
         for (int playerId : playerOrder) {

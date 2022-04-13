@@ -10,6 +10,13 @@ import please.tacticool.models.Actors.Player;
 
 public class Rifle extends Weapon {
 
+    /**
+     * Create a new rifle object.
+     * @param player    the player that will use this action.
+     * @param path      the target of the actions. 
+     *                  Should be a list of length 1, can be longer but only the first element will be used.
+     * @param damage    damage this weapon deals. //TODO This sould not be an argument, use balance sheet.
+     */
     public Rifle(Player player, List<Coordinate> path, int damage) {
         super(player, path, damage, 2);
     }
