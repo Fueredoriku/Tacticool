@@ -37,11 +37,12 @@ public abstract class Weapon extends Action {
     }
 
     @Override
-    public List<Coordinate> execute(TerrainGrid grid) {
-        if (player.getActionPoints() < getActionCost()) {
-            return new ArrayList<Coordinate>();
+    public void execute(TerrainGrid grid) {
+        if (player.getActionPoints() >= getActionCost()) {
+            player.useActionPoints(getActionCost());
+            setAffectedCoordinates(fire(player.getPosition(), path.get(0), grid));
+        } else {
+            setAffectedCoordinates(new ArrayList<Coordinate>());
         }
-        player.useActionPoints(getActionCost());
-        return fire(player.getPosition(), path.get(0), grid);
     }
 }

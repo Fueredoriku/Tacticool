@@ -71,8 +71,8 @@ public class Movement extends Action {
 
 
     @Override
-    public List<Coordinate> execute(TerrainGrid grid) {
-        return move(grid);
+    public void execute(TerrainGrid grid) {
+        setAffectedCoordinates(move(grid));
     }
 
 }

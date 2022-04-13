@@ -63,7 +63,7 @@ public class Game {
         this.actions.put(playerId, actions);
     }
 
-    public void performTurn() {
+    public List<Action> performTurn() {
         List<Action> allActions = new ArrayList<Action>();
         for (int playerId : playerOrder) {
             allActions.addAll(actions.get(playerId));
@@ -77,6 +77,7 @@ public class Game {
         turnCounter++;
         playerOrder.clear();
         players.forEach(a -> a.resetActionPoints());
+        return allActions;
     }
  
     public UUID getGameId() {
@@ -226,5 +227,48 @@ public class Game {
 
         game.performTurn();
         System.out.println(game);
+
+        game.addPlayerActions(
+            players.get(0).getPlayerID(), 
+            List.of(
+                new Movement(
+                    players.get(0), 
+                    List.of(
+                        new Coordinate(0, 0)
+                    )
+                ),
+                new Rifle(players.get(0), List.of(new Coordinate(0, 1)), 3)
+            )
+        );
+        game.addPlayerActions(
+            players.get(1).getPlayerID(), 
+            List.of(
+                new Movement(
+                    players.get(1), 
+                    List.of(
+                        new Coordinate(0, 1),
+                        new Coordinate(0, 0)
+                    )
+                )
+            )
+        );
+
+        game.addPlayerActions(
+            players.get(3).getPlayerID(), 
+            List.of(
+                new Movement(
+                    players.get(3), 
+                    List.of(
+                        new Coordinate(9, 0)
+                    )
+                )
+            )
+        );
+
+        List<Action> test = game.performTurn();
+        System.out.println(game);
+
+        System.out.println(test.get(0).getClass().getSimpleName());
+        System.out.println(test.get(0).getClass().getSimpleName() + ": " + test.get(0).getAffectedCoordinates());
     }
 }

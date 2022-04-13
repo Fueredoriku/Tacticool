@@ -10,6 +10,7 @@ public abstract class Action {
 
     protected final Player player;
     protected final List<Coordinate> path;
+    private List<Coordinate> affectedCoordinates;
     private final int actionCost;
 
     public Action(Player player, List<Coordinate> path, int actionCost){
@@ -36,11 +37,19 @@ public abstract class Action {
      */
     public abstract int getPriority();
 
+    public List<Coordinate> getAffectedCoordinates() {
+        return affectedCoordinates;
+    }
+
+    public void setAffectedCoordinates(List<Coordinate> affectedCoordinates) {
+        this.affectedCoordinates = affectedCoordinates;
+    }
+
     public int getActionCost() {
         return actionCost;
     }
 
-    public abstract List<Coordinate> execute(TerrainGrid grid);
+    public abstract void execute(TerrainGrid grid);
 
     //public abstract List<Coordinate> execute(Coordinate position, List<Coordinate> path, TerrainGrid grid);
 }
