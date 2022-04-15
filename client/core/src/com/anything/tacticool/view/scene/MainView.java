@@ -34,15 +34,18 @@ public class MainView extends Scene {
     public void create() {
         this.stage = new Stage(new ScreenViewport());
 
+        // Skin to texture UI elements. Currently uses libgdx's internal skin
         Skin skin = new Skin(Gdx.files.internal("uiskin.json"));
 
         float sw = Gdx.graphics.getWidth();
         float sh = Gdx.graphics.getHeight();
 
+        // Instantiates UI elements
         TextField gameID_Input = new TextField("Game ID", skin);
         TextButton joinGame_Button = new TextButton("Join Game", skin);
         TextButton settings_Button = new TextButton("Settings", skin);
 
+        // Defines listeners for when the join game and settings buttons are pressed
         joinGame_Button.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
@@ -57,13 +60,17 @@ public class MainView extends Scene {
             }
         });
 
+        // Sets locations of UI elements
         gameID_Input.setPosition(sw/2f, sh * 4/5, Align.center);
         joinGame_Button.setPosition(sw/2f, sh * 3/5, Align.center);
         settings_Button.setPosition(sw/2f, sh * 2/5, Align.center);
 
+        // Adds UI elements to stage
         stage.addActor(gameID_Input);
         stage.addActor(joinGame_Button);
         stage.addActor(settings_Button);
+
+        // Allows UI elements to take inputs
         Gdx.input.setInputProcessor(stage);
     }
 
@@ -73,7 +80,20 @@ public class MainView extends Scene {
 
         stage.act();
         stage.draw();
+
+        checkState();
+
         this.gameID = ((TextField) stage.getActors().get(0)).getText();
+    }
+
+    // Rudimentary exception handling
+    private void checkState() {
+        if (stage.getActors().size != 3) {
+            throw new IllegalStateException("Expected 3 actors, instead of " + stage.getActors().size);
+        }
+        if (!((TextField) stage.getActors().get(0) instanceof TextField)) {
+            throw new IllegalStateException("Expected TextField at index 0 in Actors, instead of " + stage.getActors().get(0).getName());
+        }
     }
 
 
@@ -87,9 +107,5 @@ public class MainView extends Scene {
     private void openSettings() {
         sm.Push(new Settings());
     }
-
-    //Method for closing app?
-
-
 }
 
