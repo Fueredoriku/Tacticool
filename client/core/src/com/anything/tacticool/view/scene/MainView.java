@@ -5,6 +5,7 @@ import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
 import com.badlogic.gdx.scenes.scene2d.ui.TextField;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
 public class MainView extends Scene {
 
@@ -21,6 +22,12 @@ public class MainView extends Scene {
     private ImageButton joinGame_Button;
     private ImageButton settings_Button;
 
+
+    @Override
+    public void render(SpriteBatch batch) {
+        //Temporary code to switch directly to gameView as main menu still is not defined.
+        sm.Push(new GameView());
+    }
 
     //constructor
 
@@ -55,4 +62,6 @@ public class MainView extends Scene {
 
     //Method for closing app?
 
+
 }
+
