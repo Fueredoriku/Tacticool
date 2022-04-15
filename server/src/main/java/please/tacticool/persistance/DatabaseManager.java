@@ -3,7 +3,7 @@ package please.tacticool.persistance;
 import java.sql.*;
 import java.util.ArrayList;
 
-public class DatabaseManager {
+public abstract class DatabaseManager {
     private static final String DB_URL = "jdbc:mysql://mysql.stud.ntnu.no:3306/miburgos_tacticool";
     private static final String USER = "miburgos_tacticool";
     private static final String PASS = "admin";
@@ -31,10 +31,7 @@ public class DatabaseManager {
         return tmA;
     }
 
-
-    public static void main(String[] args) {
-        // Open a connection
-        DatabaseManager dm = new DatabaseManager();
-        System.out.println(dm.getPlayers().get(0));
+    protected Connection getConn(){
+        return conn;
     }
 }
