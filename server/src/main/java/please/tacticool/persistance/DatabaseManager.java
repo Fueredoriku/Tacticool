@@ -1,32 +1,40 @@
 package please.tacticool.persistance;
 
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.util.Properties;
+import java.sql.*;
+import java.util.ArrayList;
 
 public class DatabaseManager {
-    protected Connection conn;
-    public DatabaseManager () {}
+    private static final String DB_URL = "jdbc:mysql://mysql.stud.ntnu.no:3306/miburgos_tacticool";
+    private static final String USER = "miburgos_tacticool";
+    private static final String PASS = "admin";
+    private Connection conn;
 
-    public void connect() {
+    public DatabaseManager() {
         try {
-            // Class.forName("com.mysql.jdbc.Driver").newInstance(); when you are using MySQL 5.7
-            Class.forName("com.mysql.cj.jdbc.Driver");
-            // Properties for user and password.
-            Properties p = new Properties();
-            p.put("user", "miburgos_tacticool");
-            p.put("password", "admin");
-            //            conn = DriverManager.getConnection("jdbc:mysql://mysql.ansatt.ntnu.no/sveinbra_ektdb?autoReconnect=true&useSSL=false",p);
-            conn = DriverManager.getConnection("jdbc:mysql:mysql.stud.ntnu.no:3306/miburgos_tacticool",p); //ekt?*/
-        } catch (Exception e)
-        {
-            throw new RuntimeException("Unable to connect", e);
+            conn = DriverManager.getConnection(DB_URL, USER, PASS);
+        } catch (SQLException sqlException) {
+            System.out.println("Could not connect");
         }
     }
 
-    public static void main(String[] args) {
-        DatabaseManager dbm = new DatabaseManager();
-        dbm.connect();
+    public ArrayList<String> getPlayers(){
+        ArrayList<String> tmA = new ArrayList<>();
+        try {
+            Statement stmt = conn.createStatement();
+            ResultSet rs = stmt.executeQuery("SELECT * FROM miburgos_tacticool.Player");
+            while (rs.next()){
+                tmA.add(String.format("PlayerID: %d, Name: %s, Pass: %s", rs.getInt(1), rs.getString(2), rs.getString(3)));
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return tmA;
     }
 
+
+    public static void main(String[] args) {
+        // Open a connection
+        DatabaseManager dm = new DatabaseManager();
+        System.out.println(dm.getPlayers().get(0));
+    }
 }
