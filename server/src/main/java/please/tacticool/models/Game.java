@@ -290,6 +290,7 @@ public class Game {
         List<Action> test = game.performTurn();
         System.out.println(game);
 
+        System.out.println(test.stream().filter(a -> a.getPlayer().getPlayerID() == 0).toList());
         System.out.println(test.get(0).getClass().getSimpleName());
         System.out.println(test.get(0).getClass().getSimpleName() + ": " + test.get(0).getAffectedCoordinates());
     }

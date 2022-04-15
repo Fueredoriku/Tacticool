@@ -49,6 +49,10 @@ public abstract class Action {
         return actionCost;
     }
 
+    public Player getPlayer() {
+        return player;
+    }
+
     public abstract void execute(TerrainGrid grid);
 
     //public abstract List<Coordinate> execute(Coordinate position, List<Coordinate> path, TerrainGrid grid);
