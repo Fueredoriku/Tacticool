@@ -31,4 +31,8 @@ public class GameView extends Scene {
         textureHandler.renderBoard(playfield, batch);
     }
 
+    @Override
+    public void onRender(SpriteBatch batch){
+        textureHandler.renderBoard(playfield, batch);
+    }
 }
