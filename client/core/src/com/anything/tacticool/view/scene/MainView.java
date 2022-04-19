@@ -4,9 +4,7 @@ package com.anything.tacticool.view.scene;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
-import com.badlogic.gdx.scenes.scene2d.ui.Container;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
-import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.ui.TextField;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
@@ -15,23 +13,25 @@ import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 
 
+enum MenuState {
+    MAIN,
+    QEUED,
+    START
+}
+
 public class MainView extends Scene {
 
     protected SceneManager sm;
 
-    /**
-     * textField gameID_input
-     * button joinGame
-     * button settings
-     * button quit
-     */
-
     private Stage stage;
     private String gameID;
+    private MenuState menuState;
 
 
     @Override
     public void create() {
+        this.menuState = MenuState.MAIN;
+
         this.stage = new Stage(new ScreenViewport());
 
         // Skin to texture UI elements. Currently uses libgdx's internal skin
@@ -78,12 +78,27 @@ public class MainView extends Scene {
     public void render(SpriteBatch batch) {
         Gdx.gl.glClearColor(0,0,0,0);
 
-        stage.act();
-        stage.draw();
+        switch (menuState) {
+            case MAIN:
+                stage.act();
+                stage.draw();
 
-        checkState();
+                checkState();
 
-        this.gameID = ((TextField) stage.getActors().get(0)).getText();
+                this.gameID = ((TextField) stage.getActors().get(0)).getText();
+                break;
+            case QEUED:
+                //TODO make call to server to check if game can start
+                if (true) {
+                    this.menuState = menuState.START;
+                }
+                break;
+            case START:
+                //TODO make call to server to start new game
+                this.menuState = menuState.MAIN;
+                sm.Push(new GameView());
+                break;
+        }
     }
 
     // Rudimentary exception handling
@@ -99,9 +114,7 @@ public class MainView extends Scene {
 
     //Method for joining game
     private void joinGame(String gameID) {
-        //TODO make call to server
-
-        sm.Push(new GameView());
+        this.menuState = menuState.QEUED;
     }
 
     //Method for opening settings
