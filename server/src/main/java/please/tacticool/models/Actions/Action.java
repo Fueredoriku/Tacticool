@@ -53,6 +53,10 @@ public abstract class Action {
         return player;
     }
 
+    public List<Coordinate> getPath() {
+        return path;
+    }
+
     public abstract void execute(TerrainGrid grid);
 
     //public abstract List<Coordinate> execute(Coordinate position, List<Coordinate> path, TerrainGrid grid);

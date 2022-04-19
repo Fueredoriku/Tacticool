@@ -4,7 +4,12 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.UUID;
+import java.util.stream.Collector;
+import java.util.stream.Collectors;
+
+import javax.swing.text.GapContent;
+
+import com.google.gson.Gson;
 
 import please.tacticool.models.Actions.Action;
 import please.tacticool.models.Actions.Movement;
@@ -146,12 +151,20 @@ public class GameController {
         return null;
     }
 
+    public List<Action> getAction(int playerID) {
+        return actions.get(playerID);
+    }
+
     public void setGrid(TerrainGrid grid) {
         this.grid = grid;
     }
 
     public boolean isGameOver() {
         return players.values().stream().filter(a -> a.getHealthPoints() > 0).count() <= 1;
+    }
+
+    public void addMovesToDB(int playerID) {
+
     }
 
     @Override
@@ -164,6 +177,7 @@ public class GameController {
 
         return result;           
     }
+
 
     public static void main(String[] args) {
         GameController game = new GameController();
@@ -296,7 +310,8 @@ public class GameController {
                 new Movement(
                     players.get(0), 
                     List.of(
-                        new Coordinate(0, 0)
+                        new Coordinate(0, 0),
+                        new Coordinate(1, 0)
                     )
                 ),
                 new Rifle(players.get(0), List.of(new Coordinate(0, 1)), 3)
@@ -369,8 +384,14 @@ public class GameController {
                 )
             )
         );
+        Gson gson = new Gson();
 
-        game.performTurn();
-        System.out.println(game);
+        String stri = gson.toJson(game.getAction(0).get(0));
+        System.out.println();
+        // System.out.println(game.getAction(0).stream().map(a -> a.getPath()).collect(Collectors.toList()));
+        // String sti = gson.toJson(game.getAction(0).stream().map(a -> a.getPath()).collect(Collectors.toList()));
+        // System.out.println(sti);
+        // System.out.println("YOOOOOOOOO \n");
+        // System.out.println(gson.fromJson(sti, List.class));
     }
 }

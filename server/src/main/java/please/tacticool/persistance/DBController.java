@@ -50,6 +50,14 @@ public class DBController extends DatabaseManager{
         return controller;
     }
 
+    // public void updateGame(GameController controller) {
+    //     try (Statement stmt = getConn().createStatement()){
+    //         String sql = String.format("UPDATE coord, ", gameID);
+    //     } catch (SQLException e) {
+    //         e.printStackTrace();
+    //     }
+    // }
+
     public static void main(String[] args) {
         DBController controller = new DBController();
         GameController test = controller.getGame(1);
