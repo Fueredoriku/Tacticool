@@ -128,6 +128,10 @@ public class Game {
         return null;
     }
 
+    public boolean isGameOver() {
+        return players.values().stream().filter(a -> a.getHealthPoints() > 0).count() <= 1;
+    }
+
     @Override
     public String toString() {
         String result = String.format("Turn: %s\n", turnCounter);
