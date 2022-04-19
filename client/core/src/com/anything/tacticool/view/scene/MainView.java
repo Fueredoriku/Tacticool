@@ -91,7 +91,7 @@ public class MainView extends Scene {
         if (stage.getActors().size != 3) {
             throw new IllegalStateException("Expected 3 actors, instead of " + stage.getActors().size);
         }
-        if (!((TextField) stage.getActors().get(0) instanceof TextField)) {
+        if (!(stage.getActors().get(0) instanceof TextField)) {
             throw new IllegalStateException("Expected TextField at index 0 in Actors, instead of " + stage.getActors().get(0).getName());
         }
     }
@@ -100,6 +100,7 @@ public class MainView extends Scene {
     //Method for joining game
     private void joinGame(String gameID) {
         //TODO make call to server
+
         sm.Push(new GameView());
     }
 
