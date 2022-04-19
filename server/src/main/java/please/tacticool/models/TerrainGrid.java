@@ -66,6 +66,10 @@ public class TerrainGrid {
         getTile(coordinate).setActor(actor);
     }
 
+    public Actor getActor(Coordinate coordinate) {
+        return getTile(coordinate).getActor();
+    }
+
 
     /**
      * Moves actor to position by platerId.

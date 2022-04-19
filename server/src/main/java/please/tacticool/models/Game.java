@@ -1,7 +1,6 @@
 package please.tacticool.models;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -19,7 +18,8 @@ public class Game {
 
     private static final int defaultHealthPoint = 10;
 
-    private List<Player> players;
+    //private List<Player> players;
+    private Map<Integer, Player> players;
     private Map<Integer, List<Action>> actions;
     private List<Integer> playerOrder; 
     private int width = 10, depth = 10;
@@ -31,7 +31,10 @@ public class Game {
      * @param players the players to instantiate the game with.
      */
     public Game(Player... players) {
-        this.players = new ArrayList<Player>(Arrays.asList(players));
+        this.players = new HashMap<Integer, Player>();
+        for (Player player : players) {
+            this.players.put(player.getPlayerID(), player);
+        }
         instantiateGame();
     }
 
@@ -39,7 +42,7 @@ public class Game {
      * Creates a new game from scratch, using default start positions.
      */
     public Game() {
-        players = new ArrayList<Player>();
+        players = new HashMap<Integer, Player>();
         List<Coordinate> startPositions = new ArrayList<Coordinate>(List.of( // Current default start positions.
             new Coordinate(0, 0),
             new Coordinate(0, depth - 1),
@@ -47,7 +50,7 @@ public class Game {
             new Coordinate(width - 1, depth - 1)
         ));
         for (int i = 0; i < startPositions.size(); i++) {
-            players.add(new Player(i, startPositions.get(i), defaultHealthPoint));
+            players.put(i, new Player(i, startPositions.get(i), defaultHealthPoint));
         }
         instantiateGame();
     }
@@ -60,7 +63,7 @@ public class Game {
         playerOrder = new ArrayList<Integer>();
         gameId = UUID.randomUUID();
         grid = new TerrainGrid(width, depth);
-        for (Player player : this.players) {
+        for (Player player : this.players.values()) {
             grid.setActor(player.getPosition(), player);
         }
     }
@@ -72,11 +75,13 @@ public class Game {
      * @param actions   the actions the player is submitting.
      */
     public void addPlayerActions(int playerId, List<Action> actions) {
-        if (playerOrder.contains(playerId)) {
-            playerOrder.remove(playerId);
+        if (players.containsKey(playerId) && players.get(playerId).getHealthPoints() > 0) {
+            if (playerOrder.contains(playerId)) {
+                playerOrder.remove(playerId);
+            }
+            playerOrder.add(playerId);
+            this.actions.put(playerId, actions);
         }
-        playerOrder.add(playerId);
-        this.actions.put(playerId, actions);
     }
 
     /**
@@ -98,10 +103,12 @@ public class Game {
 
         turnCounter++;
         playerOrder.clear();
-        players.forEach(a -> a.resetActionPoints());
+        players.values().forEach(a -> a.resetActionPoints());
+        players.values().stream().filter(a -> a.getHealthPoints() <= 0).forEach(a -> {if (grid.getActor(a.getPosition()).equals(a)) {grid.setActor(a.getPosition(), null);}});
+
         return allActions;
     }
- 
+
     public UUID getGameId() {
         return gameId;
     }
@@ -111,13 +118,20 @@ public class Game {
     }
 
     public List<Player> getPlayers() {
-        return new ArrayList<Player>(players);
+        return new ArrayList<Player>(players.values());
+    }
+
+    public Player getPlayer(int playerId) {
+        if (players.containsKey(playerId)) {
+            return players.get(playerId);
+        }
+        return null;
     }
 
     @Override
     public String toString() {
         String result = String.format("Turn: %s\n", turnCounter);
-        for (Player player : players) {
+        for (Player player : players.values()) {
             result += String.format("Player %s: %s - %s\n", player.getPlayerID(), player.getHealthPoints(), player.getActionPoints());
         }
         result += grid.toString();
@@ -271,7 +285,8 @@ public class Game {
                         new Coordinate(0, 1),
                         new Coordinate(0, 0)
                     )
-                )
+                ),
+                new Rifle(players.get(1), List.of(new Coordinate(0,0)), 6)
             )
         );
 
@@ -289,9 +304,47 @@ public class Game {
 
         List<Action> test = game.performTurn();
         System.out.println(game);
-
         System.out.println(test.stream().filter(a -> a.getPlayer().getPlayerID() == 0).toList());
         System.out.println(test.get(0).getClass().getSimpleName());
         System.out.println(test.get(0).getClass().getSimpleName() + ": " + test.get(0).getAffectedCoordinates());
+
+        game.addPlayerActions(
+            players.get(0).getPlayerID(), 
+            List.of(
+                new Movement(
+                    players.get(0), 
+                    List.of(
+                        new Coordinate(1, 0),
+                        new Coordinate(2, 0)
+                    )
+                )
+            )
+        );
+        game.addPlayerActions(
+            players.get(1).getPlayerID(), 
+            List.of(
+                new Movement(
+                    players.get(1), 
+                    List.of(
+                        new Coordinate(0, 0)
+                    )
+                )
+            )
+        );
+
+        game.addPlayerActions(
+            players.get(3).getPlayerID(), 
+            List.of(
+                new Movement(
+                    players.get(3), 
+                    List.of(
+                        new Coordinate(9, 0)
+                    )
+                )
+            )
+        );
+
+        game.performTurn();
+        System.out.println(game);
     }
 }
