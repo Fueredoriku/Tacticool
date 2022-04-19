@@ -27,7 +27,8 @@ public class GameController {
 
 
     public GameController(int id) {
-        gameId = id;
+        players = new HashMap<>();
+        instantiateGame(id);
     }
 
 
