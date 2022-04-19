@@ -93,6 +93,7 @@ public class GameController {
     public void addPlayer(Player player) {
         if (!players.containsKey(player.getPlayerID())) {
             players.put(player.getPlayerID(), player);
+            grid.setActor(player.getPosition(), player);
         }
     }
 
@@ -143,6 +144,10 @@ public class GameController {
             return players.get(playerId);
         }
         return null;
+    }
+
+    public void setGrid(TerrainGrid grid) {
+        this.grid = grid;
     }
 
     public boolean isGameOver() {

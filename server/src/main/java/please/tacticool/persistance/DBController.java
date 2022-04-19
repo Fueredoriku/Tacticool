@@ -6,6 +6,7 @@ import java.sql.Statement;
 
 import please.tacticool.models.Coordinate;
 import please.tacticool.models.GameController;
+import please.tacticool.models.TerrainGrid;
 import please.tacticool.models.Actors.Player;
 
 public class DBController extends DatabaseManager{
@@ -29,15 +30,13 @@ public class DBController extends DatabaseManager{
     }
 
     public GameController getGame(int gameID) {
-        System.out.println("We");
         GameController controller = null;
         try (Statement stmt = getConn().createStatement()){
-            System.out.println("Got");
             String sql = String.format("SELECT * FROM GameTable WHERE IDgame = '%s'", gameID);
             ResultSet result = stmt.executeQuery(sql);
             controller = new GameController(gameID);
             while (result.next()) {
-                // Convert string to TileGrid
+                controller.setGrid(new TerrainGrid(result.getString("map"), result.getInt("mapW"), result.getInt("mapH")));
             }
             sql = String.format("SELECT * FROM GameToPlayer WHERE IDgame = '%s'", gameID);
             result = stmt.executeQuery(sql);
@@ -55,6 +54,6 @@ public class DBController extends DatabaseManager{
         DBController controller = new DBController();
         GameController test = controller.getGame(1);
 
-        System.out.println(test.getPlayers());
+        System.out.println(test);
     }
 }
