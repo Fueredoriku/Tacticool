@@ -14,7 +14,7 @@ import please.tacticool.models.Actors.Player;
 
 public class GameController {
 
-    private UUID gameId;
+    private int gameId;
 
     private static final int defaultHealthPoint = 10;
 
@@ -25,16 +25,22 @@ public class GameController {
     private TerrainGrid grid;
     private int turnCounter = 1;
 
+
+    public GameController(int id) {
+        gameId = id;
+    }
+
+
     /**
      * Creates a game with a custom list of players.
      * @param players the players to instantiate the game with.
      */
-    public GameController(Player... players) {
+    public GameController(int id, Player... players) {
         this.players = new HashMap<Integer, Player>();
         for (Player player : players) {
             this.players.put(player.getPlayerID(), player);
         }
-        instantiateGame();
+        instantiateGame(id);
     }
 
     /**
@@ -51,16 +57,16 @@ public class GameController {
         for (int i = 0; i < startPositions.size(); i++) {
             players.put(i, new Player(i, startPositions.get(i), defaultHealthPoint));
         }
-        instantiateGame();
+        instantiateGame(1);
     }
 
     /**
      * Instantiates all necessary variables.
      */
-    private void instantiateGame() {
+    private void instantiateGame(int id) {
         actions = new HashMap<Integer, List<Action>>();
         playerOrder = new ArrayList<Integer>();
-        gameId = UUID.randomUUID();
+        gameId = id;
         grid = new TerrainGrid(width, depth);
         for (Player player : this.players.values()) {
             grid.setActor(player.getPosition(), player);
@@ -80,6 +86,12 @@ public class GameController {
             }
             playerOrder.add(playerId);
             this.actions.put(playerId, actions);
+        }
+    }
+
+    public void addPlayer(Player player) {
+        if (!players.containsKey(player.getPlayerID())) {
+            players.put(player.getPlayerID(), player);
         }
     }
 
@@ -113,7 +125,7 @@ public class GameController {
         return allActions;
     }
 
-    public UUID getGameId() {
+    public int getGameId() {
         return gameId;
     }
 
