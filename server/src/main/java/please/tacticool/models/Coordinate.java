@@ -22,7 +22,7 @@ public class Coordinate {
     }
 
     public int distance(Coordinate coordinate) {
-        return Math.abs((coordinate.getX() - this.getX()) + (coordinate.getY() - this.getY()));
+        return Math.abs(coordinate.getX() - this.getX()) + Math.abs(coordinate.getY() - this.getY());
     }
 
     public int getX(){

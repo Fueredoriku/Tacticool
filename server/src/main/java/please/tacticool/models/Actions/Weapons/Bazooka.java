@@ -6,14 +6,15 @@ import java.util.List;
 import please.tacticool.models.Coordinate;
 import please.tacticool.models.TerrainGrid;
 import please.tacticool.models.Actors.Actor;
+import please.tacticool.models.Actors.Player;
 
 public class Bazooka extends Weapon{
 
     private int range = 3;
     private int radius = 3;
 
-    public Bazooka(Coordinate playerPosition, List<Coordinate> path, int damage) {
-        super(playerPosition, path, damage);
+    public Bazooka(Player player, List<Coordinate> path, int damage) {
+        super(player, path, damage, 3);
     }
 
     // Currently possible to shot one self.

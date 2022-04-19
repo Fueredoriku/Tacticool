@@ -4,15 +4,19 @@ import java.util.List;
 
 import please.tacticool.models.Coordinate;
 import please.tacticool.models.TerrainGrid;
+import please.tacticool.models.Actors.Player;
 
 public abstract class Action {
 
-    private final Coordinate playerPosition;
-    private final List<Coordinate> path;
+    protected final Player player;
+    protected final List<Coordinate> path;
+    private List<Coordinate> affectedCoordinates;
+    private final int actionCost;
 
-    public Action(Coordinate playerPosition, List<Coordinate> path){
-        this.playerPosition = playerPosition;
+    public Action(Player player, List<Coordinate> path, int actionCost){
+        this.player = player;
         this.path = path;
+        this.actionCost = actionCost;
     }
 
     /**
@@ -33,15 +37,23 @@ public abstract class Action {
      */
     public abstract int getPriority();
 
-    public Coordinate getPlayerPosition() {
-        return playerPosition;
+    public List<Coordinate> getAffectedCoordinates() {
+        return affectedCoordinates;
     }
 
-    public List<Coordinate> getPath() {
-        return path;
+    public void setAffectedCoordinates(List<Coordinate> affectedCoordinates) {
+        this.affectedCoordinates = affectedCoordinates;
     }
 
-    public abstract List<Coordinate> execute(TerrainGrid grid);
+    public int getActionCost() {
+        return actionCost;
+    }
+
+    public Player getPlayer() {
+        return player;
+    }
+
+    public abstract void execute(TerrainGrid grid);
 
     //public abstract List<Coordinate> execute(Coordinate position, List<Coordinate> path, TerrainGrid grid);
 }

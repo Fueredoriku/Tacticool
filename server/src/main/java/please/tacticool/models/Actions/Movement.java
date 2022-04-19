@@ -13,8 +13,8 @@ public class Movement extends Action {
     int targetRadius = 1;
     int defaultCost = 1;
 
-    public Movement(Coordinate playerPosition, List<Coordinate> path) {
-        super(playerPosition, path);
+    public Movement(Player player, List<Coordinate> path) {
+        super(player, path, 1);
     }
 
     /**
@@ -45,33 +45,34 @@ public class Movement extends Action {
      * Moves the affected Actor object
      */
     private List<Coordinate> move(TerrainGrid grid) {
-        Player player = (Player) grid.getTile(getPlayerPosition()).getActor();
 
         List<Coordinate> npath = new ArrayList<Coordinate>();
         
-        if (getPath().isEmpty()) {
+        if (path.isEmpty()) {
             return npath;
         }
 
-        for (Coordinate coordinate : getPath()) {
-            if (!grid.isEmptyTile(coordinate)) {
+        int distance = 1;
+        for (Coordinate coordinate : path) {
+            if (!grid.isEmptyTile(coordinate) || coordinate.distance(player.getPosition()) != distance++ || npath.size() >= player.getActionPoints()) {
                 break;
             }
             npath.add(coordinate);
         }
 
         if (!npath.isEmpty()) {
-            grid.moveActor(getPlayerPosition(), npath.get(npath.size() - 1));
+            grid.moveActor(player.getPosition(), npath.get(npath.size() - 1));
             player.setPosition(npath.get(npath.size() - 1));
         }
 
+        player.useActionPoints(npath.size());
         return npath;
     }
 
 
     @Override
-    public List<Coordinate> execute(TerrainGrid grid) {
-        return move(grid);
+    public void execute(TerrainGrid grid) {
+        setAffectedCoordinates(move(grid));
     }
 
 }
