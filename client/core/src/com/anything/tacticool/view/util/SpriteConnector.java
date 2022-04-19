@@ -1,25 +1,41 @@
 package com.anything.tacticool.view.util;
 
-public enum SpriteConnector {
-    GRASS("terrain1.png", 0),
-    PLAYER("player.png", 1),
-    BULLET("", 2),
-    EXPLOSION("", 2);
+import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.Sprite;
 
-    private final String filePath;
-    private final int layer;
+public class SpriteConnector {
 
-    private SpriteConnector(final String filePath, final int layer) {
-        this.filePath = filePath;
-        this.layer = layer;
+    private SpriteConnectorEnum spriteConnectorEnum;
+    private int x;
+    private int y;
+
+    public SpriteConnector(SpriteConnectorEnum spriteConnectorEnum, int x, int y) {
+        this.spriteConnectorEnum = spriteConnectorEnum;
+        this.x = x;
+        this.y = y;
     }
 
-    public String getFilePath() {
-        return filePath;
+    public SpriteConnectorEnum getSpriteConnectorEnum() {
+        return spriteConnectorEnum;
     }
 
-    public int getLayer() {
-        return layer;
+    public int getX() {
+        return x;
     }
 
+    public int getY() {
+        return y;
+    }
+
+    /**
+     * Currently loads each texture seperately from memory each time this is called.
+     * Should be changed to use TextureRegion to avoid this.
+     */
+
+    public Sprite prepareSprite(float tileScale) {
+        Texture texture = new Texture(spriteConnectorEnum.getFilePath());
+        Sprite sprite = new Sprite(texture);
+        sprite.setSize(tileScale, tileScale);
+        return sprite;
+    }
 }
