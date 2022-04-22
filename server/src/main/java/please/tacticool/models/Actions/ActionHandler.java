@@ -1,5 +1,8 @@
 package please.tacticool.models.Actions;
 
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.*;
 
 import com.google.gson.Gson;
@@ -30,8 +33,10 @@ public class ActionHandler {
 
 
     public void addPlayer(Player player) {
-        grid.setActor(player.getPosition(), player);
         playerActions.put(player, new Actions());
+        if (!player.isDead()) { //TODO: OK way of handling dead players?
+            grid.setActor(player.getPosition(), player);
+        }
     }
 
     public void addActions(Player player, Actions actions, boolean saveToDb) {
@@ -100,7 +105,7 @@ public class ActionHandler {
         results.add("players", players);
         results.addProperty("actions", new DBController().getPerformedActions(this));
 
-        return results.getAsString();
+        return results.toString();
     }
 
     @Override
@@ -126,6 +131,7 @@ public class ActionHandler {
 
         handler.simulate();
 
-        System.out.println(handler.toString());
+
+        System.out.println(handler.getGameState());
     }
 }
