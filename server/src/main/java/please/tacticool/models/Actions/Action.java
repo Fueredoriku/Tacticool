@@ -8,9 +8,13 @@ import please.tacticool.models.Actors.Player;
 
 public abstract class Action {
 
+    // Player
     protected final Player player;
+    // List of player input actions
     protected final List<Coordinate> path;
+    // Returning list
     private List<Coordinate> affectedCoordinates;
+    // Get somewhere else
     private final int actionCost;
 
     public Action(Player player, List<Coordinate> path, int actionCost){

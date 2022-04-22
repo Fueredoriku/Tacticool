@@ -20,7 +20,9 @@ public class Actions {
     }
 
     public void perform() {
-        
+        for(Action2 a : actions) {
+            a.perform();
+        }
     }
     
     public static void main(String[] args) {
