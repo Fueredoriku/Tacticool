@@ -17,7 +17,7 @@ public class Settings extends Scene {
 
 
     @Override
-    public void prepareStage() {
+    public void prepareScene() {
         this.stage = new Stage(new ScreenViewport());
         this.skin = new Skin(Gdx.files.internal("ui/uiskin.json"));
         this.skin.getFont("default-font").getData().setScale(3f);

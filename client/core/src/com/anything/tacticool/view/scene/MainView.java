@@ -1,7 +1,9 @@
 package com.anything.tacticool.view.scene;
 
 
+import com.anything.tacticool.view.util.AudioController;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
@@ -23,15 +25,17 @@ public class MainView extends Scene {
 
     private Stage stage;
     private Skin skin;
+    private AudioController audioController;
     private MenuState menuState;
 
     private String gameID;
 
 
     @Override
-    public void prepareStage() {
+    public void prepareScene() {
         prepareVariables();
         prepareUI();
+        prepareSound();
     }
 
 
@@ -69,7 +73,13 @@ public class MainView extends Scene {
     @Override
     public void dispose(SpriteBatch batch) {
         stage.dispose();
+        audioController.endMusic();
         batch.dispose();
+    }
+
+    @Override
+    public void disposeEarly() {
+        audioController.endMusic();
     }
 
 
@@ -150,6 +160,13 @@ public class MainView extends Scene {
 
         // Allows UI elements to take inputs
         Gdx.input.setInputProcessor(stage);
+    }
+
+    private void prepareSound() {
+        audioController = new AudioController();
+        audioController.setMusic("audio/main_menu.ogg");
+        audioController.playMusic();
+        audioController.setMusicVolume(1f);
     }
 }
 

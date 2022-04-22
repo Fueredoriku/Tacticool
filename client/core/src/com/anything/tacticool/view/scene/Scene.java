@@ -22,7 +22,10 @@ public abstract class Scene extends ApplicationAdapter {
     public Stage getStage() {
         return stage;
     }
-    public void prepareStage(){
+
+    public void prepareScene(){
         this.stage = new Stage();
     }
+
+    public void disposeEarly() { }
 }
