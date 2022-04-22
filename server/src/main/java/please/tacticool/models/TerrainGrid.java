@@ -1,5 +1,6 @@
 package please.tacticool.models;
 
+import please.tacticool.enums.Terrain;
 import please.tacticool.models.Actors.Actor;
 import please.tacticool.models.Actors.Player;
 
@@ -14,6 +15,17 @@ public class TerrainGrid {
         grid = new Tile[width*depth];
         
         populateGrid();
+    }
+
+    public TerrainGrid(String board, int width, int height) {
+        dimensions = new Coordinate(width, height);
+        grid = new Tile[width * height];
+
+        Terrain[] values = Terrain.values();
+        String[] brd = board.split(",");
+        for (int i = 0; i < brd.length; i++) {
+            grid[i] = new Tile(values[Integer.parseInt(brd[i])]);
+        }
     }
     
     private void validateCoordinate(Coordinate coordinate) {

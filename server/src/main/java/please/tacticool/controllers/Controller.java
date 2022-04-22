@@ -3,6 +3,8 @@ package please.tacticool.controllers;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import please.tacticool.models.Actions.ActionHandler;
+import please.tacticool.persistance.DBController;
 
 @RestController
 public class Controller {
@@ -23,12 +25,13 @@ public class Controller {
      *
      */
     @GetMapping("/api/getBoard{gameId}")
-    public ResponseEntity<String> getBoard(@PathVariable String gameId) {
+    public ResponseEntity<String> getFinishedSimulation(@PathVariable String gameId) {
         // Initalize gameController as object with input gameId
         // Ask if gameController has changed
         // Return a map and moves that both players have made this turn
+        ActionHandler ah = new DBController().getGame(Integer.parseInt(gameId));
 
-        return new ResponseEntity<>(gameId, HttpStatus.OK);
+        return new ResponseEntity<>(ah.getGameState(), HttpStatus.OK);
     }
 
     @GetMapping("/api/hasChanged{gameId}")
@@ -50,19 +53,15 @@ public class Controller {
     @PostMapping("/api/move/{gameId}/{playerId}")
     public ResponseEntity<String> inputMove(@RequestBody String body, @PathVariable("gameId") String gameId, @PathVariable("playerId") String playerId) {
         try {
-            // Initalize game and input user id with moves
-            // Game Controller = new GameController(gameId);
-            // gameController.move(pId, utilclasse(body))
-            // Check if player is alive before executing
-            // Check if moves are legal
-            // If legal, then add to list
-            // If all players added moves to list, start simulating
-            System.out.println(gameId);
-            System.out.println(playerId);
-            System.out.println(body);
-            return new ResponseEntity<>(gameId + " " + playerId, HttpStatus.CREATED);
+            DBController db = new DBController();
+            ActionHandler actionHandler = db.getGame(Integer.parseInt(gameId));
+            actionHandler.addActions(actionHandler.getPlayerById(Integer.parseInt(playerId)), body);
+
+            // Simulate if all players have added.
+            actionHandler.simulate();
+            return new ResponseEntity<>(gameId + " " + playerId, HttpStatus.OK);
         } catch (Exception e) {
-            return new ResponseEntity<>("Illegal Moves!!", HttpStatus.I_AM_A_TEAPOT);
+            return new ResponseEntity<>("Illegal Moves!!", HttpStatus.BAD_REQUEST);
         }
     }
 }
