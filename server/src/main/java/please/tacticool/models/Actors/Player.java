@@ -20,9 +20,10 @@ public class Player extends Actor {
     public Player(int playerID, Coordinate position, int healthPoint){
         super(position);
         this.playerID = playerID;
-        if(healthPoint < 0){
-            throw new IllegalArgumentException("Life points can't be less than 0");
-        }
+        // TODO: Check this
+        // if(healthPoint < 0){
+        //     throw new IllegalArgumentException("Life points can't be less than 0");
+        // }
         this.healthPoint = healthPoint;
     }
 

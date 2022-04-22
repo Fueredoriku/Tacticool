@@ -12,9 +12,9 @@ public abstract class Action {
 
 
     public Action(Coordinate coordinate, ActionType actionType) throws IllegalArgumentException {
-        if (coordinate.distance(new Coordinate(0,0)) != 1) {
-            throw new IllegalArgumentException("Invalid coordinate direction!");
-        }
+        // if (coordinate.distance(new Coordinate(0,0)) != 1) {
+        //     throw new IllegalArgumentException("Invalid coordinate direction!");
+        // }
         this.coordinate = coordinate;
         this.actionType = actionType;
     }

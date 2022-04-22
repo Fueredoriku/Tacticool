@@ -4,10 +4,9 @@ import java.util.*;
 
 import com.google.gson.Gson;
 
-import com.google.gson.GsonBuilder;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
-import please.tacticool.enums.ActionType;
+
 import please.tacticool.models.Coordinate;
 import please.tacticool.models.TerrainGrid;
 import please.tacticool.models.Actors.Player;
@@ -31,26 +30,29 @@ public class ActionHandler {
 
 
     public void addPlayer(Player player) {
+        grid.setActor(player.getPosition(), player);
         playerActions.put(player, new Actions());
     }
 
-    public void addActions(Player player, Actions actions) {
+    public void addActions(Player player, Actions actions, boolean saveToDb) {
         // Check if dead, check if legal,
         if (!player.isDead()) {
             playerActions.put(player, actions);
+            if (saveToDb) {
+                new DBController().addMovesToPlayerInGame(this, player);
+            }
         }
     }
 
-    public void addActions(Player player, String actions) throws IllegalArgumentException {
+    public void addActions(Player player, String actions, boolean saveToDb) throws IllegalArgumentException {
+        if (actions == null || actions.equals("null")) { return; }
         JsonArray actionArray = new Gson().fromJson(actions, JsonObject.class).getAsJsonArray("actions");
         Actions ac = new Actions();
         for (int a = 0; a < actionArray.size(); a++) {
             Action action = JsonConvert.convertToAction(actionArray.get(a).getAsJsonObject());
             ac.addAction(action);
-            //ac.addAction(JsonConvert.convertToAction(actionArray.get(a).getAsJsonObject()));
         }
-        playerActions.put(player, ac);
-        new DBController().addMovesToPlayerInGame(this, player);
+        addActions(player, ac, saveToDb);
     }
 
     public Player getPlayerById(int playerID) {
@@ -71,7 +73,7 @@ public class ActionHandler {
     }
 
     public void simulate() {
-        if (new DBController().playersReady(this) == getPlayers().size()) {
+        if (new DBController().playersReady(this) == getPlayers().stream().filter(a -> !a.isDead()).count()) {
             performActions();
         }
     }
@@ -99,5 +101,31 @@ public class ActionHandler {
         results.addProperty("actions", new DBController().getPerformedActions(this));
 
         return results.getAsString();
+    }
+
+    @Override
+    public String toString() {
+        String result = "";
+        for (Player player : getPlayers()) {
+            result += String.format("Player %s: %s - %s\n", player.getPlayerID(), player.getHealthPoints(), player.getActionPoints());
+        }
+        result += grid.toString();
+
+        return result;           
+    }
+
+
+    public static void main(String[] args) {
+        // TODO: Deal with dead players
+        DBController dbController = new DBController();
+        ActionHandler handler = dbController.getGame(2);
+        Player me = handler.getPlayerById(7);
+        Actions a = new Actions();
+        a.addAction(new Move(new Coordinate(-1, 0)));
+        handler.addActions(me, a, true);
+
+        handler.simulate();
+
+        System.out.println(handler.toString());
     }
 }

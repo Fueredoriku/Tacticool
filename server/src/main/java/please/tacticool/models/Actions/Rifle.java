@@ -7,9 +7,6 @@ import please.tacticool.models.Actors.Player;
 import please.tacticool.models.Coordinate;
 import please.tacticool.models.TerrainGrid;
 
-import java.util.ArrayList;
-import java.util.List;
-
 public class Rifle extends Action {
 
     public Rifle(Coordinate coordinate) {

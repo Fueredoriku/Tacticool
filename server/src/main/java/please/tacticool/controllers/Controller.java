@@ -55,7 +55,7 @@ public class Controller {
         try {
             DBController db = new DBController();
             ActionHandler actionHandler = db.getGame(Integer.parseInt(gameId));
-            actionHandler.addActions(actionHandler.getPlayerById(Integer.parseInt(playerId)), body);
+            actionHandler.addActions(actionHandler.getPlayerById(Integer.parseInt(playerId)), body, true);
 
             // Simulate if all players have added.
             actionHandler.simulate();
