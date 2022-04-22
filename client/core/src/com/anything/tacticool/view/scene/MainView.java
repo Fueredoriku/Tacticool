@@ -25,7 +25,6 @@ public class MainView extends Scene {
 
     private Stage stage;
     private Skin skin;
-    private AudioController audioController;
     private MenuState menuState;
 
     private String gameID;
@@ -73,13 +72,13 @@ public class MainView extends Scene {
     @Override
     public void dispose(SpriteBatch batch) {
         stage.dispose();
-        audioController.endMusic();
+        AudioController.endMusic();
         batch.dispose();
     }
 
     @Override
     public void disposeEarly() {
-        audioController.endMusic();
+        AudioController.endMusic();
     }
 
 
@@ -163,10 +162,8 @@ public class MainView extends Scene {
     }
 
     private void prepareSound() {
-        audioController = new AudioController();
-        audioController.setMusic("audio/main_menu.ogg");
-        audioController.playMusic();
-        audioController.setMusicVolume(1f);
+        AudioController.setCurrent_musicPath("audio/main_menu.ogg");
+        AudioController.playMusic();
     }
 }
 

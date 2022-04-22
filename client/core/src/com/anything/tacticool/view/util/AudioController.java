@@ -5,23 +5,69 @@ import com.badlogic.gdx.audio.Music;
 
 public class AudioController {
 
-    private Music music;
+    private static Music music;
+    private static float musicVolume;
+    private static String current_musicPath;
+    private static String game_musicPath;
 
-     public void setMusic(String filePath) {
-         music = Gdx.audio.newMusic(Gdx.files.internal(filePath));
-         music.setLooping(true);
+    private static float soundVolume;
+    private static String soundPath;
+
+    //Singleton boilerplate begins
+    public static volatile AudioController Singleton;
+
+    private AudioController() {
+        if (Singleton != null) {
+            throw new RuntimeException("Singleton somehow already created, use SettingChoices.getInstance instead");
+        }
+        musicVolume = 1f;
+        soundVolume = 1f;
+    }
+
+    public static AudioController getInstance() {
+        if (Singleton == null) {
+            synchronized (AudioController.class) {
+                if (Singleton == null) Singleton = new AudioController();
+            }
+        }
+        return Singleton;
+    }
+    //Singleton boilerplate ends
+
+
+     public static void setCurrent_musicPath(String path) {
+        AudioController.current_musicPath = path;
      }
 
-     public void playMusic() {
+     public static void setGame_musicPath(String path) {
+        AudioController.game_musicPath = path;
+     }
+
+     public static float getMusicVolume() {
+        return AudioController.musicVolume;
+     }
+
+    public static float getSoundVolume() {
+        return AudioController.soundVolume;
+    }
+
+    public static void setMusicVolume(float volume) {
+        AudioController.musicVolume = volume;
+    }
+
+    public static void setSoundVolume(float volume) {
+        AudioController.soundVolume = volume;
+    }
+
+     public static void playMusic() {
+         music = Gdx.audio.newMusic(Gdx.files.internal(AudioController.current_musicPath));
+         music.setLooping(true);
+         music.setVolume(AudioController.musicVolume);
          music.play();
      }
 
-     public void endMusic() {
+     public static void endMusic() {
          music.stop();
          music.dispose();
      }
-
-    public void setMusicVolume(float v) {
-         music.setVolume(v);
-    }
 }
