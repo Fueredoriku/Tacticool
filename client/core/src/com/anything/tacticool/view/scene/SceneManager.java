@@ -29,13 +29,18 @@ public class SceneManager {
     //Stack handling functions
     public void Push(Scene scene){
         scenes.push(scene);
+        scenes.peek().prepareStage();
     }
 
     public Scene Pop(){
         if (scenes.isEmpty()){
             throw new IllegalStateException("Can't pop scene from stack when stack is empty.");
         }
-        return scenes.pop();
+        Scene poppedScene = scenes.pop();
+        if (!scenes.isEmpty()) {
+            scenes.peek().prepareStage();
+        }
+        return poppedScene;
     }
 
     public Scene Peek(){

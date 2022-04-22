@@ -28,11 +28,11 @@ public class MainView extends Scene {
     private String gameID;
 
 
-    public MainView() {
+    @Override
+    public void prepareStage() {
         prepareVariables();
         prepareUI();
     }
-
 
 
     @Override
@@ -68,6 +68,7 @@ public class MainView extends Scene {
 
     @Override
     public void dispose(SpriteBatch batch) {
+        stage.dispose();
         batch.dispose();
     }
 
@@ -85,7 +86,6 @@ public class MainView extends Scene {
 
     //Method for joining game
     private void joinGame() {
-        System.out.println(this.gameID);
         this.menuState = menuState.QEUED;
     }
 
