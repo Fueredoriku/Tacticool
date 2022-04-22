@@ -9,6 +9,8 @@ import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 public class SpriteConnector {
 
     private SpriteConnectorEnum spriteConnectorEnum;
+    private SpriteConnectorEnum highlightEnum;
+    private ActionPointSingleton ap;
     private int x;
     private int y;
     private Actor actor;
@@ -17,13 +19,25 @@ public class SpriteConnector {
         this.spriteConnectorEnum = spriteConnectorEnum;
         this.x = x;
         this.y = y;
+    }
+
+    public SpriteConnector(SpriteConnectorEnum spriteConnectorEnum, SpriteConnectorEnum highlightSprite, int x, int y) {
+        this.spriteConnectorEnum = spriteConnectorEnum;
+        this.highlightEnum = highlightSprite;
+        this.x = x;
+        this.y = y;
         this.actor = new Actor();
+        ap = ActionPointSingleton.getInstance();
         actor.addListener(new ClickListener(){
             @Override
             public void clicked(InputEvent event, float x, float y){
-
+                ap.addAction(getHighlight());
             }
                           });
+    }
+
+    private SpriteConnector getHighlight(){
+        return new SpriteConnector(this.highlightEnum, this.x, this.y);
     }
 
     public SpriteConnectorEnum getSpriteConnectorEnum() {

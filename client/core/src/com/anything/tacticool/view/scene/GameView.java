@@ -1,5 +1,6 @@
 package com.anything.tacticool.view.scene;
 
+import com.anything.tacticool.view.util.ActionPointSingleton;
 import com.anything.tacticool.view.util.GridElementIterator;
 import com.anything.tacticool.view.util.TextureHandler;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
@@ -13,8 +14,7 @@ public class GameView extends Scene {
 
     private GridElementIterator tileIterator;
     private GridElementIterator actorIterator;
-    private GridElementIterator inputIterator;
-    private int actionPoints;
+    private ActionPointSingleton ap;
     private int width;
     private int height;
 
@@ -23,15 +23,11 @@ public class GameView extends Scene {
     //private Stack<Input> inputs;
     private Stage stage;
 
-    private GestureDetector gm;
-
     private TextureHandler textureHandler;
 
     public GameView(){
         super();
         textureHandler = new TextureHandler(width, height);
-
-
     }
 
     public void prepareStage(){
@@ -50,6 +46,6 @@ public class GameView extends Scene {
     public void onRender(SpriteBatch batch){
         textureHandler.createBatch(tileIterator, batch);
         textureHandler.createBatch(actorIterator, batch);
-        textureHandler.createBatch(inputIterator, batch);
+        textureHandler.createBatch(ap.getInputIterator(), batch);
     }
 }

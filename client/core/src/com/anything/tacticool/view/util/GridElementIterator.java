@@ -13,6 +13,10 @@ public class GridElementIterator implements Iterator{
         //TODO implement constructor
     }
 
+    public GridElementIterator() {
+        spriteConnectors = new ArrayList<>();
+        index = 0;
+    }
 
     @Override
     public boolean hasNext() {
@@ -46,6 +50,10 @@ public class GridElementIterator implements Iterator{
 
     public void reset() {
         this.index = 0;
+    }
+
+    public void clear(){
+        spriteConnectors.clear();
     }
 
 }
