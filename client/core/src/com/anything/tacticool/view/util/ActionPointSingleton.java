@@ -7,7 +7,7 @@ import java.util.Stack;
 public class ActionPointSingleton {
 
     private GridElementIterator highlightElements;
-    private int actionPoint;
+    public int actionPoint;
 
     //Singleton boilerplate begins
     public static volatile ActionPointSingleton Singleton;
@@ -43,6 +43,5 @@ public class ActionPointSingleton {
     public GridElementIterator getInputIterator(){
         return highlightElements;
     }
-
 
 }
