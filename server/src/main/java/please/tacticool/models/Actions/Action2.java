@@ -1,10 +1,12 @@
 package please.tacticool.models.Actions;
 
 import please.tacticool.enums.ActionType;
+import please.tacticool.models.Actors.Player;
 import please.tacticool.models.Coordinate;
+import please.tacticool.models.TerrainGrid;
 
 
-public class Action2 {
+public abstract class Action2 {
     private Coordinate coordinate;
     private ActionType actionType;
 
@@ -14,6 +16,10 @@ public class Action2 {
         this.actionType = actionType;
     }
 
-    public void perform(){}
+    public Coordinate getCoordinate() {
+        return coordinate;
+    }
+
+    public abstract Action2 perform(Player player, TerrainGrid grid);
 }
 

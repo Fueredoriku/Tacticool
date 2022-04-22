@@ -1,15 +1,20 @@
 package please.tacticool.models.Actions;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import com.google.gson.Gson;
 
 import com.google.gson.GsonBuilder;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonObject;
 import please.tacticool.enums.ActionType;
 import please.tacticool.models.Coordinate;
 import please.tacticool.models.TerrainGrid;
 import please.tacticool.models.Actors.Player;
+import please.tacticool.util.JsonConvert;
 
 public class ActionHandler {
     
@@ -30,8 +35,12 @@ public class ActionHandler {
     }
 
     public void addActions(Player player, String actions) {
-        Gson gson = new GsonBuilder().registerTypeAdapter();
-        addActions(player, gson.fromJson(actions, Actions.class));
+        JsonArray actionArray = new Gson().fromJson(actions, JsonObject.class).getAsJsonArray("actions");
+        Actions ac = new Actions();
+        for (int a = 0; a < actionArray.size(); a++) {
+            ac.addAction(JsonConvert.convertToAction(actionArray.get(a).getAsJsonObject()));
+        }
+        playerActions.put(player, ac);
     }
 
     public Actions getPlayerActions(Player player) {
@@ -41,21 +50,7 @@ public class ActionHandler {
     
     public void performActions() {
         for (Player player : playerActions.keySet()) {
-            playerActions.get(player).perform();
+            playerActions.get(player).perform(player, grid);
         }
-    }
-
-    public static void main(String[] args) {
-        ActionHandler handler = new ActionHandler(new TerrainGrid(3, 3));
-        Actions ac = new Actions();
-        ac.addAction(new Tesst(new Coordinate(1, 1)));
-        ac.addAction(new Move(new Coordinate(3, 3)));
-        ac.perform();
-        Player p = new Player(1, new Coordinate(1, 1), 100);
-        Gson gson = new Gson();
-        ActionHandler handler2 = new ActionHandler(new TerrainGrid(3, 3));
-        System.out.println(gson.toJson(ac));
-        handler2.addActions(p, gson.toJson(ac));
-        System.out.println(handler2);
     }
 }

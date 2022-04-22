@@ -4,8 +4,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 import please.tacticool.enums.ActionType;
+import please.tacticool.models.Actors.Player;
 import please.tacticool.models.Coordinate;
+import please.tacticool.models.TerrainGrid;
 
+/**
+ * Contains List<Action2>
+ */
 public class Actions {
 
     //Placeholder
@@ -19,13 +24,13 @@ public class Actions {
         actions.add(action);
     }
 
-    public void perform() {
+    public void perform(Player player, TerrainGrid grid) {
+        List<Action2> actual = new ArrayList<>();
         for(Action2 a : actions) {
-            a.perform();
+            Action2 b = a.perform(player, grid);
+            if(b != null){
+                actual.add(b);
+            }
         }
-    }
-    
-    public static void main(String[] args) {
-
     }
 }

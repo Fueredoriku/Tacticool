@@ -24,8 +24,4 @@ public enum Terrain {
     public String getTexture() {
         return texture;
     }
-
-    public static Terrain getTerrain(int id) {
-        Terrain.valueOf("")
-    }
 }

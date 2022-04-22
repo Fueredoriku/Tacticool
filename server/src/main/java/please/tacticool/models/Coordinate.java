@@ -34,6 +34,10 @@ public class Coordinate {
         return Math.abs(coordinate.getX() - this.getX()) + Math.abs(coordinate.getY() - this.getY());
     }
 
+    public Coordinate scale(int scale) {
+        return new Coordinate(this.x * scale, this.y * scale);
+    }
+
     public int getX(){
         return x;
     }
