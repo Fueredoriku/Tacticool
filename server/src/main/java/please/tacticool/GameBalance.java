@@ -1,4 +1,4 @@
-package please.tacticool.models.Actions;
+package please.tacticool;
 
 public record GameBalance() {
     //Move
@@ -14,5 +14,6 @@ public record GameBalance() {
     public static int BazookaRange = 3;
     public static int BazookaRadius = 3;
 
-
+    //Player
+    public static final int MaxActionPoints = 10;
 }

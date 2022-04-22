@@ -3,9 +3,7 @@ package please.tacticool.models.Actions;
 import java.util.ArrayList;
 import java.util.List;
 
-import please.tacticool.enums.ActionType;
 import please.tacticool.models.Actors.Player;
-import please.tacticool.models.Coordinate;
 import please.tacticool.models.TerrainGrid;
 
 /**
@@ -14,23 +12,24 @@ import please.tacticool.models.TerrainGrid;
 public class Actions {
 
     //Placeholder
-    private List<Action2> actions;
+    private List<Action> actions;
 
     public Actions() {
         actions = new ArrayList<>();
     }
 
-    public void addAction(Action2 action) {
+    public void addAction(Action action) {
         actions.add(action);
     }
 
-    public void perform(Player player, TerrainGrid grid) {
-        List<Action2> actual = new ArrayList<>();
-        for(Action2 a : actions) {
-            Action2 b = a.perform(player, grid);
+    public Actions perform(Player player, TerrainGrid grid) {
+        Actions actual = new Actions();
+        for(Action a : actions) {
+            Action b = a.perform(player, grid);
             if(b != null){
-                actual.add(b);
+                actual.addAction(b);
             }
         }
+        return actual;
     }
 }

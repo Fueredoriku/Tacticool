@@ -1,5 +1,6 @@
 package please.tacticool.models.Actors;
 
+import please.tacticool.GameBalance;
 import please.tacticool.models.Coordinate;
 
 
@@ -8,8 +9,7 @@ public class Player extends Actor {
     private int healthPoint;
     // Unique ID of the player to whom the character belongs
     private final int playerID;
-    private static final int maxActionPoints = 4;
-    private int actionPoints = maxActionPoints;
+    private int actionPoints = GameBalance.MaxActionPoints;
 
     /**
      *  Constructs a character with a given position and life points binded to the given player's ID.
@@ -39,12 +39,11 @@ public class Player extends Actor {
     }
 
     public void resetActionPoints() {
-        this.actionPoints = maxActionPoints;
+        this.actionPoints = GameBalance.MaxActionPoints;
     }
 
-    public boolean useActionPoints(int amount) {
+    public void useActionPoints(int amount) {
         actionPoints -= amount;
-        return actionPoints > 0;
     }
 
     public boolean isDead() {
