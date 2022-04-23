@@ -33,6 +33,10 @@ public class MainView extends Scene {
     private ActorFactory actorFactory;
 
 
+    public MainView() {
+        this.actorFactory = new ActorFactory();
+    }
+
     @Override
     public void prepareScene() {
         prepareVariables();
@@ -43,7 +47,7 @@ public class MainView extends Scene {
 
     @Override
     public void render(SpriteBatch batch) {
-        ScreenUtils.clear(0,0,0,1);
+        ScreenUtils.clear(0.5f,0.2f,0.5f,1);
 
         batch.begin();
 
@@ -125,16 +129,17 @@ public class MainView extends Scene {
         float uiWidth = screenWidth/3f;
         float uiHeight = screenHeight/6f;
         float ui_xPosition = screenWidth/2 - uiWidth/2;
+        float ui_yScale = screenHeight/5f;
 
         // Instantiates UI elements using the ActorFactory
         TextField gameID_Input = (TextField) actorFactory.actor(
                 new TextField("GameID", skin),
-                uiWidth, uiHeight, ui_xPosition, screenHeight * 4/5
+                uiWidth, uiHeight, ui_xPosition, ui_yScale * 4
         );
 
         TextButton joinGame_Button = actorFactory.textButton(
                 new TextButton("Join Game", skin),
-                uiWidth, uiHeight, ui_xPosition, screenHeight * 3/5,
+                uiWidth, uiHeight, ui_xPosition, ui_yScale * 3,
                 new ClickListener() {
                     @Override
                     public void clicked(InputEvent event, float x, float y) {
@@ -145,7 +150,7 @@ public class MainView extends Scene {
 
         TextButton settings_Button = actorFactory.textButton(
                 new TextButton("Settings", skin),
-                uiWidth, uiHeight, ui_xPosition, screenHeight * 3/5,
+                uiWidth, uiHeight, ui_xPosition, ui_yScale * 2,
                 new ClickListener() {
                     @Override
                     public void clicked(InputEvent event, float x, float y) {

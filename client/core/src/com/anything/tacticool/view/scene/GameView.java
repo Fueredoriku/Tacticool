@@ -49,7 +49,7 @@ public class GameView extends Scene {
     }
 
     @Override
-    public void prepareStage(){
+    public void prepareScene(){
         stage = new Stage(new ScreenViewport());
         buildButtons();
         while (tileIterator.hasNext()){
