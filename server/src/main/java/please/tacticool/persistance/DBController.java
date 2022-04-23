@@ -9,27 +9,39 @@ import please.tacticool.models.TerrainGrid;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.Locale;
 
 import com.google.gson.Gson;
 
 public class DBController extends DatabaseManager{
     
-    public void registerPlayer(int IDp, String name, String pass){
+    public int registerPlayer(String name, String pass){
         try (Statement stmt = getConn().createStatement()){
-            String sql = String.format("INSERT INTO Player VALUES (%d, '%s', '%s');", IDp, name, pass);
+            String sql = String.format("INSERT INTO miburgos_tacticool.Player(name,password) VALUES ('%s', '%s');", name.toLowerCase(), pass.toLowerCase());
             stmt.execute(sql);
+            sql = "SELECT LAST_INSERT_ID()";
+            ResultSet rs = stmt.executeQuery(sql);
+            rs.next();
+            return rs.getInt(1);
+
         } catch (SQLException e) {
             e.printStackTrace();
         }
+        return -1;
     }
 
-    public void createGame(long id, String map, boolean ready, int width, int height) {
+    public int createGame(String map, boolean ready, int width, int height) {
         try (Statement stmt = getConn().createStatement()){
-            String sql = String.format("INSERT INTO GameTable VALUES (%d, '%s', '%s', %d, %d, '%s');", id, map, ready, width, height, null);
+            String sql = String.format("INSERT INTO GameTable(map,ready,mapH,mapW,actions) VALUES ('%s', '%s', %d, %d, '%s');", map, ready, width, height, null);
             stmt.execute(sql);
+            sql = "SELECT LAST_INSERT_ID()";
+            ResultSet rs = stmt.executeQuery(sql);
+            rs.next();
+            return rs.getInt(1);
         } catch (SQLException e) {
             e.printStackTrace();
         }
+        return -1;
     }
 
     public void addPlayerToGame(ActionHandler actionHandler, Player player) {
@@ -41,7 +53,7 @@ public class DBController extends DatabaseManager{
         }
     }
 
-    public ActionHandler getGame(long gameID) {
+    public ActionHandler getGame(int gameID) {
         ActionHandler controller = null;
         try (Statement stmt = getConn().createStatement()){
             String sql = String.format("SELECT * FROM GameTable WHERE IDgame = '%s'", gameID);
@@ -91,12 +103,12 @@ public class DBController extends DatabaseManager{
         return "";
     }
 
-    public Player getPlayerById(long id) {
+    public Player getPlayerById(int id) {
         try (Statement stmt = getConn().createStatement()){
             String sql = String.format("SELECT * FROM Player WHERE IDplayer = %d", id);
             ResultSet result = stmt.executeQuery(sql);
             while (result.next()) {
-                return new Player(result.getLong("IDplayer"), new Coordinate(0, 0), GameBalance.DefaultHealthPoints);
+                return new Player(result.getInt("IDplayer"), new Coordinate(0, 0), GameBalance.DefaultHealthPoints);
             }
         } catch (SQLException e) {
             e.printStackTrace();
@@ -130,8 +142,8 @@ public class DBController extends DatabaseManager{
 
     public static void main(String[] args) {
         DBController db = new DBController();
-        ActionHandler actionHandler = new ActionHandler(1);
-        Player player = new Player(7, new Coordinate(1,1), 100);
-        db.addPlayerToGame(actionHandler, player);
+        ActionHandler ac = db.getGame(3);
+        ac.addNewPlayer(1);
+        System.out.println(ac.getGameID());
     }
 }
