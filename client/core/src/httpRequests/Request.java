@@ -1,5 +1,7 @@
 package httpRequests;
 
+import com.anything.tacticool.model.Grid;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -10,7 +12,7 @@ import java.net.URL;
 import java.nio.charset.StandardCharsets;
 
 public class Request {
-    public Request() throws MalformedURLException {
+    public Request() {
     }
 
     public void getter() throws IOException {
@@ -48,14 +50,29 @@ public class Request {
         con.disconnect();
     }
 
-    // TODO: GET finished simulation
-
-    // TODO: GET board
+    public Grid getGameState(int gid) throws IOException {
+        URL url = new URL(String.format("http://localhost:8080/api/getBoard%d", gid));
+        HttpURLConnection con = (HttpURLConnection) url.openConnection();
+        con.setRequestMethod("GET");
+        BufferedReader in = new BufferedReader(
+                new InputStreamReader(con.getInputStream()));
+        String inputLine;
+        StringBuffer content = new StringBuffer();
+        while((inputLine = in.readLine()) != null) {
+            content.append(inputLine);
+        }
+        in.close();
+        System.out.println(content);
+        con.disconnect();
+        Deserializer dese = new Deserializer();
+        return dese.deserializeTurn(content.toString());
+    }
 
 
     public static void main(String[] args) throws IOException {
         Request request = new Request();
         request.postMoves("{\"actions\":[{\"coordinate\":{\"x\":1,\"y\":0},\"actionType\":\"MOVE\"}]}\n", 1,2);
+        System.out.println(request.getGameState(2));
 
     }
 }
