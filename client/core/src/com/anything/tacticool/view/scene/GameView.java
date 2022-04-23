@@ -1,5 +1,8 @@
 package com.anything.tacticool.view.scene;
 
+import com.anything.tacticool.model.ActionType;
+import com.anything.tacticool.model.InputAction;
+import com.anything.tacticool.model.Player;
 import com.anything.tacticool.view.util.ActionPointSingleton;
 import com.anything.tacticool.view.util.GridElementIterator;
 import com.anything.tacticool.view.util.TextureHandler;
@@ -8,12 +11,18 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.scenes.scene2d.Action;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
+
+import java.net.MalformedURLException;
+import java.util.ArrayList;
+
+import httpRequests.Request;
 
 
 public class GameView extends Scene {
@@ -37,6 +46,10 @@ public class GameView extends Scene {
     private float uiWidth;
     private float uiHeight;
 
+    private Request request;
+    private ArrayList<InputAction> inputs;
+    private ArrayList<Player> players;
+
     public GameView(){
         super();
         textureHandler = new TextureHandler(width, height);
@@ -46,6 +59,15 @@ public class GameView extends Scene {
         font = new BitmapFont();
         uiWidth = Gdx.graphics.getWidth()/3f;
         uiHeight = Gdx.graphics.getHeight()/6f;
+
+        try {
+            request = new Request();
+        }
+        catch (MalformedURLException e){
+            System.out.println(e);
+        }
+
+
     }
 
     @Override
@@ -84,6 +106,8 @@ public class GameView extends Scene {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 //TODO: Submit moves to controller
+                constructActionList();
+                //request.poster(inputs);
             }
         });
 
@@ -95,6 +119,26 @@ public class GameView extends Scene {
     private void drawHUD(SpriteBatch batch){
         batch.draw(apSprite, 0, Gdx.graphics.getHeight()-10);
         font.draw(batch, ""+ap.actionPoint, 10, Gdx.graphics.getHeight()-10);
+    }
+
+    private void constructActionList(){
+        inputs.clear();
+        while (ap.getInputIterator().hasNext()) {
+            InputAction action = new InputAction(ActionType.MOVE, ap.getInputIterator().next().getX(), ap.getInputIterator().next().getY());
+            inputs.add(action);
+        }
+    }
+
+    public void updatePlayers(){
+        //request.getter();
+        //players = deserializer.deserializePlayers();
+    }
+
+    public void updatePlayer(Player player){
+        while (actorIterator.hasNext()){
+            if
+        }
+
     }
 
     @Override

@@ -1,11 +1,11 @@
 package com.anything.tacticool.model;
 
-public class Action {
+public class InputAction {
     private ActionType actionType;
     private int targetX;
     private int targetY;
 
-    public Action(ActionType actionType, int targetX, int targetY) {
+    public InputAction(ActionType actionType, int targetX, int targetY) {
         this.actionType = actionType;
         this.targetX = targetX;
         this.targetY = targetY;
