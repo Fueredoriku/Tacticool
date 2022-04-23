@@ -101,6 +101,11 @@ public class ActionHandler {
         }
         results.add("players", players);
         results.add("actions", gson.fromJson(new DBController().getPerformedActions(this), JsonObject.class));
+        JsonObject board = new JsonObject();
+        board.addProperty("board", grid.toStringMap());
+        board.addProperty("width", grid.getDimensions().getX());
+        board.addProperty("height", grid.getDimensions().getY());
+        results.add("grid", board);
         return results.toString();
     }
 
