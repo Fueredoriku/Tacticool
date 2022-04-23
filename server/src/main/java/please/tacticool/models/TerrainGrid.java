@@ -136,6 +136,10 @@ public class TerrainGrid {
         return moveActor(player.getPosition(), newPosition);
     }
 
+    public Coordinate getDimensions() {
+        return dimensions;
+    }
+
     public String toStringMap() {
         String s = "";
         for (Tile tile : grid) {
