@@ -9,6 +9,7 @@ import com.anything.tacticool.model.Grid;
 import com.anything.tacticool.model.Player;
 import com.google.gson.Gson;
 import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 
 public class Deserializer {
@@ -16,9 +17,11 @@ public class Deserializer {
     public Grid deserializeTurn(String json) {
         Gson gson = new Gson();
         JsonObject obj = gson.fromJson(json, JsonObject.class);
-
+        System.out.println(obj);
         List<Player> players = deserializePlayers(obj.get("players").getAsJsonArray());
-        deserializeActions(obj.get("actions").getAsJsonObject(), players);
+        if (obj.get("actions") != null && !obj.get("actions").equals("null")) {
+            deserializeActions(obj.get("actions").getAsJsonObject(), players);
+        }
         return deserializeGrid(obj.get("grid").getAsJsonObject(), players);
     }
 
@@ -34,7 +37,11 @@ public class Deserializer {
 
     private void deserializeActions(JsonObject actionsJson, List<Player> players) {
         for (Player player : players) {
-            JsonArray actions = actionsJson.get(String.format("%d", player.getPlayerID())).getAsJsonObject().get("actions").getAsJsonArray();
+            JsonElement actions1 = actionsJson.get(String.format("%d", player.getPlayerID()));
+            if (actions1 == null || actions1.equals("null")) {
+                continue;
+            }
+            JsonArray actions = actions1.getAsJsonObject().get("actions").getAsJsonArray();
             for (int i = 0; i < actions.size(); i++) {
                 JsonObject actionJson = actions.get(i).getAsJsonObject();
                 JsonObject coordinate = actionJson.get("coordinate").getAsJsonObject();

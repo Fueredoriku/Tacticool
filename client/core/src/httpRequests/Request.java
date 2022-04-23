@@ -50,7 +50,7 @@ public class Request {
         con.disconnect();
     }
 
-    public Grid getGameState(int gid) throws IOException {
+    public Grid getGameState(long gid) throws IOException {
         URL url = new URL(String.format("http://localhost:8080/api/getBoard%d", gid));
         HttpURLConnection con = (HttpURLConnection) url.openConnection();
         con.setRequestMethod("GET");
@@ -81,9 +81,8 @@ public class Request {
             content.append(inputLine);
         }
         in.close();
-        System.out.println(content);
         con.disconnect();
-        return 1;
+        return Long.parseLong(content.toString());
     }
 
     public static void main(String[] args) throws IOException {
