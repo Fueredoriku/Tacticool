@@ -3,8 +3,14 @@ package please.tacticool.controllers;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import please.tacticool.GameBalance;
+import please.tacticool.models.Actions.Action;
 import please.tacticool.models.Actions.ActionHandler;
+import please.tacticool.models.Actors.Player;
+import please.tacticool.models.Coordinate;
 import please.tacticool.persistance.DBController;
+
+import java.util.UUID;
 
 @RestController
 public class Controller {
@@ -42,6 +48,23 @@ public class Controller {
         return true;
     }
 
+
+    @GetMapping("/api/joinGame/{gameID}/{playerID}")
+    public ResponseEntity<String> joinGame(@PathVariable String gameID, @PathVariable  String playerID) {
+        try {
+            ActionHandler ac = new DBController().getGame(Long.parseLong(gameID));
+            ac.addNewPlayer(Long.parseLong(playerID));
+            System.out.println("GOT HERE MOFO");
+            return new ResponseEntity<>(String.valueOf(ac.getGameID()), HttpStatus.OK);
+        }catch (Exception e){
+            ActionHandler ac = ActionHandler.createGame(UUID.randomUUID().getMostSignificantBits());
+            ac.addNewPlayer(Long.parseLong(playerID));
+            System.out.println("NOPE; WE GOT HERE MILF");
+            return new ResponseEntity<>(String.valueOf(ac.getGameID()), HttpStatus.CREATED);
+        }
+    }
+
+    //TODO: Register player
 
     /**
      * Main request function for taking in moves from players
