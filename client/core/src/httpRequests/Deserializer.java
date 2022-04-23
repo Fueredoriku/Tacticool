@@ -3,7 +3,7 @@ package httpRequests;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.anything.tacticool.model.Action;
+import com.anything.tacticool.model.InputAction;
 import com.anything.tacticool.model.ActionType;
 import com.anything.tacticool.model.Grid;
 import com.anything.tacticool.model.Player;
@@ -38,7 +38,7 @@ public class Deserializer {
             for (int i = 0; i < actions.size(); i++) {
                 JsonObject actionJson = actions.get(i).getAsJsonObject();
                 JsonObject coordinate = actionJson.get("coordinate").getAsJsonObject();
-                Action action = new Action(ActionType.valueOf(actionJson.get("actionType").getAsString()), Integer.parseInt(coordinate.get("x").getAsString()), Integer.parseInt(coordinate.get("y").getAsString()));
+                InputAction action = new InputAction(ActionType.valueOf(actionJson.get("actionType").getAsString()), Integer.parseInt(coordinate.get("x").getAsString()), Integer.parseInt(coordinate.get("y").getAsString()));
                 player.addAction(action);
             }
         }
