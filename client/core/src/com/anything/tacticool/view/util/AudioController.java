@@ -2,16 +2,17 @@ package com.anything.tacticool.view.util;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.audio.Music;
+import com.badlogic.gdx.audio.Sound;
 
 public class AudioController {
 
     private static Music music;
-    private static float musicVolume;
+    private static float musicVolume = 1f;
     private static String current_musicPath;
-    private static String game_musicPath;
+    public static String game_musicPath = SongPathEnum.TENSE.getSongPath();
 
-    private static float soundVolume;
-    private static String soundPath;
+    private static float soundVolume = 1f;
+
 
     //Singleton boilerplate begins
     public static volatile AudioController Singleton;
@@ -20,8 +21,6 @@ public class AudioController {
         if (Singleton != null) {
             throw new RuntimeException("Singleton somehow already created, use SettingChoices.getInstance instead");
         }
-        musicVolume = 1f;
-        soundVolume = 1f;
     }
 
     public static AudioController getInstance() {
@@ -69,5 +68,20 @@ public class AudioController {
      public static void endMusic() {
          music.stop();
          music.dispose();
+     }
+
+     public static Sound prepareSound(SoundPathEnum soundPathEnum) {
+        return Gdx.audio.newSound(Gdx.files.internal(soundPathEnum.getSoundPath()));
+     }
+
+     public static void playSound(Sound sound) {
+        sound.play(soundVolume);
+     }
+
+     public static void endSounds(Sound[] sounds) {
+         for (Sound sound : sounds) {
+             sound.stop();
+             sound.dispose();
+         }
      }
 }

@@ -1,7 +1,7 @@
 package com.anything.tacticool.view.scene;
 
 import com.anything.tacticool.view.util.AudioController;
-import com.anything.tacticool.view.util.SongPathsEnum;
+import com.anything.tacticool.view.util.SongPathEnum;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
@@ -23,6 +23,7 @@ public class Settings extends Scene {
     public void prepareScene() {
         prepareUI();
     }
+
 
     private void prepareUI() {
         this.stage = new Stage(new ScreenViewport());
@@ -64,14 +65,14 @@ public class Settings extends Scene {
         tenseMusic_Button.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                setGameSong(SongPathsEnum.TENSE);
+                setGameSong(SongPathEnum.TENSE);
             }
         });
 
         orchestralMusic_Button.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                setGameSong(SongPathsEnum.ORCHESTRAL);
+                setGameSong(SongPathEnum.ORCHESTRAL);
             }
         });
 
@@ -101,8 +102,8 @@ public class Settings extends Scene {
         }
     }
 
-    private void setGameSong(SongPathsEnum songPathsEnum) {
-        AudioController.setGame_musicPath(songPathsEnum.getSongPath());
+    private void setGameSong(SongPathEnum songPathEnum) {
+        AudioController.setGame_musicPath(songPathEnum.getSongPath());
     }
 
 
