@@ -122,7 +122,7 @@ public class ActionHandler {
             players.add(gson.fromJson(gson.toJson(player), JsonObject.class));
         }
         results.add("players", players);
-        results.add("actions", gson.fromJson(new DBController().getPerformedActions(this), JsonObject.class));
+        results.add("actions", gson.fromJson((new DBController().getPerformedActions(this)).equals("null")  ? "null" : (new DBController().getPerformedActions(this)), JsonObject.class));
         JsonObject board = new JsonObject();
         board.addProperty("board", grid.toStringMap());
         board.addProperty("width", grid.getDimensions().getX());

@@ -21,6 +21,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 
+import java.io.IOException;
 import java.net.MalformedURLException;
 import java.util.ArrayList;
 
@@ -52,13 +53,15 @@ public class GameView extends Scene {
     private ArrayList<InputAction> inputs;
     private ArrayList<Player> players;
     private Grid grid;
+    private long gameID = 2;
 
     public GameView(){
         super();
-        try {
-            request = new Request();
+        request = new Request();
+        try{
+            grid = request.getGameState(gameID);
         }
-        catch (MalformedURLException e){
+        catch (IOException e){
             System.out.println(e);
         }
 
@@ -68,7 +71,7 @@ public class GameView extends Scene {
         tileIterator = new GridElementIterator();
         skin = new Skin(Gdx.files.internal("ui/uiskin.json"));
         skin.getFont("default-font").getData().setScale(3f);
-        grid = new Grid("1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1",5,5);
+        //grid = new Grid("1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1",5,5);
 
 
         constructBoard(grid.getWidth(), grid.getHeigth());
@@ -80,7 +83,7 @@ public class GameView extends Scene {
         uiWidth = Gdx.graphics.getWidth()/3f;
         uiHeight = Gdx.graphics.getHeight()/6f;
 
-        prepareStage();
+        prepareScene();
 
 
     }

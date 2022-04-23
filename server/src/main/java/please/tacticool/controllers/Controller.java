@@ -35,7 +35,7 @@ public class Controller {
         // Initalize gameController as object with input gameId
         // Ask if gameController has changed
         // Return a map and moves that both players have made this turn
-        ActionHandler ah = new DBController().getGame(Integer.parseInt(gameId));
+        ActionHandler ah = new DBController().getGame(Long.parseLong(gameId));
 
         return new ResponseEntity<>(ah.getGameState(), HttpStatus.OK);
     }
