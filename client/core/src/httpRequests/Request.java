@@ -48,6 +48,10 @@ public class Request {
         con.disconnect();
     }
 
+    // TODO: GET finished simulation
+
+    // TODO: GET board
+
 
     public static void main(String[] args) throws IOException {
         Request request = new Request();
