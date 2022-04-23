@@ -15,6 +15,10 @@ import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.ScreenUtils;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 
+import java.io.IOException;
+
+import httpRequests.Request;
+
 
 enum MenuState {
     MAIN,
@@ -28,7 +32,8 @@ public class MainView extends Scene {
     private Skin skin;
     private MenuState menuState;
 
-    private String gameID;
+    private long gameID;
+    private long playerID = 1;
 
     private ActorFactory actorFactory;
 
@@ -55,7 +60,7 @@ public class MainView extends Scene {
             case MAIN:
                 stage.draw();
                 checkState();
-                this.gameID = ((TextField) stage.getActors().get(0)).getText();
+                this.gameID = Long.parseLong( ((TextField) stage.getActors().get(0)).getText() );
                 break;
 
             case QEUED:
@@ -97,11 +102,18 @@ public class MainView extends Scene {
         if (!(stage.getActors().get(0) instanceof TextField)) {
             throw new IllegalStateException("Expected TextField at index 0 in Actors, instead of " + stage.getActors().get(0).getName());
         }
+        try {
+            Long.parseLong(((TextField) stage.getActors().get(0)).getText());
+        } catch (NumberFormatException e) {
+            throw new IllegalStateException("Textfield couldn't be cast to a long. It should only contain numbers.");
+        }
     }
 
 
     //Method for joining game
-    private void joinGame() {
+    private void joinGame() throws IOException {
+        Request request = new Request();
+        request.joinGame(gameID, playerID);
         this.menuState = menuState.QEUED;
     }
 
@@ -111,7 +123,7 @@ public class MainView extends Scene {
     }
 
 
-    // Two methods used by constructor
+    // Methods used by constructor
     private void prepareVariables() {
         this.menuState = MenuState.MAIN;
         this.stage = new Stage(new ScreenViewport());
@@ -132,9 +144,10 @@ public class MainView extends Scene {
         float ui_yScale = screenHeight/5f;
 
         // Instantiates UI elements using the ActorFactory
-        TextField gameID_Input = (TextField) actorFactory.actor(
-                new TextField("GameID", skin),
-                uiWidth, uiHeight, ui_xPosition, ui_yScale * 4
+        TextField gameID_Input = actorFactory.textField(
+                new TextField("", skin),
+                uiWidth, uiHeight, ui_xPosition, ui_yScale * 4,
+                new TextField.TextFieldFilter.DigitsOnlyFilter()
         );
 
         TextButton joinGame_Button = actorFactory.textButton(
@@ -143,7 +156,11 @@ public class MainView extends Scene {
                 new ClickListener() {
                     @Override
                     public void clicked(InputEvent event, float x, float y) {
-                        joinGame();
+                        try {
+                            joinGame();
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
                     }
                 }
         );

@@ -5,6 +5,7 @@ import com.badlogic.gdx.scenes.scene2d.EventListener;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Slider;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
+import com.badlogic.gdx.scenes.scene2d.ui.TextField;
 
 public class ActorFactory {
 
@@ -26,6 +27,13 @@ public class ActorFactory {
         slider.setPosition(x, y);
         slider.setValue(value*slider.getMaxValue());
         return slider;
+    }
+
+    public TextField textField(TextField textField, float width, float height, float x, float y, TextField.TextFieldFilter textFieldFilter) {
+        textField.setSize(width, height);
+        textField.setPosition(x, y);
+        textField.setTextFieldFilter(textFieldFilter);
+        return textField;
     }
 
 
