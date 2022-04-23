@@ -1,8 +1,5 @@
 package please.tacticool.models.Actions;
 
-import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
 import java.util.*;
 
 import com.google.gson.Gson;
@@ -84,9 +81,9 @@ public class ActionHandler {
     }
     
     public void performActions() {
-        Map<Integer, String> result = new HashMap<>();
+        Map<Integer, JsonObject> result = new HashMap<>();
         for (Player player : playerActions.keySet()) {
-            result.put(player.getPlayerID(), new Gson().toJson(playerActions.get(player).perform(player, grid)));
+            result.put(player.getPlayerID(), new Gson().fromJson(new Gson().toJson(playerActions.get(player).perform(player, grid)), JsonObject.class));
         }
         new DBController().updateGameState(this, new Gson().toJson(result));
     }
@@ -100,11 +97,10 @@ public class ActionHandler {
         JsonObject results = new JsonObject();
         JsonArray players = new JsonArray();
         for (Player player : playerActions.keySet()){
-            players.add(gson.toJson(player));
+            players.add(gson.fromJson(gson.toJson(player), JsonObject.class));
         }
         results.add("players", players);
-        results.addProperty("actions", new DBController().getPerformedActions(this));
-
+        results.add("actions", gson.fromJson(new DBController().getPerformedActions(this), JsonObject.class));
         return results.toString();
     }
 
@@ -126,11 +122,11 @@ public class ActionHandler {
         ActionHandler handler = dbController.getGame(2);
         Player me = handler.getPlayerById(7);
         Actions a = new Actions();
-        a.addAction(new Move(new Coordinate(-1, 0)));
+        a.addAction(new Move(new Coordinate(1, 0)));
         handler.addActions(me, a, true);
 
         handler.simulate();
-
+        System.out.println(handler.toString());
 
         System.out.println(handler.getGameState());
     }
