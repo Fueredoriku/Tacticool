@@ -40,8 +40,11 @@ public class SceneManager {
 
     //Stack handling functions
     public void Push(Scene scene){
+        if (!scenes.isEmpty()) {
+           scenes.peek().disposeEarly();
+        }
         scenes.push(scene);
-        scenes.peek().prepareStage();
+        scenes.peek().prepareScene();
     }
 
     public Scene Pop(){
@@ -50,7 +53,7 @@ public class SceneManager {
         }
         Scene poppedScene = scenes.pop();
         if (!scenes.isEmpty()) {
-            scenes.peek().prepareStage();
+            scenes.peek().prepareScene();
         }
         return poppedScene;
     }
