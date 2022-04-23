@@ -1,7 +1,9 @@
 package com.anything.tacticool.view.scene;
 
 
+import com.anything.tacticool.view.util.ActorFactory;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
@@ -26,6 +28,8 @@ public class MainView extends Scene {
     private MenuState menuState;
 
     private String gameID;
+
+    private ActorFactory actorFactory;
 
 
     @Override
@@ -106,6 +110,7 @@ public class MainView extends Scene {
         // Upscales font
         skin.getFont("default-font").getData().setScale(3f);
     }
+    
     private void prepareUI() {
         float screenWidth = Gdx.graphics.getWidth();
         float screenHeight = Gdx.graphics.getHeight();
@@ -113,40 +118,35 @@ public class MainView extends Scene {
         float uiHeight = screenHeight/6f;
         float ui_xPosition = screenWidth/2 - uiWidth/2;
 
-        // Instantiates UI elements
-        TextField gameID_Input = new TextField("Game ID", skin);
-        TextButton joinGame_Button = new TextButton("Join Game", skin);
-        TextButton settings_Button = new TextButton("Settings", skin);
+        // Instantiates UI elements using the ActorFactory
+        TextField gameID_Input = (TextField) actorFactory.actor(
+                new TextField("GameID", skin),
+                uiWidth, uiHeight, ui_xPosition, screenHeight * 4/5
+        );
 
-        // Sets locations of UI elements
-        gameID_Input.setPosition(ui_xPosition, screenHeight * 4/5);
-        joinGame_Button.setPosition(ui_xPosition, screenHeight * 3/5);
-        settings_Button.setPosition(ui_xPosition, screenHeight * 2/5);
+        TextButton joinGame_Button = actorFactory.textButton(
+                new TextButton("Join Game", skin),
+                uiWidth, uiHeight, ui_xPosition, screenHeight * 3/5,
+                new ClickListener() {
+                    @Override
+                    public void clicked(InputEvent event, float x, float y) {
+                        joinGame();
+                    }
+                }
+        );
 
-        // Sets size of all UI elements
-        gameID_Input.setSize(uiWidth, uiHeight);
-        joinGame_Button.setSize(uiWidth, uiHeight);
-        settings_Button.setSize(uiWidth, uiHeight);
+        TextButton settings_Button = actorFactory.textButton(
+                new TextButton("Settings", skin),
+                uiWidth, uiHeight, ui_xPosition, screenHeight * 3/5,
+                new ClickListener() {
+                    @Override
+                    public void clicked(InputEvent event, float x, float y) {
+                        openSettings();
+                    }
+                }
+        );
 
-        // Defines listeners for when the join game and settings buttons are pressed
-        joinGame_Button.addListener(new ClickListener() {
-            @Override
-            public void clicked(InputEvent event, float x, float y) {
-                joinGame();
-            }
-        });
-
-        settings_Button.addListener(new ClickListener() {
-            @Override
-            public void clicked(InputEvent event, float x, float y) {
-                openSettings();
-            }
-        });
-
-        // Adds UI elements to stage
-        stage.addActor(gameID_Input);
-        stage.addActor(joinGame_Button);
-        stage.addActor(settings_Button);
+        actorFactory.stageActors(stage, new Actor[] {gameID_Input, joinGame_Button, settings_Button});
 
         // Allows UI elements to take inputs
         Gdx.input.setInputProcessor(stage);
