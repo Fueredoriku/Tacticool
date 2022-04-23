@@ -80,6 +80,6 @@ project(":core") {
     dependencies {
         api "com.badlogicgames.gdx:gdx:$gdxVersion"
         api "com.badlogicgames.gdx:gdx-box2d:$gdxVersion"
-        
+        implementation group: 'com.google.code.gson', name: 'gson', version: '2.9.0'
     }
 }
