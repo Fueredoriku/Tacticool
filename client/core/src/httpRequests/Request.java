@@ -38,6 +38,7 @@ public class Request {
         con.setRequestMethod("POST");
         con.setFixedLengthStreamingMode(length);
         con.setRequestProperty("Content-Type", "application/json; charset=UTF-8");
+        con.setDoOutput(true);
         con.connect();
 
         try(OutputStream os = con.getOutputStream()) {
@@ -50,6 +51,7 @@ public class Request {
 
     public static void main(String[] args) throws IOException {
         Request request = new Request();
-        request.getter();
+        request.postMoves("{\"actions\":[{\"coordinate\":{\"x\":1,\"y\":0},\"actionType\":\"MOVE\"}]}\n", 1,2);
+
     }
 }
