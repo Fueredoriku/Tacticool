@@ -3,6 +3,7 @@ package com.anything.tacticool.view.util;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.EventListener;
 import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.ui.Slider;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 
 public class ActorFactory {
@@ -18,6 +19,13 @@ public class ActorFactory {
         actor.setSize(width, height);
         actor.setPosition(x, y);
         return actor;
+    }
+
+    public Slider slider(Slider slider, float width, float height, float x, float y, float value) {
+        slider.setSize(width, height);
+        slider.setPosition(x, y);
+        slider.setValue(value*slider.getMaxValue());
+        return slider;
     }
 
 
