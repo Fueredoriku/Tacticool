@@ -6,7 +6,7 @@ import java.util.List;
 public class Player {
     private int playerID;
     private int healthPoint;
-    private List<Action> actions;
+    private List<InputAction> actions;
 
     public Player(int playerID, int healthPoint) {
         this.playerID = playerID;
@@ -22,11 +22,11 @@ public class Player {
         return healthPoint;
     }
     
-    public void addAction(Action action) {
+    public void addAction(InputAction action) {
         actions.add(action);
     }
 
-    public List<Action> getActions() {
+    public List<InputAction> getActions() {
         return actions;
     }
 

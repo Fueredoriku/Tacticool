@@ -1,7 +1,13 @@
 package com.anything.tacticool.view.scene;
 
+import com.anything.tacticool.model.ActionType;
+import com.anything.tacticool.model.Grid;
+import com.anything.tacticool.model.InputAction;
+import com.anything.tacticool.model.Player;
 import com.anything.tacticool.view.util.ActionPointSingleton;
 import com.anything.tacticool.view.util.GridElementIterator;
+import com.anything.tacticool.view.util.SpriteConnector;
+import com.anything.tacticool.view.util.SpriteConnectorEnum;
 import com.anything.tacticool.view.util.TextureHandler;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
@@ -14,6 +20,11 @@ import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
+
+import java.net.MalformedURLException;
+import java.util.ArrayList;
+
+import httpRequests.Request;
 
 
 public class GameView extends Scene {
@@ -37,15 +48,47 @@ public class GameView extends Scene {
     private float uiWidth;
     private float uiHeight;
 
+    private Request request;
+    private ArrayList<InputAction> inputs;
+    private ArrayList<Player> players;
+    private Grid grid;
+
     public GameView(){
         super();
-        textureHandler = new TextureHandler(width, height);
+        try {
+            request = new Request();
+        }
+        catch (MalformedURLException e){
+            System.out.println(e);
+        }
+
+        //grid = request.getter().grid();
+
+        //temporary for test
+        tileIterator = new GridElementIterator();
+        skin = new Skin(Gdx.files.internal("ui/uiskin.json"));
+        skin.getFont("default-font").getData().setScale(3f);
+        grid = new Grid("1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1",5,5);
+
+
+        constructBoard(grid.getWidth(), grid.getHeigth());
+        textureHandler = new TextureHandler(grid.getWidth(), grid.getHeigth());
         ap = ActionPointSingleton.getInstance();
         apHUD = new Texture("aphud.png");
         apSprite = new Sprite(apHUD);
         font = new BitmapFont();
         uiWidth = Gdx.graphics.getWidth()/3f;
         uiHeight = Gdx.graphics.getHeight()/6f;
+
+        prepareStage();
+
+
+    }
+
+    public void constructBoard(int width, int height){
+        for (int i = 0; i < grid.getBoard().length; i++){
+            tileIterator.add(new SpriteConnector(SpriteConnectorEnum.GRASS, SpriteConnectorEnum.HIGHLIGHTTILE, i%width,(int)Math.floor(i/width)));
+        }
     }
 
     @Override
@@ -66,7 +109,6 @@ public class GameView extends Scene {
 
     private void buildButtons(){
 
-        skin.getFont("default-font").getData().setScale(3f);
         resetButton = new TextButton("Reset Moves", skin);
         submitButton = new TextButton("Submit Moves", skin);
         resetButton.setSize(uiWidth, uiHeight);
@@ -84,6 +126,8 @@ public class GameView extends Scene {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 //TODO: Submit moves to controller
+                constructActionList();
+                //request.poster(inputs);
             }
         });
 
@@ -97,10 +141,30 @@ public class GameView extends Scene {
         font.draw(batch, ""+ap.actionPoint, 10, Gdx.graphics.getHeight()-10);
     }
 
+    private void constructActionList(){
+        inputs.clear();
+        while (ap.getInputIterator().hasNext()) {
+            InputAction action = new InputAction(ActionType.MOVE, ap.getInputIterator().next().getX(), ap.getInputIterator().next().getY());
+            inputs.add(action);
+        }
+    }
+
+    public void updatePlayers(){
+        //request.getter();
+        //players = deserializer.deserializePlayers();
+    }
+
+    public void updatePlayer(Player player){
+        while (actorIterator.hasNext()){
+
+        }
+
+    }
+
     @Override
     public void onRender(SpriteBatch batch){
         textureHandler.createBatch(tileIterator, batch);
-        textureHandler.createBatch(actorIterator, batch);
+        //textureHandler.createBatch(actorIterator, batch);
         textureHandler.createBatch(ap.getInputIterator(), batch);
         drawHUD(batch);
     }
