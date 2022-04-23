@@ -20,7 +20,7 @@ public class GridElementIterator implements Iterator{
 
     @Override
     public boolean hasNext() {
-        if (index < spriteConnectors.size()) {
+        if (index < spriteConnectors.size()-1) {
             return true;
         }
         return false;

@@ -1,17 +1,19 @@
 package com.anything.tacticool.view.scene;
 
 import com.anything.tacticool.model.ActionType;
+import com.anything.tacticool.model.Grid;
 import com.anything.tacticool.model.InputAction;
 import com.anything.tacticool.model.Player;
 import com.anything.tacticool.view.util.ActionPointSingleton;
 import com.anything.tacticool.view.util.GridElementIterator;
+import com.anything.tacticool.view.util.SpriteConnector;
+import com.anything.tacticool.view.util.SpriteConnectorEnum;
 import com.anything.tacticool.view.util.TextureHandler;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.scenes.scene2d.Action;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
@@ -49,17 +51,10 @@ public class GameView extends Scene {
     private Request request;
     private ArrayList<InputAction> inputs;
     private ArrayList<Player> players;
+    private Grid grid;
 
     public GameView(){
         super();
-        textureHandler = new TextureHandler(width, height);
-        ap = ActionPointSingleton.getInstance();
-        apHUD = new Texture("aphud.png");
-        apSprite = new Sprite(apHUD);
-        font = new BitmapFont();
-        uiWidth = Gdx.graphics.getWidth()/3f;
-        uiHeight = Gdx.graphics.getHeight()/6f;
-
         try {
             request = new Request();
         }
@@ -67,7 +62,33 @@ public class GameView extends Scene {
             System.out.println(e);
         }
 
+        //grid = request.getter().grid();
 
+        //temporary for test
+        tileIterator = new GridElementIterator();
+        skin = new Skin(Gdx.files.internal("ui/uiskin.json"));
+        skin.getFont("default-font").getData().setScale(3f);
+        grid = new Grid("1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1",5,5);
+
+
+        constructBoard(grid.getWidth(), grid.getHeigth());
+        textureHandler = new TextureHandler(grid.getWidth(), grid.getHeigth());
+        ap = ActionPointSingleton.getInstance();
+        apHUD = new Texture("aphud.png");
+        apSprite = new Sprite(apHUD);
+        font = new BitmapFont();
+        uiWidth = Gdx.graphics.getWidth()/3f;
+        uiHeight = Gdx.graphics.getHeight()/6f;
+
+        prepareStage();
+
+
+    }
+
+    public void constructBoard(int width, int height){
+        for (int i = 0; i < grid.getBoard().length; i++){
+            tileIterator.add(new SpriteConnector(SpriteConnectorEnum.GRASS, SpriteConnectorEnum.HIGHLIGHTTILE, i%width,(int)Math.floor(i/width)));
+        }
     }
 
     @Override
@@ -88,7 +109,6 @@ public class GameView extends Scene {
 
     private void buildButtons(){
 
-        skin.getFont("default-font").getData().setScale(3f);
         resetButton = new TextButton("Reset Moves", skin);
         submitButton = new TextButton("Submit Moves", skin);
         resetButton.setSize(uiWidth, uiHeight);
@@ -136,7 +156,7 @@ public class GameView extends Scene {
 
     public void updatePlayer(Player player){
         while (actorIterator.hasNext()){
-            if
+
         }
 
     }
@@ -144,7 +164,7 @@ public class GameView extends Scene {
     @Override
     public void onRender(SpriteBatch batch){
         textureHandler.createBatch(tileIterator, batch);
-        textureHandler.createBatch(actorIterator, batch);
+        //textureHandler.createBatch(actorIterator, batch);
         textureHandler.createBatch(ap.getInputIterator(), batch);
         drawHUD(batch);
     }
