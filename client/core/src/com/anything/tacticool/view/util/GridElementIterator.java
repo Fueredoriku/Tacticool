@@ -1,21 +1,26 @@
 package com.anything.tacticool.view.util;
 
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
 
 public class GridElementIterator implements Iterator{
 
-    private SpriteConnector[] spriteConnectors;
+    private ArrayList<SpriteConnector> spriteConnectors;
     private int index;
 
     public GridElementIterator(String[] args) {
         //TODO implement constructor
     }
 
+    public GridElementIterator() {
+        spriteConnectors = new ArrayList<>();
+        index = 0;
+    }
 
     @Override
     public boolean hasNext() {
-        if (index < spriteConnectors.length) {
+        if (index < spriteConnectors.size()) {
             return true;
         }
         return false;
@@ -27,16 +32,28 @@ public class GridElementIterator implements Iterator{
             throw new NoSuchElementException("Iteration already over, can't call next()");
         }
         index ++;
-        return spriteConnectors[index];
+        return spriteConnectors.get(index);
+    }
+
+    public void add(SpriteConnector sprite){
+        spriteConnectors.add(sprite);
     }
 
     @Override
     public void remove() {
-        // This needs to be overridden to avoid compilation errors, but we don't use it, so we don't need to define behaviour
+        spriteConnectors.remove(index);
+    }
+
+    public void removeLast(){
+        spriteConnectors.remove(spriteConnectors.size());
     }
 
     public void reset() {
         this.index = 0;
+    }
+
+    public void clear(){
+        spriteConnectors.clear();
     }
 
 }

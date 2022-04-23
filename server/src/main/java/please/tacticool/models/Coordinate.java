@@ -17,12 +17,25 @@ public class Coordinate {
         this.y = coordinate.y;
     }
 
+    public Coordinate(String coorString) {
+        String[] coordinates = coorString.split(",");
+        if (coordinates.length != 2) {
+            throw new IllegalArgumentException("Only 2d coords accepted.");
+        }
+        this.x = Integer.parseInt(coordinates[0]);
+        this.y = Integer.parseInt(coordinates[1]);
+    }
+
     public Coordinate add(Coordinate that){
         return new Coordinate(this.x + that.x, this.y + that.y);
     }
 
     public int distance(Coordinate coordinate) {
         return Math.abs(coordinate.getX() - this.getX()) + Math.abs(coordinate.getY() - this.getY());
+    }
+
+    public Coordinate scale(int scale) {
+        return new Coordinate(this.x * scale, this.y * scale);
     }
 
     public int getX(){
@@ -34,6 +47,6 @@ public class Coordinate {
 
     @Override
     public String toString() {
-        return String.format("[%s, %s]", this.x, this.y);
+        return String.format("%s,%s", this.x, this.y);
     }
 }

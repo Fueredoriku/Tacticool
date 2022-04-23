@@ -16,6 +16,10 @@ public class Tile { //Might extend / implement texture handler in the future
         terrain = Terrain.GRASS;
     }
 
+    public Tile(Terrain terrain) {
+        this.terrain = terrain;
+    }
+
     /**
      * Constructor for an occupied Tile with custom move cost.
      * 
