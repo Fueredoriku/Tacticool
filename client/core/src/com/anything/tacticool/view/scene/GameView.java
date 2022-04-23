@@ -57,21 +57,19 @@ public class GameView extends Scene {
 
     public GameView(){
         super();
-        request = new Request();
+        request = new Request();/*
         try{
             grid = request.getGameState(gameID);
         }
         catch (IOException e){
             System.out.println(e);
-        }
-
-        //grid = request.getter().grid();
+        }*/
 
         //temporary for test
         tileIterator = new GridElementIterator();
         skin = new Skin(Gdx.files.internal("ui/uiskin.json"));
         skin.getFont("default-font").getData().setScale(3f);
-        //grid = new Grid("1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1",5,5);
+        grid = new Grid("1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1",5,5);
 
 
         constructBoard(grid.getWidth(), grid.getHeigth());

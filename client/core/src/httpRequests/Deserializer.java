@@ -29,7 +29,12 @@ public class Deserializer {
         List<Player> players = new ArrayList<>();
         for (int i = 0; i < playersJson.size(); i++) {
             JsonObject playerJson = playersJson.get(i).getAsJsonObject();
-            Player player = new Player(Integer.parseInt(playerJson.get("playerID").getAsString()), Integer.parseInt(playerJson.get("healthPoint").getAsString()));
+            JsonObject position = playerJson.get("position").getAsJsonObject();
+            Player player = new Player(
+                    Integer.parseInt(playerJson.get("playerID").getAsString()),
+                    Integer.parseInt(playerJson.get("healthPoint").getAsString()),
+                    Integer.parseInt(position.get("x").getAsString()),
+                    Integer.parseInt(position.get("y").getAsString()));
             players.add(player);
         }
         return players;

@@ -7,10 +7,14 @@ public class Player {
     private int playerID;
     private int healthPoint;
     private List<InputAction> actions;
+    private int posX;
+    private int posY;
 
-    public Player(int playerID, int healthPoint) {
+    public Player(int playerID, int healthPoint, int posX, int posY) {
         this.playerID = playerID;
         this.healthPoint = healthPoint;
+        this.posX = posX;
+        this.posY = posY;
         this.actions = new ArrayList<>();
     }
 
