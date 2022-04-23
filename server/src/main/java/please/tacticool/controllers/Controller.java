@@ -10,7 +10,10 @@ import please.tacticool.models.Actors.Player;
 import please.tacticool.models.Coordinate;
 import please.tacticool.persistance.DBController;
 
+import java.util.Locale;
 import java.util.UUID;
+
+import static please.tacticool.persistance.DBController.registerPlayer;
 
 @RestController
 public class Controller {
@@ -18,6 +21,15 @@ public class Controller {
     @GetMapping("/")
     public String index() {
         return "Hello World from spring boot!";
+    }
+
+    @GetMapping("/api/registerPlayer/{name}/{password}")
+    public ResponseEntity<Integer> getPlayerId(@PathVariable String name,@PathVariable String password){
+        int id = DBController.getPlayerByLogin(name.toLowerCase(),password.toLowerCase());
+        if (id < 0 ) {
+            return new ResponseEntity<>(registerPlayer(name.toLowerCase(), password.toLowerCase()), HttpStatus.CREATED);
+        }
+        return new ResponseEntity<>(id,HttpStatus.OK);
     }
 
     /**

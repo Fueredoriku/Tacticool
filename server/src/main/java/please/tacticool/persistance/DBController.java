@@ -1,5 +1,6 @@
 package please.tacticool.persistance;
 
+import com.google.gson.Gson;
 import please.tacticool.GameBalance;
 import please.tacticool.models.Actions.ActionHandler;
 import please.tacticool.models.Actors.Player;
@@ -9,13 +10,10 @@ import please.tacticool.models.TerrainGrid;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.util.Locale;
-
-import com.google.gson.Gson;
 
 public class DBController extends DatabaseManager{
     
-    public int registerPlayer(String name, String pass){
+    public static int registerPlayer(String name, String pass){
         try (Statement stmt = getConn().createStatement()){
             String sql = String.format("INSERT INTO miburgos_tacticool.Player(name,password) VALUES ('%s', '%s');", name.toLowerCase(), pass.toLowerCase());
             stmt.execute(sql);
@@ -28,6 +26,17 @@ public class DBController extends DatabaseManager{
             e.printStackTrace();
         }
         return -1;
+    }
+
+    public static int getPlayerByLogin(String name, String pass){
+        try (Statement stmt = getConn().createStatement()){
+            String sql = String.format("SELECT IDplayer FROM miburgos_tacticool.Player WHERE name='%s' AND password='%s'", name.toLowerCase(), pass.toLowerCase());
+            ResultSet rs = stmt.executeQuery(sql);
+            rs.next();
+            return rs.getInt(1);
+        } catch (Exception e) {
+            return -1;
+        }
     }
 
     public int createGame(String map, boolean ready, int width, int height) {
