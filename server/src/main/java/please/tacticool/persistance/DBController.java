@@ -9,6 +9,8 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 
+import com.google.gson.Gson;
+
 public class DBController extends DatabaseManager{
     
     public void registerPlayer(int IDp, String name, String pass){
@@ -22,7 +24,7 @@ public class DBController extends DatabaseManager{
 
     public void createGame(int id, String map, boolean ready, int width, int height) {
         try (Statement stmt = getConn().createStatement()){
-            String sql = String.format("INSERT INTO GameTable VALUES (%d, '%s', '%s', '%s', '%s');", id, map, ready, width, height);
+            String sql = String.format("INSERT INTO GameTable VALUES (%d, '%s', '%s', %d, %d, '%s');", id, map, ready, width, height, null);
             stmt.execute(sql);
         } catch (SQLException e) {
             e.printStackTrace();
@@ -52,7 +54,7 @@ public class DBController extends DatabaseManager{
             while (result.next()) {
                 Player currentPlayer = new Player(result.getInt("IDplayer"), new Coordinate(result.getString("coord")), result.getInt("hp"));
                 controller.addPlayer(currentPlayer);
-                controller.addActions(currentPlayer, result.getString("moves"));
+                controller.addActions(currentPlayer, result.getString("moves"), false);
             }
         } catch (SQLException e) {
             e.printStackTrace();
@@ -90,7 +92,7 @@ public class DBController extends DatabaseManager{
 
      public void addMovesToPlayerInGame(ActionHandler handler, Player player) {
          try (Statement stmt = getConn().createStatement()){
-             String sql = String.format("UPDATE miburgos_tacticool.GameToPlayer SET ready = %b, moves = '%s' WHERE IDgame = %d AND IDplayer = %d", true, handler.getPlayerActions(player), handler.getGameID(), player.getPlayerID());
+             String sql = String.format("UPDATE miburgos_tacticool.GameToPlayer SET ready = %b, moves = '%s' WHERE IDgame = %d AND IDplayer = %d", true, new Gson().toJson(handler.getPlayerActions(player)), handler.getGameID(), player.getPlayerID());
              stmt.execute(sql);
          } catch (SQLException e) {
              e.printStackTrace();

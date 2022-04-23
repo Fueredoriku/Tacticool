@@ -13,10 +13,14 @@ public class Move extends Action {
 
     @Override
     public Action perform(Player player, TerrainGrid grid) {
-        if (grid.isEmptyTile(getCoordinate()) && getCoordinate().distance(player.getPosition()) == 1 && player.getActionPoints() >= GameBalance.MoveActionCost && !player.isDead()) {
-            grid.moveActor(player, getCoordinate());
+        Coordinate target = player.getPosition().add(getCoordinate());
+        if (player.getActionPoints() >= GameBalance.MoveActionCost) {
             player.useActionPoints(GameBalance.MoveActionCost);
-            return new Move(getCoordinate());
+        }
+        if (grid.isValidCoordinate(target) && grid.isEmptyTile(target) && target.distance(player.getPosition()) == 1 && !player.isDead()) {
+            grid.moveActor(player, target);
+            player.setPosition(target);
+            return new Move(target);
         }
         return null;
     }
