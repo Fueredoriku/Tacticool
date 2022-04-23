@@ -16,4 +16,10 @@ public record GameBalance() {
 
     //Player
     public static final int MaxActionPoints = 10;
+    public static final int DefaultHealthPoints = 100;
+
+    //Grid
+    public static final int DefaultWidth = 10;
+    public static final int DefaultHeigth = 10;
+
 }

@@ -57,6 +57,6 @@ public class Tile { //Might extend / implement texture handler in the future
 
     @Override
     public String toString() {
-        return actor == null ? "-" : (actor instanceof Player ? Integer.toString(((Player) actor).getPlayerID()) : "A");
+        return actor == null ? "-" : (actor instanceof Player ? Long.toString(((Player) actor).getPlayerID()) : "A");
     }
 }

@@ -7,6 +7,8 @@ import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 
+import org.springframework.http.HttpStatus;
+import please.tacticool.GameBalance;
 import please.tacticool.models.Coordinate;
 import please.tacticool.models.TerrainGrid;
 import please.tacticool.models.Actors.Player;
@@ -17,9 +19,15 @@ public class ActionHandler {
     
     private Map<Player, Actions> playerActions;
     private TerrainGrid grid;
-    private int gameID;
-    
+    private long gameID;
+
+    @Deprecated
     public ActionHandler(int gameID) {
+        this.gameID = gameID;
+        playerActions = new HashMap<>();
+    }
+
+    public ActionHandler(long gameID) {
         this.gameID = gameID;
         playerActions = new HashMap<>();
     }
@@ -33,6 +41,20 @@ public class ActionHandler {
         playerActions.put(player, new Actions());
         if (!player.isDead()) { //TODO: OK way of handling dead players?
             grid.setActor(player.getPosition(), player);
+        }
+    }
+
+    public void addNewPlayer(long playerID) {
+        DBController controller = new DBController();
+        Player player = controller.getPlayerById(playerID);
+        findFreePosition(player);
+        controller.addPlayerToGame(this, player);
+        addPlayer(player);
+    }
+
+    private void findFreePosition(Player player) {
+        if (grid.getActor(player.getPosition()) != null) {
+            grid.moveActor(player, player.getPosition().add(new Coordinate(1, 0)));
         }
     }
 
@@ -81,14 +103,14 @@ public class ActionHandler {
     }
     
     public void performActions() {
-        Map<Integer, JsonObject> result = new HashMap<>();
+        Map<Long, JsonObject> result = new HashMap<>();
         for (Player player : playerActions.keySet()) {
             result.put(player.getPlayerID(), new Gson().fromJson(new Gson().toJson(playerActions.get(player).perform(player, grid)), JsonObject.class));
         }
         new DBController().updateGameState(this, new Gson().toJson(result));
     }
 
-    public int getGameID() {
+    public long getGameID() {
         return this.gameID;
     }
 
@@ -108,6 +130,15 @@ public class ActionHandler {
         results.add("grid", board);
         return results.toString();
     }
+
+    public static ActionHandler createGame(long gameID) {
+        ActionHandler handler = new ActionHandler(gameID);
+        TerrainGrid grid = new TerrainGrid(GameBalance.DefaultWidth, GameBalance.DefaultHeigth);
+        handler.setGrid(grid);
+        new DBController().createGame(handler.getGameID(), grid.toStringMap(), false, grid.getDimensions().getX(), grid.getDimensions().getY());
+        return handler;
+    }
+
 
     @Override
     public String toString() {

@@ -8,7 +8,7 @@ public class Player extends Actor {
     // Characters health
     private int healthPoint;
     // Unique ID of the player to whom the character belongs
-    private final int playerID;
+    private final long playerID;
     private int actionPoints = GameBalance.MaxActionPoints;
 
     /**
@@ -17,7 +17,7 @@ public class Player extends Actor {
      * @param position : initial position of the character.
      * @param healthPoint : initial life points of the character.
      */
-    public Player(int playerID, Coordinate position, int healthPoint){
+    public Player(long playerID, Coordinate position, int healthPoint){
         super(position);
         this.playerID = playerID;
         // TODO: Check this
@@ -31,7 +31,7 @@ public class Player extends Actor {
         return healthPoint;
     }
 
-    public int getPlayerID(){
+    public long getPlayerID(){
         return playerID;
     }
 

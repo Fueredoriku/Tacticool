@@ -1,5 +1,6 @@
 package please.tacticool.persistance;
 
+import please.tacticool.GameBalance;
 import please.tacticool.models.Actions.ActionHandler;
 import please.tacticool.models.Actors.Player;
 import please.tacticool.models.Coordinate;
@@ -22,7 +23,7 @@ public class DBController extends DatabaseManager{
         }
     }
 
-    public void createGame(int id, String map, boolean ready, int width, int height) {
+    public void createGame(long id, String map, boolean ready, int width, int height) {
         try (Statement stmt = getConn().createStatement()){
             String sql = String.format("INSERT INTO GameTable VALUES (%d, '%s', '%s', %d, %d, '%s');", id, map, ready, width, height, null);
             stmt.execute(sql);
@@ -40,7 +41,7 @@ public class DBController extends DatabaseManager{
         }
     }
 
-    public ActionHandler getGame(int gameID) {
+    public ActionHandler getGame(long gameID) {
         ActionHandler controller = null;
         try (Statement stmt = getConn().createStatement()){
             String sql = String.format("SELECT * FROM GameTable WHERE IDgame = '%s'", gameID);
@@ -88,6 +89,19 @@ public class DBController extends DatabaseManager{
             e.printStackTrace();
         }
         return "";
+    }
+
+    public Player getPlayerById(long id) {
+        try (Statement stmt = getConn().createStatement()){
+            String sql = String.format("SELECT * FROM Player WHERE IDplayer = %d", id);
+            ResultSet result = stmt.executeQuery(sql);
+            while (result.next()) {
+                return new Player(result.getLong("IDplayer"), new Coordinate(0, 0), GameBalance.DefaultHealthPoints);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 
      public void addMovesToPlayerInGame(ActionHandler handler, Player player) {

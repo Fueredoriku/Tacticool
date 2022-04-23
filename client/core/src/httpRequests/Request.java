@@ -69,10 +69,27 @@ public class Request {
     }
 
 
+    public long joinGame(long gid, long playerId) throws IOException {
+        URL url = new URL(String.format("http://localhost:8080/api/joinGame/%d/%d", gid, playerId));
+        HttpURLConnection con = (HttpURLConnection) url.openConnection();
+        con.setRequestMethod("GET");
+        BufferedReader in = new BufferedReader(
+                new InputStreamReader(con.getInputStream()));
+        String inputLine;
+        StringBuffer content = new StringBuffer();
+        while((inputLine = in.readLine()) != null) {
+            content.append(inputLine);
+        }
+        in.close();
+        System.out.println(content);
+        con.disconnect();
+        return 1;
+    }
+
     public static void main(String[] args) throws IOException {
         Request request = new Request();
         request.postMoves("{\"actions\":[{\"coordinate\":{\"x\":1,\"y\":0},\"actionType\":\"MOVE\"}]}\n", 1,2);
-        System.out.println(request.getGameState(2));
+        System.out.println(request.joinGame(3, 1));
 
     }
 }
