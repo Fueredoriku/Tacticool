@@ -14,12 +14,12 @@ import please.tacticool.models.Coordinate;
 
 @SpringBootTest
 public class PlayerTest {
-    private Coordinate coord;
-    private Player player;
-    private Player deadPlayer;
+    private static Coordinate coord;
+    private static Player player;
+    private static Player deadPlayer;
 
     @BeforeAll
-    public void BeforeAll() {
+    public static void BeforeAll() {
         coord = new Coordinate(0, 0);
         player = new Player(1, coord, 10);
         deadPlayer = new Player(2, coord, 0);
