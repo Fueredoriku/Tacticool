@@ -125,15 +125,25 @@ public class DBController extends DatabaseManager{
         return null;
     }
 
-     public void addMovesToPlayerInGame(ActionHandler handler, Player player) {
-         try (Statement stmt = getConn().createStatement()){
-             String sql = String.format("UPDATE miburgos_tacticool.GameToPlayer SET ready = %b, moves = '%s' WHERE IDgame = %d AND IDplayer = %d", true, new Gson().toJson(handler.getPlayerActions(player)), handler.getGameID(), player.getPlayerID());
-             stmt.execute(sql);
-         } catch (SQLException e) {
-             e.printStackTrace();
-         }
-     }
+    /**
+     * Adds the actions of a player in a specific game to the DB.
+     * @param handler   
+     * @param player
+     */
+    public void addMovesToPlayerInGame(ActionHandler handler, Player player) {
+        try (Statement stmt = getConn().createStatement()){
+            String sql = String.format("UPDATE miburgos_tacticool.GameToPlayer SET ready = %b, moves = '%s' WHERE IDgame = %d AND IDplayer = %d", true, new Gson().toJson(handler.getPlayerActions(player)), handler.getGameID(), player.getPlayerID());
+            stmt.execute(sql);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
 
+    /**
+     * Updates the current gamestate in the DB.
+     * @param handler   which game to update gamestate for.
+     * @param actions   performed in the provided game.
+     */
     public void updateGameState(ActionHandler handler, String actions) {
         try (Statement stmt = getConn().createStatement()){
             for (Player player : handler.getPlayers()) {
