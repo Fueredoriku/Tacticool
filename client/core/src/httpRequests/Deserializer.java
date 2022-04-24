@@ -1,5 +1,6 @@
 package httpRequests;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -19,7 +20,8 @@ public class Deserializer {
         JsonObject obj = gson.fromJson(json, JsonObject.class);
         System.out.println(obj);
         List<Player> players = deserializePlayers(obj.get("players").getAsJsonArray());
-        if (obj.get("actions") != null && !obj.get("actions").equals("null")) {
+        JsonObject actions = obj.get("actions").getAsJsonObject();
+        if (actions != null && !actions.equals("null")) {
             deserializeActions(obj.get("actions").getAsJsonObject(), players);
         }
         return deserializeGrid(obj.get("grid").getAsJsonObject(), players);
@@ -66,10 +68,4 @@ public class Deserializer {
         return grid;
     }
 
-
-    public static void main(String[] args) {
-        Deserializer deserializer = new Deserializer();
-        Grid grid = deserializer.deserializeTurn("{\"players\":[{\"healthPoint\":95,\"playerID\":8,\"actionPoints\":10,\"position\":{\"x\":1,\"y\":1}},{\"healthPoint\":95,\"playerID\":7,\"actionPoints\":10,\"position\":{\"x\":3,\"y\":1}}],\"actions\":{\"7\":{\"actions\":[{\"coordinate\":{\"x\":3,\"y\":1},\"actionType\":\"MOVE\"}]},\"8\":{\"actions\":[{\"coordinate\":{\"x\":1,\"y\":1},\"actionType\":\"MOVE\"}]}},\"grid\":{\"board\":\"0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0\",\"width\":5,\"height\":5}}");
-        System.out.println(grid);
-    }
 }
