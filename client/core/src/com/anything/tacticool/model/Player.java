@@ -65,6 +65,6 @@ public class Player {
 
     @Override
     public String toString() {
-        return String.format("ID: %d\nHP: %d\nActions: %s\n", playerID, healthPoint, actions);
+        return String.format("ID: %d\nHP: %d\nActions: %s\nPosition: %s, %s\n", playerID, healthPoint, actions, posX, posY);
     }
 }
