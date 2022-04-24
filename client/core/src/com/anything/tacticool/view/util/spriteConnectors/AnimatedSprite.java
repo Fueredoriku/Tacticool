@@ -14,6 +14,7 @@ public class AnimatedSprite extends SpriteConnector {
     public Sprite prepareSprite(float tileScale) {
         Texture texture = new Texture(getSpriteConnectorEnum().getFilePath());
         Sprite sprite = new Sprite(texture);
+        sprite.setPosition(this.getX()*tileScale,this.getY()*tileScale);
         sprite.setSize(tileScale, tileScale);
         return sprite;
     }
