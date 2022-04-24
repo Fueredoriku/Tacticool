@@ -7,7 +7,7 @@ public abstract class DatabaseManager {
     private static final String DB_URL = "jdbc:mysql://mysql.stud.ntnu.no:3306/miburgos_tacticool";
     private static final String USER = "miburgos_tacticool";
     private static final String PASS = "admin";
-    protected Connection conn;
+    protected static Connection conn;
 
     public DatabaseManager() {
         try {
@@ -31,7 +31,7 @@ public abstract class DatabaseManager {
         return tmA;
     }
 
-    protected Connection getConn(){
+    protected static Connection getConn(){
         return conn;
     }
 }

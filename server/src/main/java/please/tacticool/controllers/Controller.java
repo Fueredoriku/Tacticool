@@ -10,7 +10,10 @@ import please.tacticool.models.Actors.Player;
 import please.tacticool.models.Coordinate;
 import please.tacticool.persistance.DBController;
 
+import java.util.Locale;
 import java.util.UUID;
+
+import static please.tacticool.persistance.DBController.registerPlayer;
 
 @RestController
 public class Controller {
@@ -18,6 +21,15 @@ public class Controller {
     @GetMapping("/")
     public String index() {
         return "Hello World from spring boot!";
+    }
+
+    @GetMapping("/api/registerPlayer/{name}/{password}")
+    public ResponseEntity<Integer> getPlayerId(@PathVariable String name,@PathVariable String password){
+        int id = DBController.getPlayerByLogin(name.toLowerCase(),password.toLowerCase());
+        if (id < 0 ) {
+            return new ResponseEntity<>(registerPlayer(name.toLowerCase(), password.toLowerCase()), HttpStatus.CREATED);
+        }
+        return new ResponseEntity<>(id,HttpStatus.OK);
     }
 
     /**
@@ -35,7 +47,7 @@ public class Controller {
         // Initalize gameController as object with input gameId
         // Ask if gameController has changed
         // Return a map and moves that both players have made this turn
-        ActionHandler ah = new DBController().getGame(Long.parseLong(gameId));
+        ActionHandler ah = new DBController().getGame(Integer.parseInt(gameId));
 
         return new ResponseEntity<>(ah.getGameState(), HttpStatus.OK);
     }
@@ -52,13 +64,13 @@ public class Controller {
     @GetMapping("/api/joinGame/{gameID}/{playerID}")
     public ResponseEntity<String> joinGame(@PathVariable String gameID, @PathVariable  String playerID) {
         try {
-            ActionHandler ac = new DBController().getGame(Long.parseLong(gameID));
-            ac.addNewPlayer(Long.parseLong(playerID));
+            ActionHandler ac = new DBController().getGame(Integer.parseInt(gameID));
+            ac.addNewPlayer(Integer.parseInt(playerID));
             System.out.println("GOT HERE MOFO");
             return new ResponseEntity<>(String.valueOf(ac.getGameID()), HttpStatus.OK);
         }catch (Exception e){
-            ActionHandler ac = ActionHandler.createGame(UUID.randomUUID().getMostSignificantBits());
-            ac.addNewPlayer(Long.parseLong(playerID));
+            ActionHandler ac = ActionHandler.createGame();
+            ac.addNewPlayer(Integer.parseInt(playerID));
             System.out.println("NOPE; WE GOT HERE MILF");
             return new ResponseEntity<>(String.valueOf(ac.getGameID()), HttpStatus.CREATED);
         }

@@ -1,9 +1,8 @@
 package com.anything.tacticool;
 
-import com.anything.tacticool.view.scene.MainView;
+import com.anything.tacticool.view.scene.LoginView;
 import com.anything.tacticool.view.scene.SceneManager;
 import com.badlogic.gdx.ApplicationAdapter;
-import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.utils.ScreenUtils;
 
@@ -15,7 +14,7 @@ public class Tacticool extends ApplicationAdapter {
 	public void create () {
 		batch = new SpriteBatch();
 		sm = SceneManager.getInstance();
-		sm.Push(new MainView());
+		sm.Push(new LoginView());
 	}
 
 	@Override

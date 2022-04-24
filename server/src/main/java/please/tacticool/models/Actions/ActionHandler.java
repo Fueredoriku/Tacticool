@@ -1,33 +1,26 @@
 package please.tacticool.models.Actions;
 
-import java.util.*;
-
 import com.google.gson.Gson;
-
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
-
-import org.springframework.http.HttpStatus;
 import please.tacticool.GameBalance;
+import please.tacticool.models.Actors.Player;
 import please.tacticool.models.Coordinate;
 import please.tacticool.models.TerrainGrid;
-import please.tacticool.models.Actors.Player;
 import please.tacticool.persistance.DBController;
 import please.tacticool.util.JsonConvert;
 
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Set;
+
 public class ActionHandler {
     
-    private Map<Player, Actions> playerActions;
+    private final Map<Player, Actions> playerActions;
     private TerrainGrid grid;
-    private long gameID;
+    private final int gameID;
 
-    @Deprecated
     public ActionHandler(int gameID) {
-        this.gameID = gameID;
-        playerActions = new HashMap<>();
-    }
-
-    public ActionHandler(long gameID) {
         this.gameID = gameID;
         playerActions = new HashMap<>();
     }
@@ -44,7 +37,7 @@ public class ActionHandler {
         }
     }
 
-    public void addNewPlayer(long playerID) {
+    public void addNewPlayer(int playerID) {
         DBController controller = new DBController();
         Player player = controller.getPlayerById(playerID);
         findFreePosition(player);
@@ -103,14 +96,14 @@ public class ActionHandler {
     }
     
     public void performActions() {
-        Map<Long, JsonObject> result = new HashMap<>();
+        Map<Integer, JsonObject> result = new HashMap<>();
         for (Player player : playerActions.keySet()) {
             result.put(player.getPlayerID(), new Gson().fromJson(new Gson().toJson(playerActions.get(player).perform(player, grid)), JsonObject.class));
         }
         new DBController().updateGameState(this, new Gson().toJson(result));
     }
 
-    public long getGameID() {
+    public int getGameID() {
         return this.gameID;
     }
 
@@ -131,24 +124,24 @@ public class ActionHandler {
         return results.toString();
     }
 
-    public static ActionHandler createGame(long gameID) {
-        ActionHandler handler = new ActionHandler(gameID);
+    public static ActionHandler createGame() {
         TerrainGrid grid = new TerrainGrid(GameBalance.DefaultWidth, GameBalance.DefaultHeigth);
+        int id = new DBController().createGame(grid.toStringMap(), false, grid.getDimensions().getX(), grid.getDimensions().getY());
+        ActionHandler handler = new ActionHandler(id);
         handler.setGrid(grid);
-        new DBController().createGame(handler.getGameID(), grid.toStringMap(), false, grid.getDimensions().getX(), grid.getDimensions().getY());
         return handler;
     }
 
 
     @Override
     public String toString() {
-        String result = "";
+        StringBuilder result = new StringBuilder();
         for (Player player : getPlayers()) {
-            result += String.format("Player %s: %s - %s\n", player.getPlayerID(), player.getHealthPoints(), player.getActionPoints());
+            result.append(String.format("Player %s: %s - %s\n", player.getPlayerID(), player.getHealthPoints(), player.getActionPoints()));
         }
-        result += grid.toString();
+        result.append(grid.toString());
 
-        return result;           
+        return result.toString();
     }
 
 
@@ -162,7 +155,7 @@ public class ActionHandler {
         handler.addActions(me, a, true);
 
         handler.simulate();
-        System.out.println(handler.toString());
+        System.out.println(handler);
 
         System.out.println(handler.getGameState());
     }
