@@ -52,6 +52,11 @@ public class SpriteConnector {
         return y;
     }
 
+    public void updatePos(int x, int y){
+        this.x = x;
+        this.y = y;
+    }
+
     public Actor getActor() throws Exception{
         if (actor == null){
             throw new Exception("The sprite has no actor tied to it!");
@@ -67,6 +72,7 @@ public class SpriteConnector {
     public Sprite prepareSprite(float tileScale) {
         Texture texture = new Texture(spriteConnectorEnum.getFilePath());
         Sprite sprite = new Sprite(texture);
+        sprite.setPosition(x*tileScale,y*tileScale);
         sprite.setSize(tileScale, tileScale);
         return sprite;
     }
