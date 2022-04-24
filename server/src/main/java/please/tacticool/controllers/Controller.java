@@ -3,15 +3,8 @@ package please.tacticool.controllers;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import please.tacticool.GameBalance;
-import please.tacticool.models.Actions.Action;
 import please.tacticool.models.Actions.ActionHandler;
-import please.tacticool.models.Actors.Player;
-import please.tacticool.models.Coordinate;
 import please.tacticool.persistance.DBController;
-
-import java.util.Locale;
-import java.util.UUID;
 
 import static please.tacticool.persistance.DBController.registerPlayer;
 
@@ -24,6 +17,13 @@ public class Controller {
         return "Hello World from spring boot!";
     }
 
+    /**
+     * An endpoint for login in / registering a player. If the given username - password pair exists return their playerID,
+     * otherwise create a new user and return the created ID.
+     * @param name      of the user trying to login / register.
+     * @param password  of the user trying to login / register.
+     * @return          the id of the player + status code OK if login and code CREATED if registered.
+     */
     @GetMapping("/registerPlayer/{name}/{password}")
     public ResponseEntity<Integer> getPlayerId(@PathVariable String name,@PathVariable String password){
         int id = DBController.getPlayerByLogin(name.toLowerCase(),password.toLowerCase());
@@ -61,7 +61,13 @@ public class Controller {
         return true;
     }
 
-
+    /**
+     * An endpoint for joining a game. A player tries to join a game by providing the ID. If the game exists, add the player
+     * to the game, otherwise create a new game and add them to that game.
+     * @param gameID    id of the game to join, can be a non-existing id.
+     * @param playerID  id of the player trying to join a game.
+     * @return          the id of the game joined. If joining an existing game the response code will be OK, otherwise CREATED.
+     */
     @GetMapping("/joinGame/{gameID}/{playerID}")
     public ResponseEntity<String> joinGame(@PathVariable String gameID, @PathVariable  String playerID) {
         try {
@@ -76,8 +82,6 @@ public class Controller {
             return new ResponseEntity<>(String.valueOf(ac.getGameID()), HttpStatus.CREATED);
         }
     }
-
-    //TODO: Register player
 
     /**
      * Main request function for taking in moves from players
