@@ -102,10 +102,6 @@ public class GameView extends Scene {
         font = new BitmapFont();
         uiWidth = Gdx.graphics.getWidth()/6f;
         uiHeight = Gdx.graphics.getHeight()/12f;
-
-        //prepareScene();
-
-
     }
 
     public void constructBoard(int width, int height){
@@ -126,7 +122,7 @@ public class GameView extends Scene {
         for (int i = 0; i < players.size(); i++){
             SpriteConnector newPlayer = new SimpleSprite(SpriteConnectorEnum.PLAYER, players.get(i).getCurrentX(), players.get(i).getCurrentY());
             players.get(i).setTexture(newPlayer);
-            //tileIterator.add(newPlayer);
+            tileIterator.add(newPlayer);
 
         }
     }
@@ -145,9 +141,6 @@ public class GameView extends Scene {
             }
         }
         tileIterator.reset();
-
-
-
         Gdx.input.setInputProcessor(stage);
     }
 
@@ -206,33 +199,6 @@ public class GameView extends Scene {
                 submit_button, reset_input_button, settings_Button
         });
         Gdx.input.setInputProcessor(stage);
-
-        /*
-        resetButton = new TextButton("Reset Moves", skin);
-        submitButton = new TextButton("Submit Moves", skin);
-        resetButton.setSize(uiWidth, uiHeight);
-        submitButton.setSize(uiWidth, uiHeight);
-        resetButton.setPosition(Gdx.graphics.getWidth(), Gdx.graphics.getHeight()-10);
-        submitButton.setPosition(Gdx.graphics.getWidth(), Gdx.graphics.getHeight()-30);
-        resetButton.addListener(new ClickListener() {
-            @Override
-            public void clicked(InputEvent event, float x, float y) {
-                ap.reset();
-            }
-        });
-
-        submitButton.addListener(new ClickListener() {
-            @Override
-            public void clicked(InputEvent event, float x, float y) {
-                //TODO: Submit moves to controller
-                constructActionList();
-                //request.poster(inputs);
-            }
-        });
-
-
-*/
-       // stage.addActor(resetButton);
     }
 
     private void drawHUD(SpriteBatch batch){
