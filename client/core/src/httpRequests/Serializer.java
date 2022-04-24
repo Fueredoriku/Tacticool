@@ -7,7 +7,7 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 
 public class Serializer {
-    public String serializeActions(int playerID, List<InputAction> actions) {
+    public String serializeActions(List<InputAction> actions) {
         JsonObject obj = new JsonObject();
         JsonArray jsonActions = new JsonArray();
         for (InputAction action : actions) {
