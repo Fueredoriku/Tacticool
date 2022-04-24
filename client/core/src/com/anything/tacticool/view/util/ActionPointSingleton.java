@@ -40,7 +40,7 @@ public class ActionPointSingleton {
 
     private boolean checkDiff(SpriteConnector spriteConnector){
         if (highlightElements.getLastSprite().getX()-spriteConnector.getX() <1 && highlightElements.getLastSprite().getX()-spriteConnector.getX() >-1){
-            if (highlightElements.getLastSprite().getX()-spriteConnector.getX() <1 && highlightElements.getLastSprite().getX()-spriteConnector.getX() >-1){
+            if (highlightElements.getLastSprite().getY()-spriteConnector.getY() <1 && highlightElements.getLastSprite().getY()-spriteConnector.getY() >-1){
                 return true;
             }
         }

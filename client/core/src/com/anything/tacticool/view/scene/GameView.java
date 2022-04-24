@@ -27,6 +27,7 @@ import com.badlogic.gdx.utils.viewport.ScreenViewport;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.EventListener;
 import java.util.List;
 
 import httpRequests.Request;
@@ -59,6 +60,9 @@ public class GameView extends Scene {
     private Grid grid;
     private long gameID = 2;
     private Player mainPlayer;
+    private List<Actor> actors;
+
+    private ActorFactory actorFactory;
 
     public GameView(){
         super();
@@ -84,6 +88,7 @@ public class GameView extends Scene {
         grid.setPlayers(players);
 
 
+        actorFactory = new ActorFactory();
         constructBoard(grid.getWidth(), grid.getHeigth());
         textureHandler = new TextureHandler(grid.getWidth(), grid.getHeigth());
         ap = ActionPointSingleton.getInstance();
@@ -134,6 +139,20 @@ public class GameView extends Scene {
 
     private void buildButtons(){
 
+        TextButton submit_button = actorFactory.textButton(new TextButton("Submit", skin),
+                uiWidth, uiHeight,Gdx.graphics.getWidth()-20, Gdx.graphics.getHeight()-30,
+                new ClickListener() {
+                    @Override
+                    public void clicked(InputEvent event, float x, float y) {
+                        constructActionList();
+                    }
+                }
+                );
+        actorFactory.stageActors(stage, new Actor[]{
+                submit_button,
+        });
+
+        /*
         resetButton = new TextButton("Reset Moves", skin);
         submitButton = new TextButton("Submit Moves", skin);
         resetButton.setSize(uiWidth, uiHeight);
@@ -157,8 +176,8 @@ public class GameView extends Scene {
         });
 
 
-
-        stage.addActor(resetButton);
+*/
+       // stage.addActor(resetButton);
     }
 
     private void drawHUD(SpriteBatch batch){
