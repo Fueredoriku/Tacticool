@@ -24,6 +24,7 @@ import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.util.ArrayList;
+import java.util.List;
 
 import httpRequests.Request;
 
@@ -51,9 +52,10 @@ public class GameView extends Scene {
 
     private Request request;
     private ArrayList<InputAction> inputs;
-    private ArrayList<Player> players;
+    private List<Player> players;
     private Grid grid;
     private long gameID = 2;
+    private Player mainPlayer;
 
     public GameView(){
         super();
@@ -70,6 +72,13 @@ public class GameView extends Scene {
         skin = new Skin(Gdx.files.internal("ui/uiskin.json"));
         skin.getFont("default-font").getData().setScale(3f);
         grid = new Grid("1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1",5,5);
+        mainPlayer = new Player(513,3,4,4);
+        Player enemy = new Player(543,3,2,2);
+        players = new ArrayList<>();
+        players.add(mainPlayer);
+        players.add(enemy);
+        mainPlayer.addAction(new InputAction(ActionType.MOVE, 3,3));
+        grid.setPlayers(players);
 
 
         constructBoard(grid.getWidth(), grid.getHeigth());
@@ -90,6 +99,14 @@ public class GameView extends Scene {
         for (int i = 0; i < grid.getBoard().length; i++){
             tileIterator.add(new SpriteConnector(SpriteConnectorEnum.GRASS, SpriteConnectorEnum.HIGHLIGHTTILE, i%width,(int)Math.floor(i/width)));
         }
+
+        players = grid.getPlayers();
+        for (int i = 0; i < players.size(); i++){
+            SpriteConnector newPlayer = new SpriteConnector(SpriteConnectorEnum.PLAYER, players.get(i).getCurrentX(), players.get(i).getCurrentY());
+            players.get(i).setTexture(newPlayer);
+            tileIterator.add(newPlayer);
+
+        }
     }
 
     @Override
@@ -107,6 +124,7 @@ public class GameView extends Scene {
 
         Gdx.input.setInputProcessor(stage);
     }
+
 
     private void buildButtons(){
 
@@ -142,31 +160,37 @@ public class GameView extends Scene {
         font.draw(batch, ""+ap.actionPoint, 10, Gdx.graphics.getHeight()-10);
     }
 
+    private void updatePlayers(){
+        for (Player player : players){
+            if (player.getActions().size() > 0){
+                updatePlayer(player);
+            }
+        }
+    }
+
     private void constructActionList(){
-        inputs.clear();
+        //inputs.clear();
         while (ap.getInputIterator().hasNext()) {
             InputAction action = new InputAction(ActionType.MOVE, ap.getInputIterator().next().getX(), ap.getInputIterator().next().getY());
             inputs.add(action);
         }
     }
 
-    public void updatePlayers(){
-        //request.getter();
-        //players = deserializer.deserializePlayers();
-    }
-
     public void updatePlayer(Player player){
-        while (actorIterator.hasNext()){
-
+        while (player.getActions().size() > 0){
+            player.setCurrentPos(player.getActions().get(0).getTargetX(), player.getActions().get(0).getTargetY());
+            player.getTexture().updatePos(player.getCurrentX(), player.getCurrentY());
+            player.getActions().remove(0);
         }
-
     }
 
     @Override
     public void onRender(SpriteBatch batch){
+        updatePlayers();
         textureHandler.createBatch(tileIterator, batch);
         //textureHandler.createBatch(actorIterator, batch);
         textureHandler.createBatch(ap.getInputIterator(), batch);
         drawHUD(batch);
+
     }
 }
