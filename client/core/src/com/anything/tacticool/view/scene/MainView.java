@@ -102,8 +102,8 @@ public class MainView extends Scene {
 
     // Rudimentary exception handling
     private void checkState() {
-        if (stage.getActors().size != 3) {
-            throw new IllegalStateException("Expected 3 actors, instead of " + stage.getActors().size);
+        if (stage.getActors().size != 4) {
+            throw new IllegalStateException("Expected 4 actors, instead of " + stage.getActors().size);
         }
         if (!(stage.getActors().get(0) instanceof TextField)) {
             throw new IllegalStateException("Expected TextField at index 0 in Actors, instead of " + stage.getActors().get(0).getName());
@@ -173,9 +173,24 @@ public class MainView extends Scene {
                 }
         );
 
+        TextButton startGame_Button = actorFactory.textButton(
+                new TextButton("Start Game", skin),
+                uiWidth, uiHeight, ui_xPosition, ui_yScale * 2,
+                new ClickListener() {
+                    @Override
+                    public void clicked(InputEvent event, float x, float y) {
+                        try {
+                            startGame();
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                }
+        );
+
         TextButton settings_Button = actorFactory.textButton(
                 new TextButton("Settings", skin),
-                uiWidth, uiHeight, ui_xPosition, ui_yScale * 2,
+                uiWidth, uiHeight, ui_xPosition, ui_yScale * 1,
                 new ClickListener() {
                     @Override
                     public void clicked(InputEvent event, float x, float y) {
@@ -184,10 +199,14 @@ public class MainView extends Scene {
                 }
         );
 
-        actorFactory.stageActors(stage, new Actor[] {gameID_Input, joinGame_Button, settings_Button});
+        actorFactory.stageActors(stage, new Actor[] {gameID_Input, joinGame_Button, startGame_Button, settings_Button});
 
         // Allows UI elements to take inputs
         Gdx.input.setInputProcessor(stage);
+    }
+
+    private void startGame() throws IOException {
+        request.getGameState(gameID);
     }
 
     private void prepareSound() {
