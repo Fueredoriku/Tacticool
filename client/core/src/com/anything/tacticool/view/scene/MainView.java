@@ -110,7 +110,7 @@ public class MainView extends Scene {
 
     // Rudimentary exception handling
     private void checkState() {
-        if (stage.getActors().size != 4) {
+        if (stage.getActors().size != 3) {
             throw new IllegalStateException("Expected 4 actors, instead of " + stage.getActors().size);
         }
         if (!(stage.getActors().get(0) instanceof TextField)) {
@@ -163,13 +163,13 @@ public class MainView extends Scene {
         // Instantiates UI elements using the ActorFactory
         TextField gameID_Input = actorFactory.textField(
                 new TextField("", skin),
-                uiWidth, uiHeight, ui_xPosition, ui_yScale * 4,
+                uiWidth, uiHeight, ui_xPosition, ui_yScale * 3,
                 new TextField.TextFieldFilter.DigitsOnlyFilter()
         );
 
         TextButton joinGame_Button = actorFactory.textButton(
                 new TextButton("Join Game", skin),
-                uiWidth, uiHeight, ui_xPosition, ui_yScale * 3,
+                uiWidth, uiHeight, ui_xPosition, ui_yScale * 2,
                 new ClickListener() {
                     @Override
                     public void clicked(InputEvent event, float x, float y) {

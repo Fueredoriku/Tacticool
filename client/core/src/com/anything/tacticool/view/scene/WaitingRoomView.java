@@ -20,7 +20,6 @@ import httpRequests.Request;
 public class WaitingRoomView extends Scene {
 
     private final int gameID;
-
     private Stage stage;
     private Skin skin;
 
@@ -58,6 +57,7 @@ public class WaitingRoomView extends Scene {
         this.stage = new Stage(new ScreenViewport());
         this.skin = new Skin(Gdx.files.internal("ui/uiskin.json"));
         skin.getFont("default-font").getData().setScale(3f);
+
     }
 
     private void prepareUI(){
@@ -70,27 +70,12 @@ public class WaitingRoomView extends Scene {
 
         Label game_pin_label = (Label) actorFactory.actor(
                 new Label("Game pin : " + this.gameID, skin),
-                uiWidth, uiHeight, ui_xPosition - uiWidth/1.8f, ui_yScale * 2f
-        );
-
-        final TextButton leave_game_button = actorFactory.textButton(
-                new TextButton("Leave Game", skin),
-                uiWidth, uiHeight, ui_xPosition, ui_yScale * 2f,
-                new ClickListener(){
-                    @Override
-                    public void clicked(InputEvent event, float x, float y) {
-                        try{
-                            leaveGame();
-                        } catch (IOException e){
-                            e.printStackTrace();
-                        }
-                    }
-                }
+                uiWidth, uiHeight, ui_xPosition - uiWidth/1.5f, ui_yScale * 3f
         );
 
         TextButton start_game_button = actorFactory.textButton(
                 new TextButton("Start Game", skin),
-                uiWidth, uiHeight, ui_xPosition, ui_yScale * 1f,
+                uiWidth, uiHeight, ui_xPosition, ui_yScale * 2f,
                 new ClickListener(){
                     @Override
                     public void clicked(InputEvent event, float x, float y) {
@@ -103,7 +88,22 @@ public class WaitingRoomView extends Scene {
                 }
         );
 
-        actorFactory.stageActors(stage, new Actor[] {game_pin_label, start_game_button});
+        TextButton leave_game_button = actorFactory.textButton(
+                new TextButton("Leave Game", skin),
+                uiWidth, uiHeight, ui_xPosition, ui_yScale * 1f,
+                new ClickListener() {
+                    @Override
+                    public void clicked(InputEvent event, float x, float y) {
+                        try {
+                            leaveGame();
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                }
+        );
+
+        actorFactory.stageActors(stage, new Actor[] {game_pin_label, start_game_button, leave_game_button});
     }
 
     private void startGame() throws IOException {
@@ -114,6 +114,7 @@ public class WaitingRoomView extends Scene {
     private void leaveGame() throws IOException {
         // TODO : Leave the game
         request.getGameState(gameID);
+        sm.Pop();
     }
 
 }
