@@ -28,13 +28,15 @@ public class MainView extends Scene {
     private Skin skin;
     private MenuState menuState;
 
+    private int playerID;
     private String gameID;
 
     private ActorFactory actorFactory;
 
 
-    public MainView() {
+    public MainView(int playerID) {
         this.actorFactory = new ActorFactory();
+        this.playerID = playerID;
     }
 
     @Override
