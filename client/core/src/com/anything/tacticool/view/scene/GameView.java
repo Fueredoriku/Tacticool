@@ -6,6 +6,7 @@ import com.anything.tacticool.model.InputAction;
 import com.anything.tacticool.model.Player;
 import com.anything.tacticool.view.util.ActionPointSingleton;
 import com.anything.tacticool.view.util.ActorFactory;
+import com.anything.tacticool.view.util.AudioController;
 import com.anything.tacticool.view.util.GridElementIterator;
 import com.anything.tacticool.view.util.spriteConnectors.ActorSprite;
 import com.anything.tacticool.view.util.spriteConnectors.SimpleSprite;
@@ -134,6 +135,8 @@ public class GameView extends Scene {
     public void prepareScene(){
         stage = new Stage(new ScreenViewport());
         buildButtons();
+        prepareSound();
+
         while (tileIterator.hasNext()){
             try {
                 stage.addActor(tileIterator.next().getActor());
@@ -146,6 +149,15 @@ public class GameView extends Scene {
 
 
         Gdx.input.setInputProcessor(stage);
+    }
+
+    private void prepareSound() {
+        AudioController.playGameMusic();
+    }
+
+    @Override
+    public void disposeEarly() {
+        AudioController.endMusic();
     }
 
 
@@ -178,8 +190,20 @@ public class GameView extends Scene {
                     }
                 }
         );
+
+        TextButton settings_Button = actorFactory.textButton(
+            new TextButton("Settings", skin),
+                uiWidth, uiHeight,Gdx.graphics.getWidth() - uiWidth*1.1f, Gdx.graphics.getHeight() - 3*uiHeight*1.1f,
+                new ClickListener() {
+                    @Override
+                    public void clicked(InputEvent event, float x, float y) {
+                        sm.Push(new Settings());
+                    }
+                }
+        );
+
         actorFactory.stageActors(stage, new Actor[]{
-                submit_button, reset_input_button
+                submit_button, reset_input_button, settings_Button
         });
         Gdx.input.setInputProcessor(stage);
 
