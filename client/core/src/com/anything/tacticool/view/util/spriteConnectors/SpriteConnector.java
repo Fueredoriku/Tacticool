@@ -36,13 +36,9 @@ public class SpriteConnector {
                           });
     }
 
-    private SpriteConnector getHighlight(){
-        return new SpriteConnector(this.highlightEnum, this.x, this.y);
-    }
+    private abstract SpriteConnector getHighlight();
 
-    public SpriteConnectorEnum getSpriteConnectorEnum() {
-        return spriteConnectorEnum;
-    }
+    public abstract SpriteConnectorEnum getSpriteConnectorEnum();
 
     public int getX() {
         return x;
@@ -64,10 +60,5 @@ public class SpriteConnector {
      * Should be changed to use TextureRegion to avoid this.
      */
 
-    public Sprite prepareSprite(float tileScale) {
-        Texture texture = new Texture(spriteConnectorEnum.getFilePath());
-        Sprite sprite = new Sprite(texture);
-        sprite.setSize(tileScale, tileScale);
-        return sprite;
-    }
+    public abstract Sprite prepareSprite(float tileScale);
 }
