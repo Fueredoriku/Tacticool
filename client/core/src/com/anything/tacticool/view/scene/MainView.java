@@ -22,18 +22,19 @@ import java.io.IOException;
 
 import httpRequests.Request;
 
-
+/*
 enum MenuState {
     MAIN,
     QEUED,
     START
 }
+*/
 
 public class MainView extends Scene {
 
     private Stage stage;
     private Skin skin;
-    private MenuState menuState;
+    //private MenuState menuState;
 
     private int gameID;
     private int playerID;
@@ -62,6 +63,11 @@ public class MainView extends Scene {
 
         batch.begin();
 
+        stage.draw();
+        checkState();
+        String gameID_String = ((TextField) stage.getActors().get(0)).getText();
+        this.gameID = gameID_String.isEmpty()?0:Integer.parseInt(gameID_String);
+        /*
         switch (menuState) {
             case MAIN:
                 stage.draw();
@@ -84,6 +90,7 @@ public class MainView extends Scene {
                 sm.Push(new GameView());
                 break;
         }
+        */
 
         batch.end();
     }
@@ -121,8 +128,9 @@ public class MainView extends Scene {
 
     //Method for joining game
     private void joinGame() throws IOException {
-        request.joinGame(gameID, playerID);
-        this.menuState = menuState.QEUED;
+        //request.joinGame(gameID, playerID); /!\ UNCOMMENTED FOR TESTING, DO NOT REMOVE /!\
+        sm.Push(new WaitingRoomView(gameID));
+        //this.menuState = menuState.QEUED;
     }
 
     //Method for opening settings
@@ -134,7 +142,7 @@ public class MainView extends Scene {
 
     // Methods used by constructor
     private void prepareVariables() {
-        this.menuState = MenuState.MAIN;
+        //this.menuState = MenuState.MAIN;
         this.stage = new Stage(new ScreenViewport());
 
         // Skin to texture UI elements. Currently uses libgdx's basic skin
@@ -174,6 +182,7 @@ public class MainView extends Scene {
                 }
         );
 
+        /*
         TextButton startGame_Button = actorFactory.textButton(
                 new TextButton("Start Game", skin),
                 uiWidth, uiHeight, ui_xPosition, ui_yScale * 2,
@@ -188,6 +197,7 @@ public class MainView extends Scene {
                     }
                 }
         );
+        */
 
         TextButton settings_Button = actorFactory.textButton(
                 new TextButton("Settings", skin),
@@ -200,15 +210,17 @@ public class MainView extends Scene {
                 }
         );
 
-        actorFactory.stageActors(stage, new Actor[] {gameID_Input, joinGame_Button, startGame_Button, settings_Button});
+        actorFactory.stageActors(stage, new Actor[] {gameID_Input, joinGame_Button /*, startGame_Button*/, settings_Button});
 
         // Allows UI elements to take inputs
         Gdx.input.setInputProcessor(stage);
     }
 
+    /*
     private void startGame() throws IOException {
         request.getGameState(gameID);
     }
+    */
 
     private void prepareSound() {
         AudioController.setCurrent_musicPath("audio/main_menu.ogg");
