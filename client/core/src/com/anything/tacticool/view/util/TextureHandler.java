@@ -16,9 +16,9 @@ public class TextureHandler {
 
     public TextureHandler(int width, int height) {
         if (Gdx.graphics.getWidth() / width < Gdx.graphics.getHeight() / height) {
-            tileScale = Gdx.graphics.getWidth() / width;
+            tileScale = (Gdx.graphics.getWidth() / width);
         } else {
-            tileScale = Gdx.graphics.getHeight() / height;
+            tileScale = (Gdx.graphics.getHeight() / height);
         }
     }
 
@@ -38,7 +38,7 @@ public class TextureHandler {
     public void createBatch(GridElementIterator iterator, SpriteBatch batch) {
         while (iterator.hasNext()) {
             SpriteConnector connector = iterator.next();
-            batch.draw(connector.prepareSprite(tileScale), connector.getX()*tileScale, connector.getY()*tileScale);
+            connector.prepareSprite(tileScale).draw(batch);
         }
         iterator.reset();
     }
