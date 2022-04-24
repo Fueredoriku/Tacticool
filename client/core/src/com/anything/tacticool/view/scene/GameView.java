@@ -7,6 +7,7 @@ import com.anything.tacticool.model.Player;
 import com.anything.tacticool.view.util.ActionPointSingleton;
 import com.anything.tacticool.view.util.ActorFactory;
 import com.anything.tacticool.view.util.GridElementIterator;
+import com.anything.tacticool.view.util.spriteConnectors.ActorSprite;
 import com.anything.tacticool.view.util.spriteConnectors.SimpleSprite;
 import com.anything.tacticool.view.util.spriteConnectors.SpriteConnector;
 import com.anything.tacticool.view.util.SpriteConnectorEnum;
@@ -116,7 +117,7 @@ public class GameView extends Scene {
         for (int i = 0; i < players.size(); i++){
             SpriteConnector newPlayer = new SimpleSprite(SpriteConnectorEnum.PLAYER, players.get(i).getCurrentX(), players.get(i).getCurrentY());
             players.get(i).setTexture(newPlayer);
-            tileIterator.add(newPlayer);
+            //tileIterator.add(newPlayer);
 
         }
     }
