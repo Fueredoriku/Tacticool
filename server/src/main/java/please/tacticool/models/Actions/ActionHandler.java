@@ -194,6 +194,7 @@ public class ActionHandler {
         board.addProperty("board", grid.toStringMap());
         board.addProperty("width", grid.getDimensions().getX());
         board.addProperty("height", grid.getDimensions().getY());
+        board.addProperty("turnSwitch", new DBController().getTurnSwitch(gameID));
         results.add("grid", board);
         results.add("winState", getWinState());
         return results.toString();

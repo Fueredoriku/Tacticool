@@ -74,7 +74,7 @@ public class GameView extends Scene {
         tileIterator = new GridElementIterator();
         skin = new Skin(Gdx.files.internal("ui/uiskin.json"));
         skin.getFont("default-font").getData().setScale(3f);
-        grid = new Grid("1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1",5,5);
+        grid = new Grid("1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1",5,5, false);
         mainPlayer = new Player(513,3,4,4);
         Player enemy = new Player(543,3,2,2);
         players = new ArrayList<>();

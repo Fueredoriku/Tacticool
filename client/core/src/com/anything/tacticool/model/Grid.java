@@ -8,11 +8,13 @@ public class Grid {
     private int width;
     private int heigth;
     private List<Player> players;
+    private boolean turn;
 
-    public Grid(String board, int width, int heigth) {
+    public Grid(String board, int width, int heigth, boolean turn) {
         this.heigth = heigth;
         this.width = width;
         this.board = new int[width * heigth];
+        this.turn = turn;
         players = new ArrayList<>();
         String[] boardSplit = board.split(",");
         for (int i = 0; i < this.board.length; i++) {
@@ -36,6 +38,10 @@ public class Grid {
         return width;
     }
 
+    public boolean getTurn() {
+        return turn;
+    }
+
     public List<Player> getPlayers() {
         return players;
     }
@@ -46,6 +52,7 @@ public class Grid {
         for (int i : board) {
             result += String.format("%d,", i);
         }
+        result += "\n" + turn;
         return result + "\n" + players.toString();
     }
 }

@@ -51,12 +51,14 @@ public class Controller {
         return new ResponseEntity<>(ah.getGameState(), HttpStatus.OK);
     }
 
-    @GetMapping("/hasChanged{gameId}")
-    public boolean hasChanged(@PathVariable String gameId) {
-        // Check if map has changed, this needs to be done EFFICIENT!!
-        // return true if map has changed
-        // return false if map hasn't changed
-        return true;
+    /**
+     * Gets the value of the turn switch.
+     * @param gameId    of game to check.
+     * @return          the current turns value.
+     */
+    @GetMapping("/hasChanged/{gameId}/{currentTurn}")
+    public ResponseEntity<Boolean> hasChanged(@PathVariable String gameId, @PathVariable String currentTurn) {
+        return new ResponseEntity<>(new DBController().getTurnSwitch(Integer.parseInt(gameId)) != Boolean.parseBoolean(currentTurn), HttpStatus.OK);
     }
 
     /**
