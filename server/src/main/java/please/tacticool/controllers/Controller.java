@@ -9,6 +9,7 @@ import please.tacticool.persistance.DBController;
 import static please.tacticool.persistance.DBController.registerPlayer;
 
 @RestController
+@RequestMapping("/api")
 public class Controller {
 
     @GetMapping("/")
@@ -23,7 +24,7 @@ public class Controller {
      * @param password  of the user trying to login / register.
      * @return          the id of the player + status code OK if login and code CREATED if registered.
      */
-    @GetMapping("/api/registerPlayer/{name}/{password}")
+    @GetMapping("/registerPlayer/{name}/{password}")
     public ResponseEntity<Integer> getPlayerId(@PathVariable String name,@PathVariable String password){
         int id = DBController.getPlayerByLogin(name.toLowerCase(),password.toLowerCase());
         if (id < 0 ) {
@@ -42,7 +43,7 @@ public class Controller {
      *     1 : 100, 2 : 100}}
      *
      */
-    @GetMapping("/api/getBoard{gameId}")
+    @GetMapping("/getBoard{gameId}")
     public ResponseEntity<String> getFinishedSimulation(@PathVariable String gameId) {
         // Initalize gameController as object with input gameId
         // Ask if gameController has changed
@@ -52,14 +53,13 @@ public class Controller {
         return new ResponseEntity<>(ah.getGameState(), HttpStatus.OK);
     }
 
-    @GetMapping("/api/hasChanged{gameId}")
+    @GetMapping("/hasChanged{gameId}")
     public boolean hasChanged(@PathVariable String gameId) {
         // Check if map has changed, this needs to be done EFFICIENT!!
         // return true if map has changed
         // return false if map hasn't changed
         return true;
     }
-
 
     /**
      * An endpoint for joining a game. A player tries to join a game by providing the ID. If the game exists, add the player
@@ -68,7 +68,7 @@ public class Controller {
      * @param playerID  id of the player trying to join a game.
      * @return          the id of the game joined. If joining an existing game the response code will be OK, otherwise CREATED.
      */
-    @GetMapping("/api/joinGame/{gameID}/{playerID}")
+    @GetMapping("/joinGame/{gameID}/{playerID}")
     public ResponseEntity<String> joinGame(@PathVariable String gameID, @PathVariable  String playerID) {
         try {
             ActionHandler ac = new DBController().getGame(Integer.parseInt(gameID));
@@ -90,7 +90,7 @@ public class Controller {
      * @param playerId The way for the server to know which game the player is playing
      * @return Mainly a responsecode meant to signify OK if the input is seen as legal and I AM A TEAPOT if the move list contains illegal moves.
      */
-    @PostMapping("/api/move/{gameId}/{playerId}")
+    @PostMapping("/move/{gameId}/{playerId}")
     public ResponseEntity<String> inputMove(@RequestBody String body, @PathVariable("gameId") String gameId, @PathVariable("playerId") String playerId) {
         try {
             DBController db = new DBController();

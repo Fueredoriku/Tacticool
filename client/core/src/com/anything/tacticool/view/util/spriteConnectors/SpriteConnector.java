@@ -1,12 +1,13 @@
-package com.anything.tacticool.view.util;
+package com.anything.tacticool.view.util.spriteConnectors;
 
-import com.badlogic.gdx.graphics.Texture;
+import com.anything.tacticool.view.util.ActionPointSingleton;
+import com.anything.tacticool.view.util.SpriteConnectorEnum;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 
-public class SpriteConnector {
+public abstract class SpriteConnector {
 
     private SpriteConnectorEnum spriteConnectorEnum;
     private SpriteConnectorEnum highlightEnum;
@@ -17,10 +18,12 @@ public class SpriteConnector {
 
     public SpriteConnector(SpriteConnectorEnum spriteConnectorEnum, int x, int y) {
         this.spriteConnectorEnum = spriteConnectorEnum;
+        this.highlightEnum = null;
         this.x = x;
         this.y = y;
     }
 
+    /*
     public SpriteConnector(SpriteConnectorEnum spriteConnectorEnum, SpriteConnectorEnum highlightSprite, int x, int y) {
         this.spriteConnectorEnum = spriteConnectorEnum;
         this.highlightEnum = highlightSprite;
@@ -33,14 +36,23 @@ public class SpriteConnector {
             public void clicked(InputEvent event, float x, float y){
                 ap.addAction(getHighlight());
             }
-                          });
+        });
+    }
+    */
+
+    public void setHighlightEnum(SpriteConnectorEnum highlightEnum){
+        this.highlightEnum = highlightEnum;
     }
 
-    private SpriteConnector getHighlight(){
-        return new SpriteConnector(this.highlightEnum, this.x, this.y);
+    public SpriteConnector getHighlight(){
+        if(highlightEnum != null){
+            return new SimpleSprite(this.highlightEnum, this.x, this.y);
+        }  else {
+            return null;
+        }
     }
 
-    public SpriteConnectorEnum getSpriteConnectorEnum() {
+    public SpriteConnectorEnum getSpriteConnectorEnum(){
         return spriteConnectorEnum;
     }
 
@@ -50,6 +62,11 @@ public class SpriteConnector {
 
     public int getY() {
         return y;
+    }
+
+    public void updatePos(int x, int y){
+        this.x = x;
+        this.y = y;
     }
 
     public Actor getActor() throws Exception{
@@ -63,11 +80,16 @@ public class SpriteConnector {
      * Currently loads each texture seperately from memory each time this is called.
      * Should be changed to use TextureRegion to avoid this.
      */
+<<<<<<< HEAD:client/core/src/com/anything/tacticool/view/util/SpriteConnector.java
 
     public Sprite prepareSprite(float tileScale) {
         Texture texture = new Texture(spriteConnectorEnum.getFilePath());
         Sprite sprite = new Sprite(texture);
+        sprite.setPosition(x*tileScale,y*tileScale);
         sprite.setSize(tileScale, tileScale);
         return sprite;
     }
+=======
+    public abstract Sprite prepareSprite(float tileScale);
+>>>>>>> main:client/core/src/com/anything/tacticool/view/util/spriteConnectors/SpriteConnector.java
 }
