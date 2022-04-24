@@ -1,8 +1,6 @@
 package com.anything.tacticool.view.util;
 
-import com.anything.tacticool.view.scene.SceneManager;
-
-import java.util.Stack;
+import com.anything.tacticool.view.util.spriteConnectors.SpriteConnector;
 
 public class ActionPointSingleton {
 
@@ -31,8 +29,22 @@ public class ActionPointSingleton {
     //Singleton boilerplate ends
 
     public void addAction(SpriteConnector spriteConnector){
-        highlightElements.add(spriteConnector);
-        actionPoint--;
+        if (highlightElements.isEmpty()) {
+            highlightElements.add(spriteConnector);
+            actionPoint--;
+        }else if (checkDiff(spriteConnector)) {
+                highlightElements.add(spriteConnector);
+                actionPoint--;
+            }
+    }
+
+    private boolean checkDiff(SpriteConnector spriteConnector){
+        if (highlightElements.getLastSprite().getX()-spriteConnector.getX() <1 && highlightElements.getLastSprite().getX()-spriteConnector.getX() >-1){
+            if (highlightElements.getLastSprite().getX()-spriteConnector.getX() <1 && highlightElements.getLastSprite().getX()-spriteConnector.getX() >-1){
+                return true;
+            }
+        }
+        return false;
     }
 
     public void reset(){

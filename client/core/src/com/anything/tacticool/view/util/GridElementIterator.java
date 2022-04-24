@@ -1,5 +1,7 @@
 package com.anything.tacticool.view.util;
 
+import com.anything.tacticool.view.util.spriteConnectors.SpriteConnector;
+
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
@@ -33,6 +35,14 @@ public class GridElementIterator implements Iterator{
         }
         index ++;
         return spriteConnectors.get(index);
+    }
+
+    public SpriteConnector getLastSprite(){
+        return spriteConnectors.get(spriteConnectors.size()-1);
+    }
+
+    public boolean isEmpty(){
+        return spriteConnectors.size()==0;
     }
 
     public void add(SpriteConnector sprite){
