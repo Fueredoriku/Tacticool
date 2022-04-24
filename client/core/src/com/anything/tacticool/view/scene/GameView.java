@@ -87,6 +87,7 @@ public class GameView extends Scene {
         mainPlayer.addAction(new InputAction(ActionType.MOVE, 3,3));
         grid.setPlayers(players);
 
+        this.inputs = new ArrayList<>();
 
         actorFactory = new ActorFactory();
         constructBoard(grid.getWidth(), grid.getHeigth());
@@ -95,10 +96,10 @@ public class GameView extends Scene {
         apHUD = new Texture("aphud.png");
         apSprite = new Sprite(apHUD);
         font = new BitmapFont();
-        uiWidth = Gdx.graphics.getWidth()/3f;
-        uiHeight = Gdx.graphics.getHeight()/6f;
+        uiWidth = Gdx.graphics.getWidth()/6f;
+        uiHeight = Gdx.graphics.getHeight()/12f;
 
-        prepareScene();
+        //prepareScene();
 
 
     }
@@ -139,18 +140,30 @@ public class GameView extends Scene {
 
     private void buildButtons(){
 
-        TextButton submit_button = actorFactory.textButton(new TextButton("Submit", skin),
-                uiWidth, uiHeight,Gdx.graphics.getWidth()-20, Gdx.graphics.getHeight()-30,
+        TextButton submit_button = actorFactory.textButton(
+                new TextButton("Submit", skin),
+                uiWidth, uiHeight,Gdx.graphics.getWidth() - uiWidth*1.1f, Gdx.graphics.getHeight() - uiHeight*1.1f,
                 new ClickListener() {
                     @Override
                     public void clicked(InputEvent event, float x, float y) {
                         constructActionList();
                     }
+                });
+
+        TextButton reset_input_button = actorFactory.textButton(
+                new TextButton("Undo", skin),
+                uiWidth, uiHeight,Gdx.graphics.getWidth() - uiWidth*1.1f, Gdx.graphics.getHeight() - 2*uiHeight*1.1f,
+                new ClickListener() {
+                    @Override
+                    public void clicked(InputEvent event, float x, float y) {
+                        inputs.clear();
+                    }
                 }
-                );
+        );
         actorFactory.stageActors(stage, new Actor[]{
-                submit_button,
+                submit_button, reset_input_button
         });
+        Gdx.input.setInputProcessor(stage);
 
         /*
         resetButton = new TextButton("Reset Moves", skin);
@@ -216,6 +229,7 @@ public class GameView extends Scene {
         //textureHandler.createBatch(actorIterator, batch);
         textureHandler.createBatch(ap.getInputIterator(), batch);
         drawHUD(batch);
+        stage.draw();
 
     }
 }
