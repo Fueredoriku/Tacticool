@@ -11,7 +11,7 @@ public enum Terrain {
     private final int value;
     private final String texture;
 
-    private Terrain(final int id, final int value, final String texture) {
+    Terrain(final int id, final int value, final String texture) {
         this.id = id;
         this.value = value;
         this.texture = texture;
