@@ -20,6 +20,7 @@ import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
+import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
@@ -107,11 +108,17 @@ public class GameView extends Scene {
     }
 
     public void constructBoard(int width, int height){
+        float tileScale;
+        if (Gdx.graphics.getWidth() / width < Gdx.graphics.getHeight() / height) {
+            tileScale = (Gdx.graphics.getWidth() / width);
+        } else {
+            tileScale = (Gdx.graphics.getHeight() / height);
+        }
         for (int i = 0; i < grid.getBoard().length; i++){
             Actor newActor = new Actor();
             tileIterator.add(SpriteConnectorFactory.createActorSpriteWithHiglight(
                     SpriteConnectorEnum.GRASS, SpriteConnectorEnum.HIGHLIGHTTILE,
-                    i%width, height - 1 - (int)Math.floor(i/width), newActor));
+                    i%width, height - 1 - (int)Math.floor(i/width), newActor, tileScale));
         }
 
         players = grid.getPlayers();
@@ -135,6 +142,8 @@ public class GameView extends Scene {
             }
         }
         tileIterator.reset();
+
+
 
         Gdx.input.setInputProcessor(stage);
     }

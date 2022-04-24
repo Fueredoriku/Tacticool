@@ -17,13 +17,13 @@ public class SpriteConnectorFactory {
         return sc;
     }
 
-    public static SpriteConnector createActorSprite(SpriteConnectorEnum spriteConnectorEnum, int x, int y, Actor actor){
-        return new ActorSprite(spriteConnectorEnum, x, y, actor);
+    public static SpriteConnector createActorSprite(SpriteConnectorEnum spriteConnectorEnum, int x, int y, Actor actor, float tileScale){
+        return new ActorSprite(spriteConnectorEnum, x, y, actor, tileScale);
     }
 
     public static SpriteConnector createActorSpriteWithHiglight(SpriteConnectorEnum spriteConnectorEnum,
-                        SpriteConnectorEnum highlight, int x, int y, Actor actor){
-        SpriteConnector sc = new ActorSprite(spriteConnectorEnum, x, y, actor);
+                        SpriteConnectorEnum highlight, int x, int y, Actor actor, float tileScale){
+        SpriteConnector sc = new ActorSprite(spriteConnectorEnum, x, y, actor, tileScale);
         sc.setHighlightEnum(highlight);
         return sc;
     }

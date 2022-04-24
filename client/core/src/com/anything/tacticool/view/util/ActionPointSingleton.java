@@ -20,6 +20,7 @@ public class ActionPointSingleton {
             throw new RuntimeException("Singleton somehow already created, use ActionPointSingleton.getInstance() instead.");
         }
         highlightElements = new GridElementIterator();
+        inputs = new ArrayList<>();
         actionPoint = 10;
     }
 
@@ -34,19 +35,27 @@ public class ActionPointSingleton {
     //Singleton boilerplate ends
 
     public void addAction(SpriteConnector spriteConnector){
+        System.out.println("Trying to add");
         if (highlightElements.isEmpty()) {
             highlightElements.add(spriteConnector);
             actionPoint--;
+            System.out.println("Added");
         }else if (checkDiff(spriteConnector)) {
-                highlightElements.add(spriteConnector);
-                actionPoint--;
-                inputs.add(new InputAction(ActionType.MOVE, highlightElements.getLastSprite().getX()-spriteConnector.getX(), highlightElements.getLastSprite().getY()-spriteConnector.getY()));
+            highlightElements.add(spriteConnector);
+            actionPoint--;
+            inputs.add(new InputAction(ActionType.MOVE, highlightElements.getLastSprite().getX()-spriteConnector.getX(), highlightElements.getLastSprite().getY()-spriteConnector.getY()));
+            System.out.println("Added");
             }
     }
 
     private boolean checkDiff(SpriteConnector spriteConnector){
-        if (highlightElements.getLastSprite().getX()-spriteConnector.getX() <1 && highlightElements.getLastSprite().getX()-spriteConnector.getX() >-1){
-            if (highlightElements.getLastSprite().getY()-spriteConnector.getY() <1 && highlightElements.getLastSprite().getY()-spriteConnector.getY() >-1){
+        if (highlightElements.getLastSprite().getX()-spriteConnector.getX() == 1 || highlightElements.getLastSprite().getX()-spriteConnector.getX() == -1){
+            if (highlightElements.getLastSprite().getY()-spriteConnector.getY() == 0) {
+                return true;
+            }
+        }
+        if (highlightElements.getLastSprite().getY()-spriteConnector.getY() == 1 || highlightElements.getLastSprite().getY()-spriteConnector.getY() == -1){
+            if (highlightElements.getLastSprite().getX()-spriteConnector.getX() == 0) {
                 return true;
             }
         }
