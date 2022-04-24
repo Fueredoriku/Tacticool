@@ -71,7 +71,7 @@ public class Settings extends Scene {
 
         Label gameMusic_Label = (Label) actorFactory.actor(
                 new Label("Game Music", skin),
-                uiWidth, uiHeight, ui_xPosition, ui_yScale * 3f
+                uiWidth, uiHeight, ui_xPosition - uiWidth/1.8f, ui_yScale * 3f
         );
 
         TextButton tenseMusic_Button = actorFactory.textButton(
