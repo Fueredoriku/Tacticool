@@ -32,6 +32,7 @@ import java.util.EventListener;
 import java.util.List;
 
 import httpRequests.Request;
+import httpRequests.Serializer;
 
 
 public class GameView extends Scene {
@@ -59,7 +60,7 @@ public class GameView extends Scene {
     private ArrayList<InputAction> inputs;
     private List<Player> players;
     private Grid grid;
-    private long gameID = 2;
+    private int gameID = 2;
     private Player mainPlayer;
     private List<Actor> actors;
 
@@ -79,7 +80,7 @@ public class GameView extends Scene {
         tileIterator = new GridElementIterator();
         skin = new Skin(Gdx.files.internal("ui/uiskin.json"));
         skin.getFont("default-font").getData().setScale(3f);
-        grid = new Grid("1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1",5,5);
+        grid = new Grid("1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1",5,5, false);
         mainPlayer = new Player(513,3,4,4);
         Player enemy = new Player(543,3,2,2);
         players = new ArrayList<>();
@@ -148,6 +149,11 @@ public class GameView extends Scene {
                     @Override
                     public void clicked(InputEvent event, float x, float y) {
                         constructActionList();
+                        try {
+                            request.postMoves(new Serializer().serializeActions(inputs), gameID, mainPlayer.getPlayerID());
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
                     }
                 });
 
@@ -209,10 +215,12 @@ public class GameView extends Scene {
 
     private void constructActionList(){
         inputs.clear();
+        /*
         while (ap.getInputIterator().hasNext()) {
             InputAction action = new InputAction(ActionType.MOVE, ap.getInputIterator().next().getX(), ap.getInputIterator().next().getY());
             inputs.add(action);
-        }
+        }*/
+        inputs = ap.getInputs();
     }
 
     public void updatePlayer(Player player){

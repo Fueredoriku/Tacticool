@@ -13,7 +13,7 @@ import java.sql.Statement;
 
 public class DBController extends DatabaseManager{
     
-    public static int registerPlayer(String name, String pass){
+    public int registerPlayer(String name, String pass){
         try (Statement stmt = getConn().createStatement()){
             String sql = String.format("INSERT INTO miburgos_tacticool.Player(name,password) VALUES ('%s', '%s');", name.toLowerCase(), pass.toLowerCase());
             stmt.execute(sql);
@@ -28,7 +28,7 @@ public class DBController extends DatabaseManager{
         return -1;
     }
 
-    public static int getPlayerByLogin(String name, String pass){
+    public int getPlayerByLogin(String name, String pass){
         try (Statement stmt = getConn().createStatement()){
             String sql = String.format("SELECT IDplayer FROM miburgos_tacticool.Player WHERE name='%s' AND password='%s'", name.toLowerCase(), pass.toLowerCase());
             ResultSet rs = stmt.executeQuery(sql);
@@ -125,22 +125,44 @@ public class DBController extends DatabaseManager{
         return null;
     }
 
-     public void addMovesToPlayerInGame(ActionHandler handler, Player player) {
-         try (Statement stmt = getConn().createStatement()){
-             String sql = String.format("UPDATE miburgos_tacticool.GameToPlayer SET ready = %b, moves = '%s' WHERE IDgame = %d AND IDplayer = %d", true, new Gson().toJson(handler.getPlayerActions(player)), handler.getGameID(), player.getPlayerID());
-             stmt.execute(sql);
-         } catch (SQLException e) {
-             e.printStackTrace();
-         }
-     }
+    public boolean getTurnSwitch(int gameID) {
+        try (Statement stmt = getConn().createStatement()){
+            String sql = String.format("SELECT ready FROM GameTable WHERE IDgame = %d", gameID);
+            ResultSet result = stmt.executeQuery(sql);
+            result.next();
+            return result.getBoolean("ready");
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        throw new IllegalStateException("Something went wrong when fetching 'ready' column");
+    }
 
+    /**
+     * Adds the actions of a player in a specific game to the DB.
+     * @param handler An ActionHandler
+     * @param player A player object
+     */
+    public void addMovesToPlayerInGame(ActionHandler handler, Player player) {
+        try (Statement stmt = getConn().createStatement()){
+            String sql = String.format("UPDATE miburgos_tacticool.GameToPlayer SET ready = %b, moves = '%s' WHERE IDgame = %d AND IDplayer = %d", true, new Gson().toJson(handler.getPlayerActions(player)), handler.getGameID(), player.getPlayerID());
+            stmt.execute(sql);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * Updates the current gamestate in the DB.
+     * @param handler   which game to update gamestate for.
+     * @param actions   performed in the provided game.
+     */
     public void updateGameState(ActionHandler handler, String actions) {
         try (Statement stmt = getConn().createStatement()){
             for (Player player : handler.getPlayers()) {
                 String updatePlayer = String.format("UPDATE miburgos_tacticool.GameToPlayer SET hp = %d, coord = '%s', ready = %b WHERE IDgame = %d AND IDplayer = %d", player.getHealthPoints(), player.getPosition().toString(), false, handler.getGameID(), player.getPlayerID());
                 stmt.execute(updatePlayer);
             }
-            String updateGame = String.format("UPDATE miburgos_tacticool.GameTable SET actions = '%s' WHERE IDgame = %d", actions, handler.getGameID());
+            String updateGame = String.format("UPDATE miburgos_tacticool.GameTable SET actions = '%s', ready = %b WHERE IDgame = %d", actions, !getTurnSwitch(handler.getGameID()), handler.getGameID());
             stmt.execute(updateGame);
         } catch (SQLException e) {
             e.printStackTrace();

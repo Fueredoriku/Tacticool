@@ -1,8 +1,6 @@
 package com.anything.tacticool.model;
 
-import com.anything.tacticool.view.util.spriteConnectors.SimpleSprite;
 import com.anything.tacticool.view.util.spriteConnectors.SpriteConnector;
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -65,6 +63,6 @@ public class Player {
 
     @Override
     public String toString() {
-        return String.format("ID: %d\nHP: %d\nActions: %s\n", playerID, healthPoint, actions);
+        return String.format("ID: %d\nHP: %d\nActions: %s\nPosition: %s, %s\n", playerID, healthPoint, actions, posX, posY);
     }
 }
