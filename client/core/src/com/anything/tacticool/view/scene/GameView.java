@@ -5,7 +5,9 @@ import com.anything.tacticool.model.Grid;
 import com.anything.tacticool.model.InputAction;
 import com.anything.tacticool.model.Player;
 import com.anything.tacticool.view.util.ActionPointSingleton;
+import com.anything.tacticool.view.util.ActorFactory;
 import com.anything.tacticool.view.util.GridElementIterator;
+import com.anything.tacticool.view.util.spriteConnectors.SimpleSprite;
 import com.anything.tacticool.view.util.spriteConnectors.SpriteConnector;
 import com.anything.tacticool.view.util.SpriteConnectorEnum;
 import com.anything.tacticool.view.util.TextureHandler;
@@ -15,6 +17,7 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
@@ -97,15 +100,15 @@ public class GameView extends Scene {
 
     public void constructBoard(int width, int height){
         for (int i = 0; i < grid.getBoard().length; i++){
-            tileIterator.add(SpriteConnectorFactory.createSimpleSpriteWithHighlight(
+            Actor newActor = new Actor();
+            tileIterator.add(SpriteConnectorFactory.createActorSpriteWithHiglight(
                     SpriteConnectorEnum.GRASS, SpriteConnectorEnum.HIGHLIGHTTILE,
-                    i%width, (int)Math.floor(i/width)));
-            //tileIterator.add(new SpriteConnector(SpriteConnectorEnum.GRASS, SpriteConnectorEnum.HIGHLIGHTTILE, i%width,(int)Math.floor(i/width)));
+                    i%width, (int)Math.floor(i/width), newActor));
         }
 
         players = grid.getPlayers();
         for (int i = 0; i < players.size(); i++){
-            SpriteConnector newPlayer = new SpriteConnector(SpriteConnectorEnum.PLAYER, players.get(i).getCurrentX(), players.get(i).getCurrentY());
+            SpriteConnector newPlayer = new SimpleSprite(SpriteConnectorEnum.PLAYER, players.get(i).getCurrentX(), players.get(i).getCurrentY());
             players.get(i).setTexture(newPlayer);
             tileIterator.add(newPlayer);
 
