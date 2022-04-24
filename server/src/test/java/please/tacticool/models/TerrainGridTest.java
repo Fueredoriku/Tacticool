@@ -5,11 +5,14 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+import java.util.List;
+
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import please.tacticool.models.Actors.Actor;
+import please.tacticool.models.Actors.Obstacle;
 import please.tacticool.models.Actors.Player;
 
 @SpringBootTest
@@ -17,12 +20,16 @@ public class TerrainGridTest {
 
     private static TerrainGrid grid;
     private static Player dummyPlayer;
+    private static Obstacle dummyObstacle;
 
     @BeforeAll
     public static void beforeAll(){
         grid = new TerrainGrid(5, 5);
         dummyPlayer = new Player(1, new Coordinate(1,1), 10);
         grid.setActor(dummyPlayer.getPosition(), dummyPlayer);
+
+        dummyObstacle = new Obstacle(new Coordinate(3,3), true);
+        grid.setActor(dummyObstacle.getPosition(), dummyObstacle);
     }
 
     @Test
@@ -67,6 +74,14 @@ public class TerrainGridTest {
         Coordinate illegalMove = new Coordinate(5, 1);
         assertThrows(IndexOutOfBoundsException.class, () -> grid.moveActor(dummyPlayer, illegalMove));
         assertTrue(grid.getTile(target).getActor().equals(dummyPlayer));
+    }
+
+    @Test
+    void getFreeTilesTest(){
+        List<Coordinate> freeTiles = grid.getFreeTiles();
+        for(Coordinate c : freeTiles){
+            assertFalse(c.equals(dummyObstacle.getPosition()) || c.equals(dummyPlayer.getPosition()));
+        }
     }
 
 
