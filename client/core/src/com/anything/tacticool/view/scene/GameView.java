@@ -110,7 +110,7 @@ public class GameView extends Scene {
             Actor newActor = new Actor();
             tileIterator.add(SpriteConnectorFactory.createActorSpriteWithHiglight(
                     SpriteConnectorEnum.GRASS, SpriteConnectorEnum.HIGHLIGHTTILE,
-                    i%width, (int)Math.floor(i/width), newActor));
+                    i%width, height - 1 - (int)Math.floor(i/width), newActor));
         }
 
         players = grid.getPlayers();
