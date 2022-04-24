@@ -84,18 +84,6 @@ public class Controller {
     }
 
     /**
-     * Check if the game is won.
-     * @param gameID    the id of the game to check.
-     * @return          json on the form {"isGameWon": true/false, "player": playerId / -1 / null}. 
-     *                  For the "player" field, you get the id on single player win, -1 on a tie and null if the game is not won.
-     */
-    @GetMapping("/api/isGameWon{gameID}")
-    public ResponseEntity<String> isGameWon(@PathVariable String gameID) {
-        ActionHandler ac = new DBController().getGame(Integer.parseInt(gameID));
-        return new ResponseEntity<>(ac.getWinState().getAsString(), HttpStatus.OK);
-    }
-
-    /**
      * Main request function for taking in moves from players
      * @param body Input body that will be the move list from the client
      * @param gameId The main way for the player to identify him/herself

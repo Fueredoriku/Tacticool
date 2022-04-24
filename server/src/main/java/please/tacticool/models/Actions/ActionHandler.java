@@ -169,6 +169,8 @@ public class ActionHandler {
         return this.gameID;
     }
 
+
+
     /**
      * Gets the current game state as a json string. 
      * @return  a json string containing: player information (hp, position), performed actions and the grid.
@@ -187,6 +189,7 @@ public class ActionHandler {
         board.addProperty("width", grid.getDimensions().getX());
         board.addProperty("height", grid.getDimensions().getY());
         results.add("grid", board);
+        results.add("winState", getWinState());
         return results.toString();
     }
 
@@ -212,20 +215,5 @@ public class ActionHandler {
         result.append(grid.toString());
 
         return result.toString();
-    }
-
-
-    public static void main(String[] args) {
-        DBController dbController = new DBController();
-        ActionHandler handler = dbController.getGame(2);
-        Player me = handler.getPlayerById(7);
-        Actions a = new Actions();
-        a.addAction(new Move(new Coordinate(1, 0)));
-        handler.addActions(me, a, true);
-
-        handler.simulate();
-        System.out.println(handler);
-
-        System.out.println(handler.getGameState());
     }
 }
