@@ -12,7 +12,11 @@ public class TerrainGrid {
     private Tile[] grid;
     private Coordinate dimensions;
 
-    
+    /**
+     * Simple constructor for TerrainGrid.
+     * @param width width of the grid.
+     * @param depth depth / heigth of the grid.
+     */
     public TerrainGrid(int width, int depth) {
         dimensions = new Coordinate(width, depth);
         grid = new Tile[width*depth];
@@ -20,6 +24,12 @@ public class TerrainGrid {
         populateGrid();
     }
 
+    /**
+     * Constructor with specified terrain types for tiles.
+     * @param board string representation of the board (from toStringMap() method).
+     * @param width width of the board.
+     * @param height depth / heigth of the grid.
+     */
     public TerrainGrid(String board, int width, int height) {
         dimensions = new Coordinate(width, height);
         grid = new Tile[width * height];
@@ -53,6 +63,11 @@ public class TerrainGrid {
         return coordinate.getX() >= 0 && coordinate.getX() < dimensions.getX() && coordinate.getY() >= 0 && coordinate.getY() < dimensions.getY();
     }
 
+    /**
+     * Checks if a tile on the grid is occupied.
+     * @param coordinate    the coordinate to check.
+     * @return              true if empty, false otherwise.
+     */
     public boolean isEmptyTile(Coordinate coordinate) {
         if (getTile(coordinate).isEmpty()) {
             return true;
@@ -143,6 +158,10 @@ public class TerrainGrid {
         return dimensions;
     }
 
+    /**
+     * Gets a list of the coordinates of all free tiles.
+     * @return  the coordinates of all free tiles.
+     */
     public List<Coordinate> getFreeTiles() {
         List<Coordinate> result = new ArrayList<>();
         for (int i = 0; i < dimensions.getY(); i++) {
@@ -153,6 +172,10 @@ public class TerrainGrid {
         return result;
     }
 
+    /**
+     * Creates a string representation of the tiles on the grid, ignoring Actiors.
+     * @return  string representation of the map on the form "1,1,1,1" where the number indicates the type of Terrain. 
+     */
     public String toStringMap() {
         String s = "";
         for (Tile tile : grid) {
