@@ -117,7 +117,7 @@ public class GameView extends Scene {
         for (int i = 0; i < players.size(); i++){
             SpriteConnector newPlayer = new SimpleSprite(SpriteConnectorEnum.PLAYER, players.get(i).getCurrentX(), players.get(i).getCurrentY());
             players.get(i).setTexture(newPlayer);
-            tileIterator.add(newPlayer);
+            //tileIterator.add(newPlayer);
 
         }
     }
