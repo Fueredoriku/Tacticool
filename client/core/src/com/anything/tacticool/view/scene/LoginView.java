@@ -14,17 +14,23 @@ import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.ScreenUtils;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 
+import java.io.IOException;
+
+import httpRequests.Request;
+
 public class LoginView extends Scene{
 
     private Stage stage;
     private Skin skin;
     private ActorFactory actorFactory;
+    private Request request;
 
     private String username;
 
 
     public LoginView() {
         this.actorFactory = new ActorFactory();
+        this.request = new Request();
     }
 
     @Override
@@ -78,7 +84,11 @@ public class LoginView extends Scene{
 
     private void login() {
         //TODO connect to server
-        sm.Push(new MainView());
+        try {
+            sm.Push(new MainView(request.getPlayerIDFromLogin(username,"")));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     @Override
