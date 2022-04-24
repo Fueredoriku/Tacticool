@@ -1,6 +1,7 @@
 package com.anything.tacticool.view.util;
 
 
+import com.anything.tacticool.view.util.spriteConnectors.SpriteConnector;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 

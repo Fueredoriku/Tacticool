@@ -6,9 +6,10 @@ import com.anything.tacticool.model.InputAction;
 import com.anything.tacticool.model.Player;
 import com.anything.tacticool.view.util.ActionPointSingleton;
 import com.anything.tacticool.view.util.GridElementIterator;
-import com.anything.tacticool.view.util.SpriteConnector;
+import com.anything.tacticool.view.util.spriteConnectors.SpriteConnector;
 import com.anything.tacticool.view.util.SpriteConnectorEnum;
 import com.anything.tacticool.view.util.TextureHandler;
+import com.anything.tacticool.view.util.spriteConnectors.SpriteConnectorFactory;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
@@ -22,7 +23,6 @@ import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 
 import java.io.IOException;
-import java.net.MalformedURLException;
 import java.util.ArrayList;
 
 import httpRequests.Request;
@@ -90,7 +90,10 @@ public class GameView extends Scene {
 
     public void constructBoard(int width, int height){
         for (int i = 0; i < grid.getBoard().length; i++){
-            tileIterator.add(new SpriteConnector(SpriteConnectorEnum.GRASS, SpriteConnectorEnum.HIGHLIGHTTILE, i%width,(int)Math.floor(i/width)));
+            tileIterator.add(SpriteConnectorFactory.createSimpleSpriteWithHighlight(
+                    SpriteConnectorEnum.GRASS, SpriteConnectorEnum.HIGHLIGHTTILE,
+                    i%width, (int)Math.floor(i/width)));
+            //tileIterator.add(new SpriteConnector(SpriteConnectorEnum.GRASS, SpriteConnectorEnum.HIGHLIGHTTILE, i%width,(int)Math.floor(i/width)));
         }
     }
 

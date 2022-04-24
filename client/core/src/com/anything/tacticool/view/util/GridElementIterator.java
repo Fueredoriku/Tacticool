@@ -1,5 +1,7 @@
 package com.anything.tacticool.view.util;
 
+import com.anything.tacticool.view.util.spriteConnectors.SpriteConnector;
+
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
