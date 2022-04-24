@@ -5,6 +5,7 @@ import com.anything.tacticool.view.util.ActorFactory;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.anything.tacticool.view.util.AudioController;
+import com.badlogic.gdx.scenes.scene2d.EventListener;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
@@ -12,8 +13,10 @@ import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.ui.TextField;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
+import com.badlogic.gdx.scenes.scene2d.utils.FocusListener;
 import com.badlogic.gdx.utils.ScreenUtils;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
+import com.sun.tools.javac.util.StringUtils;
 
 import java.io.IOException;
 
@@ -32,14 +35,16 @@ public class MainView extends Scene {
     private Skin skin;
     private MenuState menuState;
 
-    private long gameID;
-    private long playerID = 1;
+    private int gameID;
+    private int playerID = 1;
 
     private ActorFactory actorFactory;
+    private Request request;
 
 
     public MainView() {
         this.actorFactory = new ActorFactory();
+        this.request = new Request();
     }
 
     @Override
@@ -60,13 +65,14 @@ public class MainView extends Scene {
             case MAIN:
                 stage.draw();
                 checkState();
-                this.gameID = Long.parseLong( ((TextField) stage.getActors().get(0)).getText() );
+                String gameID_String = ((TextField) stage.getActors().get(0)).getText();
+                this.gameID = gameID_String.isEmpty()?0:Integer.parseInt(gameID_String);
                 break;
 
             case QEUED:
                 //TODO make call to server to check if game can start
                 //TODO change if statement to take the answer from the server as its condition
-                if (true) {
+                if (false) {
                     this.menuState = menuState.START;
                 }
                 break;
@@ -103,22 +109,24 @@ public class MainView extends Scene {
             throw new IllegalStateException("Expected TextField at index 0 in Actors, instead of " + stage.getActors().get(0).getName());
         }
         try {
-            Long.parseLong(((TextField) stage.getActors().get(0)).getText());
+            Integer.parseInt(((TextField) stage.getActors().get(0)).getText());
         } catch (NumberFormatException e) {
-            throw new IllegalStateException("Textfield couldn't be cast to a long. It should only contain numbers.");
+            if (((TextField) stage.getActors().get(0)).getText().length() != 0) {
+                throw new IllegalStateException("Textfield couldn't be cast to an int. It should only contain numbers.");
+            }
         }
     }
 
 
     //Method for joining game
     private void joinGame() throws IOException {
-        Request request = new Request();
         request.joinGame(gameID, playerID);
         this.menuState = menuState.QEUED;
     }
 
     //Method for opening settings
     private void openSettings() {
+        Gdx.input.setOnscreenKeyboardVisible(false);
         sm.Push(new Settings());
     }
 
