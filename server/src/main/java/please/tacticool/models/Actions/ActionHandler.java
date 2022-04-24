@@ -139,7 +139,7 @@ public class ActionHandler {
         if (isGameWon) {
             obj.addProperty("player", alive.size() == 1 ? alive.get(0).getPlayerID() : -1);
         } else {
-            obj.add("player", null);
+            obj.addProperty("player", -2);
         }
 
         return obj;
