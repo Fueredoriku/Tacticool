@@ -9,6 +9,8 @@ public class Grid {
     private int heigth;
     private List<Player> players;
     private boolean turn;
+    private boolean isGameWon;
+    private int winningPlayer;
 
     public Grid(String board, int width, int heigth, boolean turn) {
         this.heigth = heigth;
@@ -24,6 +26,33 @@ public class Grid {
 
     public void setPlayers(List<Player> players) {
         this.players = players;
+    }
+
+    public void setWinState(boolean isGameWon, int playerID) {
+        this.isGameWon = isGameWon;
+        this.winningPlayer = playerID;
+    }
+
+    public boolean isGameWon() {
+        return isGameWon;
+    }
+
+    /**
+     * Gets the winning player if the game is won.
+     * @throws  IllegalStateException   if the game is not won.
+     * @return  a player if he won or null if everyone is dead and it is a tie.
+     */
+    public Player getWinningPlayer() {
+        if (!isGameWon) {
+            throw new IllegalStateException("This method should only be called if the game is won");
+        }
+
+        for (Player player : players) {
+            if (player.getPlayerID() == winningPlayer) {
+                return player;
+            }
+        }
+        return null;
     }
 
     public int[] getBoard() {

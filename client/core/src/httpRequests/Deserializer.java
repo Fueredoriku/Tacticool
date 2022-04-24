@@ -1,6 +1,5 @@
 package httpRequests;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -23,7 +22,13 @@ public class Deserializer {
         if (actions != null && !actions.equals("null")) {
             deserializeActions(obj.get("actions").getAsJsonObject(), players);
         }
-        return deserializeGrid(obj.get("grid").getAsJsonObject(), players);
+
+        Grid grid = deserializeGrid(obj.get("grid").getAsJsonObject(), players);
+
+        JsonObject winState = obj.get("winState").getAsJsonObject();
+        grid.setWinState(winState.get("isGameWon").getAsBoolean(), winState.get("player").getAsInt());;
+
+        return grid;
     }
 
     private List<Player> deserializePlayers(JsonArray playersJson) {
