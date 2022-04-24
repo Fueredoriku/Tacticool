@@ -5,7 +5,6 @@ import com.anything.tacticool.view.util.ActorFactory;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.anything.tacticool.view.util.AudioController;
-import com.badlogic.gdx.scenes.scene2d.EventListener;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
@@ -13,28 +12,18 @@ import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.ui.TextField;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
-import com.badlogic.gdx.scenes.scene2d.utils.FocusListener;
 import com.badlogic.gdx.utils.ScreenUtils;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
-import com.sun.tools.javac.util.StringUtils;
 
 import java.io.IOException;
 
 import httpRequests.Request;
 
-/*
-enum MenuState {
-    MAIN,
-    QEUED,
-    START
-}
-*/
 
 public class MainView extends Scene {
 
     private Stage stage;
     private Skin skin;
-    //private MenuState menuState;
 
     private int gameID;
     private int playerID;
@@ -67,31 +56,6 @@ public class MainView extends Scene {
         checkState();
         String gameID_String = ((TextField) stage.getActors().get(0)).getText();
         this.gameID = gameID_String.isEmpty()?0:Integer.parseInt(gameID_String);
-        /*
-        switch (menuState) {
-            case MAIN:
-                stage.draw();
-                checkState();
-                String gameID_String = ((TextField) stage.getActors().get(0)).getText();
-                this.gameID = gameID_String.isEmpty()?0:Integer.parseInt(gameID_String);
-                break;
-
-            case QEUED:
-                //TODO make call to server to check if game can start
-                //TODO change if statement to take the answer from the server as its condition
-                if (false) {
-                    this.menuState = menuState.START;
-                }
-                break;
-
-            case START:
-                //TODO make call to server to start new game
-                this.menuState = menuState.MAIN;
-                sm.Push(new GameView());
-                break;
-        }
-        */
-
         batch.end();
     }
 
@@ -111,7 +75,7 @@ public class MainView extends Scene {
     // Rudimentary exception handling
     private void checkState() {
         if (stage.getActors().size != 3) {
-            throw new IllegalStateException("Expected 4 actors, instead of " + stage.getActors().size);
+            throw new IllegalStateException("Expected 3 actors, instead of " + stage.getActors().size);
         }
         if (!(stage.getActors().get(0) instanceof TextField)) {
             throw new IllegalStateException("Expected TextField at index 0 in Actors, instead of " + stage.getActors().get(0).getName());
@@ -128,9 +92,8 @@ public class MainView extends Scene {
 
     //Method for joining game
     private void joinGame() throws IOException {
-        //request.joinGame(gameID, playerID); /!\ UNCOMMENTED FOR TESTING, DO NOT REMOVE /!\
+        request.joinGame(gameID, playerID); //!\ UNCOMMENT FOR TESTING, DO NOT REMOVE /!\
         sm.Push(new WaitingRoomView(gameID));
-        //this.menuState = menuState.QEUED;
     }
 
     //Method for opening settings
@@ -142,7 +105,6 @@ public class MainView extends Scene {
 
     // Methods used by constructor
     private void prepareVariables() {
-        //this.menuState = MenuState.MAIN;
         this.stage = new Stage(new ScreenViewport());
 
         // Skin to texture UI elements. Currently uses libgdx's basic skin
@@ -182,23 +144,6 @@ public class MainView extends Scene {
                 }
         );
 
-        /*
-        TextButton startGame_Button = actorFactory.textButton(
-                new TextButton("Start Game", skin),
-                uiWidth, uiHeight, ui_xPosition, ui_yScale * 2,
-                new ClickListener() {
-                    @Override
-                    public void clicked(InputEvent event, float x, float y) {
-                        try {
-                            startGame();
-                        } catch (IOException e) {
-                            e.printStackTrace();
-                        }
-                    }
-                }
-        );
-        */
-
         TextButton settings_Button = actorFactory.textButton(
                 new TextButton("Settings", skin),
                 uiWidth, uiHeight, ui_xPosition, ui_yScale * 1,
@@ -210,17 +155,12 @@ public class MainView extends Scene {
                 }
         );
 
-        actorFactory.stageActors(stage, new Actor[] {gameID_Input, joinGame_Button /*, startGame_Button*/, settings_Button});
+        actorFactory.stageActors(stage, new Actor[] {gameID_Input, joinGame_Button, settings_Button});
 
         // Allows UI elements to take inputs
         Gdx.input.setInputProcessor(stage);
     }
 
-    /*
-    private void startGame() throws IOException {
-        request.getGameState(gameID);
-    }
-    */
 
     private void prepareSound() {
         AudioController.setCurrent_musicPath("audio/main_menu.ogg");
