@@ -172,6 +172,8 @@ public class GameView extends Scene {
                 new ClickListener() {
                     @Override
                     public void clicked(InputEvent event, float x, float y) {
+                        ap.inputs.clear();
+                        ap.reset();
                         inputs.clear();
                     }
                 }
