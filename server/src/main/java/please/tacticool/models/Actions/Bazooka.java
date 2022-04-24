@@ -22,7 +22,7 @@ public class Bazooka extends Action {
 
         Coordinate target = player.getPosition().add(getCoordinate().scale(GameBalance.BazookaRange));
 
-        player.useActionPoints(GameBalance.BazookaDamage);
+        player.useActionPoints(GameBalance.BazookaActionCost);
 
         for (int i = 0; i < GameBalance.BazookaRadius * GameBalance.BazookaRadius; i++) {
             Coordinate newTarget = target.add(new Coordinate(-1 + i % GameBalance.BazookaRadius, -1 + i / GameBalance.BazookaRadius));
