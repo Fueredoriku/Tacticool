@@ -169,7 +169,7 @@ public class GameView extends Scene {
     }
 
     private void constructActionList(){
-        //inputs.clear();
+        inputs.clear();
         while (ap.getInputIterator().hasNext()) {
             InputAction action = new InputAction(ActionType.MOVE, ap.getInputIterator().next().getX(), ap.getInputIterator().next().getY());
             inputs.add(action);
@@ -178,7 +178,7 @@ public class GameView extends Scene {
 
     public void updatePlayer(Player player){
         while (player.getActions().size() > 0){
-            player.setCurrentPos(player.getActions().get(0).getTargetX(), player.getActions().get(0).getTargetY());
+            player.setCurrentPos(player.getCurrentX() + player.getActions().get(0).getTargetX(), player.getCurrentY() + player.getActions().get(0).getTargetY());
             player.getTexture().updatePos(player.getCurrentX(), player.getCurrentY());
             player.getActions().remove(0);
         }
