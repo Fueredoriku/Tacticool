@@ -26,6 +26,10 @@ public class ActorSprite extends SpriteConnector {
         });
     }
 
+    @Override
+    public Actor getActor() {
+        return this.actor;
+    }
 
     @Override
     public Sprite prepareSprite(float tileScale) {
