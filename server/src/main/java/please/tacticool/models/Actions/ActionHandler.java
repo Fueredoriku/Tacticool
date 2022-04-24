@@ -11,7 +11,9 @@ import please.tacticool.persistance.DBController;
 import please.tacticool.util.JsonConvert;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.Random;
 import java.util.Set;
 
 public class ActionHandler {
@@ -32,7 +34,7 @@ public class ActionHandler {
 
     public void addPlayer(Player player) {
         playerActions.put(player, new Actions());
-        if (!player.isDead()) { //TODO: OK way of handling dead players?
+        if (!player.isDead()) { 
             grid.setActor(player.getPosition(), player);
         }
     }
@@ -46,8 +48,9 @@ public class ActionHandler {
     }
 
     private void findFreePosition(Player player) {
+        List<Coordinate> possibleTiles = grid.getFreeTiles();
         if (grid.getActor(player.getPosition()) != null) {
-            grid.moveActor(player, player.getPosition().add(new Coordinate(1, 0)));
+            player.setPosition(possibleTiles.get(new Random().nextInt(possibleTiles.size())));
         }
     }
 
