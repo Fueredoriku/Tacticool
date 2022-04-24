@@ -61,8 +61,9 @@ public class Deserializer {
         System.out.println(gridJson);
         Grid grid = new Grid(
             gridJson.get("board").getAsString(), 
-            Integer.parseInt(gridJson.get("width").getAsString()), 
-            Integer.parseInt(gridJson.get("height").getAsString()));
+            gridJson.get("width").getAsInt(), 
+            gridJson.get("height").getAsInt(),
+            gridJson.get("turnSwitch").getAsBoolean());
         grid.setPlayers(players);
         return grid;
     }
