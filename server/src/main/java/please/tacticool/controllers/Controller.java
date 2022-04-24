@@ -6,8 +6,6 @@ import org.springframework.web.bind.annotation.*;
 import please.tacticool.models.Actions.ActionHandler;
 import please.tacticool.persistance.DBController;
 
-import static please.tacticool.persistance.DBController.registerPlayer;
-
 @RestController
 @RequestMapping("/api")
 public class Controller {
@@ -24,11 +22,11 @@ public class Controller {
      * @param password  of the user trying to login / register.
      * @return          the id of the player + status code OK if login and code CREATED if registered.
      */
-    @GetMapping("/registerPlayer/{name}/{password}")
+    @GetMapping("/getUser/{name}/{password}")
     public ResponseEntity<Integer> getPlayerId(@PathVariable String name,@PathVariable String password){
-        int id = DBController.getPlayerByLogin(name.toLowerCase(),password.toLowerCase());
+        int id = new DBController().getPlayerByLogin(name.toLowerCase(),password.toLowerCase());
         if (id < 0 ) {
-            return new ResponseEntity<>(registerPlayer(name.toLowerCase(), password.toLowerCase()), HttpStatus.CREATED);
+            return new ResponseEntity<>(new DBController().registerPlayer(name.toLowerCase(), password.toLowerCase()), HttpStatus.CREATED);
         }
         return new ResponseEntity<>(id,HttpStatus.OK);
     }

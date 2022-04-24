@@ -7,6 +7,8 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+import java.net.ProtocolException;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
 
@@ -84,10 +86,29 @@ public class Request {
         return Long.parseLong(content.toString());
     }
 
+    public int getPlayerIDFromLogin(String name, String pass) throws IOException {
+        URL url = new URL(String.format("http://localhost:8080/api/getUser/%s/%s", name.toLowerCase(), pass.toLowerCase()));
+        HttpURLConnection con = (HttpURLConnection) url.openConnection();
+        con.setRequestMethod("GET");
+        BufferedReader in = new BufferedReader(new InputStreamReader(con.getInputStream()));
+        String inputLine;
+        StringBuffer content = new StringBuffer();
+        while((inputLine = in.readLine()) != null) {
+            content.append(inputLine);
+        }
+        in.close();
+        con.disconnect();
+        return Integer.parseInt(content.toString());
+
+    }
+
     public static void main(String[] args) throws IOException {
         Request request = new Request();
-        request.postMoves("{\"actions\":[{\"coordinate\":{\"x\":1,\"y\":0},\"actionType\":\"MOVE\"}]}\n", 1,2);
-        System.out.println(request.joinGame(3, 1));
+        //request.postMoves("{\"actions\":[{\"coordinate\":{\"x\":0,\"y\":-1},\"actionType\":\"MOVE\"}]}\n", 1,2);
+        //System.out.println(request.joinGame(3, 1));
+        System.out.println(request.getPlayerIDFromLogin("frei","opp"));
+        System.out.println(request.getPlayerIDFromLogin("ula","joy"));
+
 
     }
 }

@@ -13,7 +13,7 @@ import java.sql.Statement;
 
 public class DBController extends DatabaseManager{
     
-    public static int registerPlayer(String name, String pass){
+    public int registerPlayer(String name, String pass){
         try (Statement stmt = getConn().createStatement()){
             String sql = String.format("INSERT INTO miburgos_tacticool.Player(name,password) VALUES ('%s', '%s');", name.toLowerCase(), pass.toLowerCase());
             stmt.execute(sql);
@@ -28,7 +28,7 @@ public class DBController extends DatabaseManager{
         return -1;
     }
 
-    public static int getPlayerByLogin(String name, String pass){
+    public int getPlayerByLogin(String name, String pass){
         try (Statement stmt = getConn().createStatement()){
             String sql = String.format("SELECT IDplayer FROM miburgos_tacticool.Player WHERE name='%s' AND password='%s'", name.toLowerCase(), pass.toLowerCase());
             ResultSet rs = stmt.executeQuery(sql);
@@ -127,8 +127,8 @@ public class DBController extends DatabaseManager{
 
     /**
      * Adds the actions of a player in a specific game to the DB.
-     * @param handler   
-     * @param player
+     * @param handler An ActionHandler
+     * @param player A player object
      */
     public void addMovesToPlayerInGame(ActionHandler handler, Player player) {
         try (Statement stmt = getConn().createStatement()){
