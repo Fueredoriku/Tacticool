@@ -57,7 +57,7 @@ public class GameView extends Scene {
     private ArrayList<InputAction> inputs;
     private List<Player> players;
     private Grid grid;
-    private long gameID = 2;
+    private int gameID = 2;
     private Player mainPlayer;
 
     public GameView(){

@@ -7,8 +7,6 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
-import java.net.ProtocolException;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
 
@@ -28,7 +26,6 @@ public class Request {
             content.append(inputLine);
         }
         in.close();
-        System.out.println(content);
         con.disconnect();
     }
 
@@ -47,11 +44,10 @@ public class Request {
         try(OutputStream os = con.getOutputStream()) {
             os.write(out);
         }
-        System.out.println(body);
         con.disconnect();
     }
 
-    public Grid getGameState(long gid) throws IOException {
+    public Grid getGameState(int gid) throws IOException {
         URL url = new URL(String.format("http://localhost:8080/api/getBoard%d", gid));
         HttpURLConnection con = (HttpURLConnection) url.openConnection();
         con.setRequestMethod("GET");
@@ -63,14 +59,13 @@ public class Request {
             content.append(inputLine);
         }
         in.close();
-        System.out.println(content);
         con.disconnect();
         Deserializer dese = new Deserializer();
         return dese.deserializeTurn(content.toString());
     }
 
 
-    public long joinGame(long gid, long playerId) throws IOException {
+    public int joinGame(int gid, int playerId) throws IOException {
         URL url = new URL(String.format("http://localhost:8080/api/joinGame/%d/%d", gid, playerId));
         HttpURLConnection con = (HttpURLConnection) url.openConnection();
         con.setRequestMethod("GET");
@@ -83,7 +78,7 @@ public class Request {
         }
         in.close();
         con.disconnect();
-        return Long.parseLong(content.toString());
+        return Integer.parseInt(content.toString());
     }
 
     public int getPlayerIDFromLogin(String name, String pass) throws IOException {
@@ -99,16 +94,6 @@ public class Request {
         in.close();
         con.disconnect();
         return Integer.parseInt(content.toString());
-
-    }
-
-    public static void main(String[] args) throws IOException {
-        Request request = new Request();
-        //request.postMoves("{\"actions\":[{\"coordinate\":{\"x\":0,\"y\":-1},\"actionType\":\"MOVE\"}]}\n", 1,2);
-        //System.out.println(request.joinGame(3, 1));
-        System.out.println(request.getPlayerIDFromLogin("frei","opp"));
-        System.out.println(request.getPlayerIDFromLogin("ula","joy"));
-
 
     }
 }

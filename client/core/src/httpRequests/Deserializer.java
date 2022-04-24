@@ -18,7 +18,6 @@ public class Deserializer {
     public Grid deserializeTurn(String json) {
         Gson gson = new Gson();
         JsonObject obj = gson.fromJson(json, JsonObject.class);
-        System.out.println(obj);
         List<Player> players = deserializePlayers(obj.get("players").getAsJsonArray());
         JsonObject actions = obj.get("actions").getAsJsonObject();
         if (actions != null && !actions.equals("null")) {
