@@ -1,7 +1,6 @@
 package com.anything.tacticool.model;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 public class Grid {

@@ -1,8 +1,6 @@
 package com.anything.tacticool.model;
 
-import com.anything.tacticool.view.util.spriteConnectors.SimpleSprite;
 import com.anything.tacticool.view.util.spriteConnectors.SpriteConnector;
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
 import java.util.ArrayList;
 import java.util.List;
