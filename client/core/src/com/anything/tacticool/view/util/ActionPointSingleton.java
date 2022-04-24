@@ -35,16 +35,13 @@ public class ActionPointSingleton {
     //Singleton boilerplate ends
 
     public void addAction(SpriteConnector spriteConnector){
-        System.out.println("Trying to add");
         if (highlightElements.isEmpty()) {
             highlightElements.add(spriteConnector);
             actionPoint--;
-            System.out.println("Added");
         }else if (checkDiff(spriteConnector)) {
             highlightElements.add(spriteConnector);
             actionPoint--;
             inputs.add(new InputAction(ActionType.MOVE, highlightElements.getLastSprite().getX()-spriteConnector.getX(), highlightElements.getLastSprite().getY()-spriteConnector.getY()));
-            System.out.println("Added");
             }
     }
 
