@@ -90,7 +90,9 @@ public class GameView extends Scene {
 
     public void constructBoard(int width, int height){
         for (int i = 0; i < grid.getBoard().length; i++){
-            tileIterator.add(SpriteConnectorFactory.createSimpleSprite())
+            tileIterator.add(SpriteConnectorFactory.createSimpleSpriteWithHighlight(
+                    SpriteConnectorEnum.GRASS, SpriteConnectorEnum.HIGHLIGHTTILE,
+                    i%width, (int)Math.floor(i/width)));
             //tileIterator.add(new SpriteConnector(SpriteConnectorEnum.GRASS, SpriteConnectorEnum.HIGHLIGHTTILE, i%width,(int)Math.floor(i/width)));
         }
     }

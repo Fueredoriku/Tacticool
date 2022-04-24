@@ -23,6 +23,7 @@ public abstract class SpriteConnector {
         this.y = y;
     }
 
+    /*
     public SpriteConnector(SpriteConnectorEnum spriteConnectorEnum, SpriteConnectorEnum highlightSprite, int x, int y) {
         this.spriteConnectorEnum = spriteConnectorEnum;
         this.highlightEnum = highlightSprite;
@@ -36,6 +37,11 @@ public abstract class SpriteConnector {
                 ap.addAction(getHighlight());
             }
         });
+    }
+    */
+
+    public void setHighlightEnum(SpriteConnectorEnum highlightEnum){
+        this.highlightEnum = highlightEnum;
     }
 
     public SpriteConnector getHighlight(){
