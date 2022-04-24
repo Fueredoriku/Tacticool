@@ -6,8 +6,6 @@ import org.springframework.web.bind.annotation.*;
 import please.tacticool.models.Actions.ActionHandler;
 import please.tacticool.persistance.DBController;
 
-import static please.tacticool.persistance.DBController.registerPlayer;
-
 @RestController
 @RequestMapping("/api")
 public class Controller {
@@ -24,11 +22,11 @@ public class Controller {
      * @param password  of the user trying to login / register.
      * @return          the id of the player + status code OK if login and code CREATED if registered.
      */
-    @GetMapping("/registerPlayer/{name}/{password}")
+    @GetMapping("/getUser/{name}/{password}")
     public ResponseEntity<Integer> getPlayerId(@PathVariable String name,@PathVariable String password){
-        int id = DBController.getPlayerByLogin(name.toLowerCase(),password.toLowerCase());
+        int id = new DBController().getPlayerByLogin(name.toLowerCase(),password.toLowerCase());
         if (id < 0 ) {
-            return new ResponseEntity<>(registerPlayer(name.toLowerCase(), password.toLowerCase()), HttpStatus.CREATED);
+            return new ResponseEntity<>(new DBController().registerPlayer(name.toLowerCase(), password.toLowerCase()), HttpStatus.CREATED);
         }
         return new ResponseEntity<>(id,HttpStatus.OK);
     }
@@ -53,12 +51,14 @@ public class Controller {
         return new ResponseEntity<>(ah.getGameState(), HttpStatus.OK);
     }
 
-    @GetMapping("/hasChanged{gameId}")
-    public boolean hasChanged(@PathVariable String gameId) {
-        // Check if map has changed, this needs to be done EFFICIENT!!
-        // return true if map has changed
-        // return false if map hasn't changed
-        return true;
+    /**
+     * Gets the value of the turn switch.
+     * @param gameId    of game to check.
+     * @return          the current turns value.
+     */
+    @GetMapping("/hasChanged/{gameId}/{currentTurn}")
+    public ResponseEntity<Boolean> hasChanged(@PathVariable String gameId, @PathVariable String currentTurn) {
+        return new ResponseEntity<>(new DBController().getTurnSwitch(Integer.parseInt(gameId)) != Boolean.parseBoolean(currentTurn), HttpStatus.OK);
     }
 
     /**

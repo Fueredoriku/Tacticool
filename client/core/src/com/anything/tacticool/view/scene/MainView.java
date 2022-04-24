@@ -36,15 +36,16 @@ public class MainView extends Scene {
     private MenuState menuState;
 
     private int gameID;
-    private int playerID = 1;
+    private int playerID;
 
     private ActorFactory actorFactory;
     private Request request;
 
 
-    public MainView() {
+    public MainView(int playerID) {
         this.actorFactory = new ActorFactory();
         this.request = new Request();
+        this.playerID = playerID;
     }
 
     @Override

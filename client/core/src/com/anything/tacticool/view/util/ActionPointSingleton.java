@@ -1,11 +1,16 @@
 package com.anything.tacticool.view.util;
 
+import com.anything.tacticool.model.ActionType;
+import com.anything.tacticool.model.InputAction;
 import com.anything.tacticool.view.util.spriteConnectors.SpriteConnector;
+
+import java.util.ArrayList;
 
 public class ActionPointSingleton {
 
     private GridElementIterator highlightElements;
     public int actionPoint;
+    public ArrayList<InputAction> inputs;
 
     //Singleton boilerplate begins
     public static volatile ActionPointSingleton Singleton;
@@ -35,16 +40,21 @@ public class ActionPointSingleton {
         }else if (checkDiff(spriteConnector)) {
                 highlightElements.add(spriteConnector);
                 actionPoint--;
+                inputs.add(new InputAction(ActionType.MOVE, highlightElements.getLastSprite().getX()-spriteConnector.getX(), highlightElements.getLastSprite().getY()-spriteConnector.getY()));
             }
     }
 
     private boolean checkDiff(SpriteConnector spriteConnector){
         if (highlightElements.getLastSprite().getX()-spriteConnector.getX() <1 && highlightElements.getLastSprite().getX()-spriteConnector.getX() >-1){
-            if (highlightElements.getLastSprite().getX()-spriteConnector.getX() <1 && highlightElements.getLastSprite().getX()-spriteConnector.getX() >-1){
+            if (highlightElements.getLastSprite().getY()-spriteConnector.getY() <1 && highlightElements.getLastSprite().getY()-spriteConnector.getY() >-1){
                 return true;
             }
         }
         return false;
+    }
+
+    public ArrayList<InputAction> getInputs(){
+        return inputs;
     }
 
     public void reset(){
