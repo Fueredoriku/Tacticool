@@ -1,5 +1,8 @@
 package please.tacticool.models;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import please.tacticool.enums.Terrain;
 import please.tacticool.models.Actors.Actor;
 import please.tacticool.models.Actors.Player;
@@ -138,6 +141,16 @@ public class TerrainGrid {
 
     public Coordinate getDimensions() {
         return dimensions;
+    }
+
+    public List<Coordinate> getFreeTiles() {
+        List<Coordinate> result = new ArrayList<>();
+        for (int i = 0; i < dimensions.getY(); i++) {
+            for (int j = 0; j < dimensions.getX(); j++) {
+                if (isEmptyTile(new Coordinate(j, i))) {result.add(new Coordinate(j, i));}
+            }
+        }
+        return result;
     }
 
     public String toStringMap() {

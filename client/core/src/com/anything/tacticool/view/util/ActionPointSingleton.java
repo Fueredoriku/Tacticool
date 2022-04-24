@@ -1,8 +1,6 @@
 package com.anything.tacticool.view.util;
 
-import com.anything.tacticool.view.scene.SceneManager;
-
-import java.util.Stack;
+import com.anything.tacticool.view.util.spriteConnectors.SpriteConnector;
 
 public class ActionPointSingleton {
 
