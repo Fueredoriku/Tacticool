@@ -337,4 +337,12 @@ public class GameView extends Scene {
             e.printStackTrace();
         }
     }
+
+    private void gameOver(int winnerID) {
+        if (winnerID == playerID) {
+            sm.Push(new WinView());
+        } else {
+            sm.Push(new LoseView());
+        }
+    }
 }
