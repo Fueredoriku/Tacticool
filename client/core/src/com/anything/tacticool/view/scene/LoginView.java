@@ -57,9 +57,11 @@ public class LoginView extends Scene{
         float ui_xPosition = screenWidth/2 - uiWidth/2;
         float ui_yScale = screenHeight/5f;
 
-        Label username_Label = (Label) actorFactory.actor(
-          new Label("Username", skin),
-                uiWidth, uiHeight, ui_xPosition, ui_yScale * 3 + uiHeight
+
+        Label username_Label = (Label) actorFactory.label(
+                "Username", skin,
+                uiWidth, uiHeight, screenWidth/2, ui_yScale * 3 + uiHeight,
+                true
         );
 
         TextField username_TextField = (TextField) actorFactory.actor(
@@ -83,7 +85,6 @@ public class LoginView extends Scene{
     }
 
     private void login() {
-        //TODO connect to server
         try {
             sm.Push(new MainView(1));
             sm.Push(new MainView(request.getPlayerIDFromLogin(username,"password")));
