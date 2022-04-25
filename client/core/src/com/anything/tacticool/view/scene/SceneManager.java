@@ -51,6 +51,7 @@ public class SceneManager {
         if (scenes.isEmpty()){
             throw new IllegalStateException("Can't pop scene from stack when stack is empty.");
         }
+        scenes.peek().disposeEarly();
         Scene poppedScene = scenes.pop();
         if (!scenes.isEmpty()) {
             scenes.peek().prepareScene();
