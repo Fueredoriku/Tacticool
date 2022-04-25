@@ -7,7 +7,7 @@ Trello: https://trello.com/invite/b/KnJ83SPl/81b2286a3553386e2e54ca448829ca9d/td
 
 Run the server with java 17: https://adoptium.net/.
 
-Run the client with the java SDK bundled with android studio
+Run the client with the java SDK bundled with android studio (no need to make changes)
 
 
 To run server:
