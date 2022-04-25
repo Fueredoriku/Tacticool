@@ -1,9 +1,8 @@
 package httpRequests;
 
-import com.anything.tacticool.model.ActionType;
 import com.anything.tacticool.model.Grid;
-import com.anything.tacticool.model.InputAction;
-import com.anything.tacticool.model.Player;
+import com.badlogic.gdx.Application.ApplicationType;
+import com.badlogic.gdx.Gdx;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -12,15 +11,25 @@ import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
-import java.util.ArrayList;
-import java.util.List;
+
 
 public class Request {
+
+    private final String urlAndroidEmulator = "http://10.0.2.2:8080";
+    private final String urlDesktopEmulator = "http://localhost:8080";
+    private String baseURL;
+
     public Request() {
+
+        if (Gdx.app.getType() == ApplicationType.Android) {
+            baseURL = urlAndroidEmulator;
+        } else {
+            baseURL = urlDesktopEmulator;
+        }
     }
 
     public void getter() throws IOException {
-        URL url = new URL("http://localhost:8080");
+        URL url = new URL(String.format("%s", baseURL));
         HttpURLConnection con = (HttpURLConnection) url.openConnection();
         con.setRequestMethod("GET");
         BufferedReader in = new BufferedReader(
@@ -35,7 +44,7 @@ public class Request {
     }
 
     public void postMoves(String body, int gid, int pid) throws IOException {
-        URL url = new URL(String.format("http://localhost:8080/api/move/%d/%d",gid,pid));
+        URL url = new URL(String.format("%s/api/move/%d/%d", baseURL,gid,pid));
         HttpURLConnection con = (HttpURLConnection) url.openConnection();
         byte[] out = body.getBytes(StandardCharsets.UTF_8);
         int length = out.length;
@@ -49,11 +58,20 @@ public class Request {
         try(OutputStream os = con.getOutputStream()) {
             os.write(out);
         }
+
+        String json_response = "";
+        InputStreamReader in = new InputStreamReader(con.getInputStream());
+        BufferedReader br = new BufferedReader(in);
+        String text = "";
+        while ((text = br.readLine()) != null) {
+            json_response += text;
+        }
+        System.out.println(json_response);
         con.disconnect();
     }
 
     public Grid getGameState(int gid) throws IOException {
-        URL url = new URL(String.format("http://localhost:8080/api/getBoard%d", gid));
+        URL url = new URL(String.format("%s/api/getBoard%d", baseURL, gid));
         HttpURLConnection con = (HttpURLConnection) url.openConnection();
         con.setRequestMethod("GET");
         BufferedReader in = new BufferedReader(
@@ -71,7 +89,7 @@ public class Request {
 
 
     public int joinGame(int gid, int playerId) throws IOException {
-        URL url = new URL(String.format("http://localhost:8080/api/joinGame/%d/%d", gid, playerId));
+        URL url = new URL(String.format("%s/api/joinGame/%d/%d", baseURL, gid, playerId));
         HttpURLConnection con = (HttpURLConnection) url.openConnection();
         con.setRequestMethod("GET");
         BufferedReader in = new BufferedReader(
@@ -87,7 +105,7 @@ public class Request {
     }
 
     public int getPlayerIDFromLogin(String name, String pass) throws IOException {
-        URL url = new URL(String.format("http://localhost:8080/api/getUser/%s/%s", name.toLowerCase(), pass.toLowerCase()));
+        URL url = new URL(String.format("%s/api/getUser/%s/%s", baseURL, name.toLowerCase(), pass.toLowerCase()));
         HttpURLConnection con = (HttpURLConnection) url.openConnection();
         con.setRequestMethod("GET");
         BufferedReader in = new BufferedReader(new InputStreamReader(con.getInputStream()));
@@ -103,7 +121,7 @@ public class Request {
     }
 
     public boolean getHasChanged(int gameID, boolean turn) throws IOException {
-        URL url = new URL(String.format("http://localhost:8080/api/hasChanged/%d/%b", gameID, turn));
+        URL url = new URL(String.format("%s/api/hasChanged/%d/%b", baseURL, gameID, turn));
         HttpURLConnection con = (HttpURLConnection) url.openConnection();
         con.setRequestMethod("GET");
         BufferedReader in = new BufferedReader(new InputStreamReader(con.getInputStream()));
@@ -115,43 +133,5 @@ public class Request {
         in.close();
         con.disconnect();
         return Boolean.parseBoolean(content.toString());
-
-    }
-
-    public static void main(String[] args) throws IOException, InterruptedException {
-        Request request = new Request();
-        int niko = request.getPlayerIDFromLogin("nikolai", "notapassword");
-        int gameId = request.joinGame(4, niko);
-        int tester = request.getPlayerIDFromLogin("tester", "tester");
-        int g2 = request.joinGame(gameId, tester);
-        
-        Grid grid = request.getGameState(gameId);
-        System.out.println(grid);
-        List<Player> players = grid.getPlayers();
-
-        Player nikola = null;
-        Player testers = null;
-        for (Player player : players) {
-            if (player.getPlayerID() == niko) {
-                nikola = player;
-                continue;
-            }
-            if (player.getPlayerID() == tester) {
-                testers = player;
-                continue;
-            }
-        }
-        if (nikola == null || testers == null) {
-            System.out.println("Something went wrong!");
-        }
-        Serializer serializer = new Serializer();
-        List<InputAction> actions = new ArrayList<>();
-        actions.add(new InputAction(ActionType.MOVE, 1, 0));
-        actions.add(new InputAction(ActionType.MOVE, 1, 0));
-        request.postMoves(serializer.serializeActions(actions), gameId, nikola.getPlayerID());
-
-        Thread.sleep(3000);
-
-        System.out.println(request.getHasChanged(gameId, grid.getTurn()));
     }
 }
