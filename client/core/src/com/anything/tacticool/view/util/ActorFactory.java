@@ -1,10 +1,13 @@
 package com.anything.tacticool.view.util;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.EventListener;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Slider;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
+import com.badlogic.gdx.scenes.scene2d.ui.TextField;
+import com.badlogic.gdx.scenes.scene2d.utils.FocusListener;
 
 public class ActorFactory {
 
@@ -26,6 +29,22 @@ public class ActorFactory {
         slider.setPosition(x, y);
         slider.setValue(value*slider.getMaxValue());
         return slider;
+    }
+
+    public TextField textField(TextField textField, float width, float height, float x, float y, TextField.TextFieldFilter textFieldFilter) {
+        textField.setSize(width, height);
+        textField.setPosition(x, y);
+        textField.setTextFieldFilter(textFieldFilter);
+        textField.addListener(new FocusListener() {
+            @Override
+            public void keyboardFocusChanged(FocusEvent event, Actor actor, boolean focused) {
+                super.keyboardFocusChanged(event, actor, focused);
+                if (!focused) {
+                    Gdx.input.setOnscreenKeyboardVisible(false);
+                }
+            }
+        });
+        return textField;
     }
 
 

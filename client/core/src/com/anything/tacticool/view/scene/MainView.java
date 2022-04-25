@@ -15,27 +15,26 @@ import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.ScreenUtils;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 
+import java.io.IOException;
 
-enum MenuState {
-    MAIN,
-    QEUED,
-    START
-}
+import httpRequests.Request;
+
 
 public class MainView extends Scene {
 
     private Stage stage;
     private Skin skin;
-    private MenuState menuState;
 
+    private int gameID;
     private int playerID;
-    private String gameID;
 
     private ActorFactory actorFactory;
+    private Request request;
 
 
     public MainView(int playerID) {
         this.actorFactory = new ActorFactory();
+        this.request = new Request();
         this.playerID = playerID;
     }
 
@@ -53,28 +52,10 @@ public class MainView extends Scene {
 
         batch.begin();
 
-        switch (menuState) {
-            case MAIN:
-                stage.draw();
-                checkState();
-                this.gameID = ((TextField) stage.getActors().get(0)).getText();
-                break;
-
-            case QEUED:
-                //TODO make call to server to check if game can start
-                //TODO change if statement to take the answer from the server as its condition
-                if (true) {
-                    this.menuState = menuState.START;
-                }
-                break;
-
-            case START:
-                //TODO make call to server to start new game
-                this.menuState = menuState.MAIN;
-                sm.Push(new GameView());
-                break;
-        }
-
+        stage.draw();
+        checkState();
+        String gameID_String = ((TextField) stage.getActors().get(0)).getText();
+        this.gameID = gameID_String.isEmpty()?0:Integer.parseInt(gameID_String);
         batch.end();
     }
 
@@ -99,23 +80,31 @@ public class MainView extends Scene {
         if (!(stage.getActors().get(0) instanceof TextField)) {
             throw new IllegalStateException("Expected TextField at index 0 in Actors, instead of " + stage.getActors().get(0).getName());
         }
+        try {
+            Integer.parseInt(((TextField) stage.getActors().get(0)).getText());
+        } catch (NumberFormatException e) {
+            if (((TextField) stage.getActors().get(0)).getText().length() != 0) {
+                throw new IllegalStateException("Textfield couldn't be cast to an int. It should only contain numbers.");
+            }
+        }
     }
 
 
     //Method for joining game
-    private void joinGame() {
-        this.menuState = menuState.QEUED;
+    private void joinGame() throws IOException {
+        request.joinGame(gameID, playerID); //!\ UNCOMMENT FOR TESTING, DO NOT REMOVE /!\
+        sm.Push(new WaitingRoomView(gameID));
     }
 
     //Method for opening settings
     private void openSettings() {
+        Gdx.input.setOnscreenKeyboardVisible(false);
         sm.Push(new Settings());
     }
 
 
-    // Two methods used by constructor
+    // Methods used by constructor
     private void prepareVariables() {
-        this.menuState = MenuState.MAIN;
         this.stage = new Stage(new ScreenViewport());
 
         // Skin to texture UI elements. Currently uses libgdx's basic skin
@@ -134,25 +123,30 @@ public class MainView extends Scene {
         float ui_yScale = screenHeight/5f;
 
         // Instantiates UI elements using the ActorFactory
-        TextField gameID_Input = (TextField) actorFactory.actor(
-                new TextField("GameID", skin),
-                uiWidth, uiHeight, ui_xPosition, ui_yScale * 4
+        TextField gameID_Input = actorFactory.textField(
+                new TextField("", skin),
+                uiWidth, uiHeight, ui_xPosition, ui_yScale * 3,
+                new TextField.TextFieldFilter.DigitsOnlyFilter()
         );
 
         TextButton joinGame_Button = actorFactory.textButton(
                 new TextButton("Join Game", skin),
-                uiWidth, uiHeight, ui_xPosition, ui_yScale * 3,
+                uiWidth, uiHeight, ui_xPosition, ui_yScale * 2,
                 new ClickListener() {
                     @Override
                     public void clicked(InputEvent event, float x, float y) {
-                        joinGame();
+                        try {
+                            joinGame();
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
                     }
                 }
         );
 
         TextButton settings_Button = actorFactory.textButton(
                 new TextButton("Settings", skin),
-                uiWidth, uiHeight, ui_xPosition, ui_yScale * 2,
+                uiWidth, uiHeight, ui_xPosition, ui_yScale * 1,
                 new ClickListener() {
                     @Override
                     public void clicked(InputEvent event, float x, float y) {
@@ -166,6 +160,7 @@ public class MainView extends Scene {
         // Allows UI elements to take inputs
         Gdx.input.setInputProcessor(stage);
     }
+
 
     private void prepareSound() {
         AudioController.setCurrent_musicPath("audio/main_menu.ogg");
