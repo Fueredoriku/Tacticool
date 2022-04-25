@@ -42,8 +42,6 @@ public class GameView extends Scene {
     private GridElementIterator tileIterator;
     private GridElementIterator playerIterator;
     private ActionPointSingleton ap;
-    private int width;
-    private int height;
 
     private Stage stage;
     private Texture apHUD;
@@ -54,8 +52,6 @@ public class GameView extends Scene {
     private BitmapFont font;
     private Skin skin;
 
-    private TextButton resetButton;
-    private TextButton submitButton;
     private float uiWidth;
     private float uiHeight;
 
@@ -63,41 +59,42 @@ public class GameView extends Scene {
     private ArrayList<InputAction> inputs;
     private List<Player> players;
     private Grid grid;
-    private int gameID = 2;
+    private int gameID;
     private Player mainPlayer;
-    private List<Actor> actors;
 
     private ActorFactory actorFactory;
 
-    public GameView(){
+    public GameView(int playerID, int gameID){
         super();
-        request = new Request();/*
+        this.playerID = playerID;
+        this.gameID = gameID;
+        request = new Request();
+
+        // Instantiate grid
         try{
             grid = request.getGameState(gameID);
         }
         catch (IOException e){
             System.out.println(e);
-        }*/
+        }
 
-        //temporary for test
+        // Find the character the player controls
+        for (Player player : grid.getPlayers()) {
+            if (player.getPlayerID() == playerID) {
+                mainPlayer = player;
+            }
+        }
+
+        constructBoard(grid.getWidth(), grid.getHeigth());
+
         tileIterator = new GridElementIterator();
         playerIterator = new GridElementIterator();
         skin = new Skin(Gdx.files.internal("ui/uiskin.json"));
         skin.getFont("default-font").getData().setScale(3f);
-        grid = new Grid("1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1",5,5, false);
-        mainPlayer = new Player(513,3,4,4);
-        Player enemy = new Player(543,3,2,2);
-        players = new ArrayList<>();
-        players.add(mainPlayer);
-        players.add(enemy);
-        //mainPlayer.addAction(new InputAction(ActionType.MOVE, -1,0));
-        enemy.addAction(new InputAction(ActionType.MOVE, 1,0));
-        grid.setPlayers(players);
 
         this.inputs = new ArrayList<>();
-
         actorFactory = new ActorFactory();
-        constructBoard(grid.getWidth(), grid.getHeigth());
+
         textureHandler = new TextureHandler(grid.getWidth(), grid.getHeigth());
         ap = ActionPointSingleton.getInstance();
         apHUD = new Texture("aphud.png");
@@ -105,6 +102,17 @@ public class GameView extends Scene {
         font = new BitmapFont();
         uiWidth = Gdx.graphics.getWidth()/6f;
         uiHeight = Gdx.graphics.getHeight()/12f;
+
+        //temporary for test
+        //grid = new Grid("1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1",5,5, false);
+        //mainPlayer = new Player(513,3,4,4);
+        //Player enemy = new Player(543,3,2,2);
+        //players = new ArrayList<>();
+        //players.add(mainPlayer);
+        //players.add(enemy);
+        //mainPlayer.addAction(new InputAction(ActionType.MOVE, -1,0));
+        //enemy.addAction(new InputAction(ActionType.MOVE, 1,0));
+        //grid.setPlayers(players);
     }
 
     public void constructBoard(int width, int height){
@@ -157,7 +165,6 @@ public class GameView extends Scene {
 
 
     private void buildButtons(){
-
         TextButton submit_button = actorFactory.textButton(
                 new TextButton("Submit", skin),
                 uiWidth, uiHeight,Gdx.graphics.getWidth() - uiWidth*1.1f, Gdx.graphics.getHeight() - uiHeight*1.1f,
@@ -166,7 +173,7 @@ public class GameView extends Scene {
                     public void clicked(InputEvent event, float x, float y) {
                         constructActionList();
                         try {
-                            request.postMoves(new Serializer().serializeActions(inputs), gameID, mainPlayer.getPlayerID());
+                            request.postMoves(new Serializer().serializeActions(inputs), gameID, playerID);
                         } catch (IOException e) {
                             e.printStackTrace();
                         }
