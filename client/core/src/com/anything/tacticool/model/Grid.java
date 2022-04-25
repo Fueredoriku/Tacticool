@@ -71,8 +71,21 @@ public class Grid {
         return turn;
     }
 
+    public void setTurn(boolean turn) {
+        this.turn = turn;
+    }
+
     public List<Player> getPlayers() {
         return players;
+    }
+
+    public Player getPlayer(int playerID) {
+        for (Player player : players) {
+            if (player.getPlayerID() == playerID) {
+                return player;
+            }
+        }
+        return null;
     }
 
     @Override
