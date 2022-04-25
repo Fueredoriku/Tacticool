@@ -48,30 +48,34 @@ public class Settings extends Scene {
         float uiHeight = screenHeight/7f;
         float ui_xPosition = screenWidth/2 - uiWidth/2;
         float ui_yScale = screenHeight/6f;
+        float ui_side_offset = uiWidth/1.8f;
 
         Slider musicSlider = actorFactory.slider(
                 new Slider(0f, 10f, 1f, false, skin),
-                uiWidth, uiHeight, ui_xPosition - uiWidth/1.8f, ui_yScale * 4f, AudioController.getMusicVolume()
+                uiWidth, uiHeight, ui_xPosition - ui_side_offset, ui_yScale * 4f, AudioController.getMusicVolume()
         );
 
         Slider soundSlider = actorFactory.slider(
                 new Slider(0f, 10f, 1f, false, skin),
-                uiWidth, uiHeight, ui_xPosition + uiWidth/1.8f, ui_yScale * 4f, AudioController.getSoundVolume()
+                uiWidth, uiHeight, ui_xPosition + ui_side_offset, ui_yScale * 4f, AudioController.getSoundVolume()
         );
 
-        Label musicSlider_Label = (Label) actorFactory.actor(
-                new Label("Music Volume", skin),
-                uiWidth, uiHeight, ui_xPosition - uiWidth/1.8f, ui_yScale * 5f
+        Label music_slider_label = (Label) actorFactory.label("Music Volume", skin,
+                uiWidth, uiHeight,
+                ui_xPosition - ui_side_offset + uiWidth/2, ui_yScale * 5f,
+                true
         );
 
-        Label soundSlider_label = (Label) actorFactory.actor(
-                new Label("Sound Volume", skin),
-                uiWidth, uiHeight, ui_xPosition + uiWidth/1.8f, ui_yScale * 5f
+        Label sound_slider_label = (Label) actorFactory.label("Sound Volume", skin,
+                uiWidth, uiHeight,
+                ui_xPosition + ui_side_offset + uiWidth/2, ui_yScale * 5f,
+                true
         );
 
-        Label gameMusic_Label = (Label) actorFactory.actor(
-                new Label("Game Music", skin),
-                uiWidth, uiHeight, ui_xPosition - uiWidth/1.8f, ui_yScale * 3f
+        Label game_music_label = (Label) actorFactory.label("Game Music", skin,
+                uiWidth, uiHeight,
+                Gdx.graphics.getWidth()/2, Gdx.graphics.getHeight()/2,
+                true
         );
 
         TextButton tenseMusic_Button = actorFactory.textButton(
@@ -108,7 +112,7 @@ public class Settings extends Scene {
         );
 
         actorFactory.stageActors(stage, new Actor[] {
-                musicSlider, soundSlider, musicSlider_Label, soundSlider_label, gameMusic_Label, tenseMusic_Button, orchestralMusic_Button, closeSettings_Button
+                musicSlider, soundSlider, music_slider_label, sound_slider_label, game_music_label, tenseMusic_Button, orchestralMusic_Button, closeSettings_Button
         });
 
         Gdx.input.setInputProcessor(stage);
