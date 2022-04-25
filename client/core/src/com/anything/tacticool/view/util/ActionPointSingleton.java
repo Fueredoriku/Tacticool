@@ -8,6 +8,8 @@ import java.util.ArrayList;
 
 public class ActionPointSingleton {
 
+    private static SpriteConnectorEnum currentActionTypeEnum;
+    private static ActionType currentActionType;
     private GridElementIterator highlightElements;
     public int actionPoint;
     public ArrayList<InputAction> inputs;
@@ -22,6 +24,8 @@ public class ActionPointSingleton {
         highlightElements = new GridElementIterator();
         inputs = new ArrayList<>();
         actionPoint = 10;
+        currentActionTypeEnum = SpriteConnectorEnum.HIGHLIGHTTILE;
+        currentActionType = ActionType.MOVE;
     }
 
     public static ActionPointSingleton getInstance() {
@@ -38,23 +42,33 @@ public class ActionPointSingleton {
         if (highlightElements.isEmpty()) {
             highlightElements.add(spriteConnector);
         }else if (checkDiff(spriteConnector)) {
-            System.out.println(spriteConnector.getX() + " " + spriteConnector.getY());
-            System.out.println(spriteConnector.getX()-highlightElements.getLastSprite().getX());
-            inputs.add(new InputAction(ActionType.MOVE, spriteConnector.getX()-highlightElements.getLastSprite().getX(), spriteConnector.getY()-highlightElements.getLastSprite().getY()));
+            System.out.println(currentActionType);
+            inputs.add(new InputAction(currentActionType, spriteConnector.getX()-highlightElements.getLastMoveSprite().getX(), spriteConnector.getY()-highlightElements.getLastMoveSprite().getY()));
+            System.out.println(spriteConnector.getSpriteConnectorEnum());
+            spriteConnector.setHighlightEnum(ActionPointSingleton.currentActionTypeEnum);
             highlightElements.add(spriteConnector);
             actionPoint--;
             System.out.println(inputs);
             }
     }
 
+    public static void setCurrentActionType(SpriteConnectorEnum actionTypeEnum, ActionType actionType) {
+        ActionPointSingleton.currentActionTypeEnum = actionTypeEnum;
+        ActionPointSingleton.currentActionType = actionType;
+    }
+
+    public SpriteConnectorEnum getCurrentActionType() {
+        return currentActionTypeEnum;
+    }
+
     private boolean checkDiff(SpriteConnector spriteConnector){
-        if (highlightElements.getLastSprite().getX()-spriteConnector.getX() == 1 || highlightElements.getLastSprite().getX()-spriteConnector.getX() == -1){
-            if (highlightElements.getLastSprite().getY()-spriteConnector.getY() == 0) {
+        if (highlightElements.getLastMoveSprite().getX()-spriteConnector.getX() == 1 || highlightElements.getLastMoveSprite().getX()-spriteConnector.getX() == -1){
+            if (highlightElements.getLastMoveSprite().getY()-spriteConnector.getY() == 0) {
                 return true;
             }
         }
-        if (highlightElements.getLastSprite().getY()-spriteConnector.getY() == 1 || highlightElements.getLastSprite().getY()-spriteConnector.getY() == -1){
-            if (highlightElements.getLastSprite().getX()-spriteConnector.getX() == 0) {
+        if (highlightElements.getLastMoveSprite().getY()-spriteConnector.getY() == 1 || highlightElements.getLastMoveSprite().getY()-spriteConnector.getY() == -1){
+            if (highlightElements.getLastMoveSprite().getX()-spriteConnector.getX() == 0) {
                 return true;
             }
         }

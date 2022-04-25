@@ -4,11 +4,14 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.EventListener;
 import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.ui.Dialog;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
+import com.badlogic.gdx.scenes.scene2d.ui.SelectBox;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Slider;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.ui.TextField;
+import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.FocusListener;
 
 public class ActorFactory {
@@ -46,6 +49,14 @@ public class ActorFactory {
         }
 
         return label;
+    }
+
+    public SelectBox selectBox(Skin skin, String[] strings, float width, float height, float x, float y, ClickListener clickListener) {
+        SelectBox selectBox = new SelectBox(skin);
+        selectBox.setItems(strings);
+        selectBox.setSize(width, height);
+        selectBox.setPosition(x,y);
+        return selectBox;
     }
 
     public Slider slider(Slider slider, float width, float height, float x, float y, float value) {
