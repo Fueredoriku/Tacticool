@@ -40,7 +40,7 @@ import httpRequests.Serializer;
 public class GameView extends Scene {
 
     private GridElementIterator tileIterator;
-    private GridElementIterator actorIterator;
+    private GridElementIterator playerIterator;
     private ActionPointSingleton ap;
     private int width;
     private int height;
@@ -48,6 +48,7 @@ public class GameView extends Scene {
     private Stage stage;
     private Texture apHUD;
     private Sprite apSprite;
+    private int playerID;
 
     private TextureHandler textureHandler;
     private BitmapFont font;
@@ -80,6 +81,7 @@ public class GameView extends Scene {
 
         //temporary for test
         tileIterator = new GridElementIterator();
+        playerIterator = new GridElementIterator();
         skin = new Skin(Gdx.files.internal("ui/uiskin.json"));
         skin.getFont("default-font").getData().setScale(3f);
         grid = new Grid("1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1",5,5, false);
@@ -88,7 +90,8 @@ public class GameView extends Scene {
         players = new ArrayList<>();
         players.add(mainPlayer);
         players.add(enemy);
-        mainPlayer.addAction(new InputAction(ActionType.MOVE, 3,3));
+        //mainPlayer.addAction(new InputAction(ActionType.MOVE, -1,0));
+        enemy.addAction(new InputAction(ActionType.MOVE, 1,0));
         grid.setPlayers(players);
 
         this.inputs = new ArrayList<>();
@@ -122,8 +125,7 @@ public class GameView extends Scene {
         for (int i = 0; i < players.size(); i++){
             SpriteConnector newPlayer = new SimpleSprite(SpriteConnectorEnum.PLAYER, players.get(i).getCurrentX(), players.get(i).getCurrentY());
             players.get(i).setTexture(newPlayer);
-            tileIterator.add(newPlayer);
-
+            playerIterator.add(newPlayer);
         }
     }
 
@@ -177,9 +179,7 @@ public class GameView extends Scene {
                 new ClickListener() {
                     @Override
                     public void clicked(InputEvent event, float x, float y) {
-                        ap.inputs.clear();
-                        ap.reset();
-                        inputs.clear();
+                        undoInputs();
                     }
                 }
         );
@@ -199,6 +199,17 @@ public class GameView extends Scene {
                 submit_button, reset_input_button, settings_Button
         });
         Gdx.input.setInputProcessor(stage);
+    }
+
+    private void undoInputs() {
+        ap.inputs.clear();
+        ap.reset();
+        inputs.clear();
+        addFirstInput();
+    }
+
+    private void addFirstInput() {
+        ap.addAction(new SimpleSprite(SpriteConnectorEnum.HIGHLIGHTTILE, mainPlayer.getCurrentX(), mainPlayer.getCurrentY()));
     }
 
     private void drawHUD(SpriteBatch batch){
@@ -226,9 +237,11 @@ public class GameView extends Scene {
 
     public void updatePlayer(Player player){
         while (player.getActions().size() > 0){
+            System.out.println(player.getActions().size());
             player.setCurrentPos(player.getCurrentX() + player.getActions().get(0).getTargetX(), player.getCurrentY() + player.getActions().get(0).getTargetY());
             player.getTexture().updatePos(player.getCurrentX(), player.getCurrentY());
             player.getActions().remove(0);
+            undoInputs();
         }
     }
 
@@ -236,8 +249,8 @@ public class GameView extends Scene {
     public void onRender(SpriteBatch batch){
         updatePlayers();
         textureHandler.createBatch(tileIterator, batch);
-        //textureHandler.createBatch(actorIterator, batch);
         textureHandler.createBatch(ap.getInputIterator(), batch);
+        textureHandler.createBatch(playerIterator, batch);
         drawHUD(batch);
         stage.draw();
 
