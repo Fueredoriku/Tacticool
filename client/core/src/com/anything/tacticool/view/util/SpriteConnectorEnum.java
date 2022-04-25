@@ -1,11 +1,12 @@
 package com.anything.tacticool.view.util;
 
 public enum SpriteConnectorEnum {
-    GRASS("terrain1.png"),
-    HIGHLIGHTTILE("tile2.png"),
+    GRASS("tile1.png"),
+    HIGHLIGHTTILE("tilehl.png"),
     PLAYER("player.png"),
-    BULLET(""),
-    EXPLOSION("");
+    ENEMY("enemy.png"),
+    BULLET("bullet.png"),
+    EXPLOSION("explosion.png");
 
     private final String filePath;
 
