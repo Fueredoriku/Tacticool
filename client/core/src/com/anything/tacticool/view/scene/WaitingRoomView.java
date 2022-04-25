@@ -76,13 +76,6 @@ public class WaitingRoomView extends Scene {
                 Gdx.graphics.getWidth()/2, ui_yScale * 3f,
                 true
         );
-        /*
-        Label game_pin_label = (Label) actorFactory.actor(
-                new Label("Game pin : " + this.gameID, skin),
-                uiWidth, uiHeight, ui_xPosition - uiWidth/1.5f, ui_yScale * 3f
-        );
-
-         */
 
         TextButton start_game_button = actorFactory.textButton(
                 new TextButton("Start Game", skin),
