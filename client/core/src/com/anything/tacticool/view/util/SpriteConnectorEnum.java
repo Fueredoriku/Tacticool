@@ -6,7 +6,10 @@ public enum SpriteConnectorEnum {
     PLAYER("player.png"),
     ENEMY("enemy.png"),
     BULLET("bullet.png"),
-    EXPLOSION("explosion.png");
+    EXPLOSION("explosion.png"),
+    LOGO("logo.png"),
+    LOSE("gutterball.png"),
+    WIN("strike.png");
 
     private final String filePath;
 
