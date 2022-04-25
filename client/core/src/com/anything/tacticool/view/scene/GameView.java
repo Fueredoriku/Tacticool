@@ -240,6 +240,7 @@ public class GameView extends Scene {
     private void post() throws IOException{
         request.postMoves(new Serializer().serializeActions(ap.inputs), gameID, playerID);
         this.isWaiting = true;
+        // Diasble UI
         for (Actor actor : stage.getActors()) {
             actor.setVisible(false);
         }
@@ -303,7 +304,6 @@ public class GameView extends Scene {
             stage.act();
             drawHUD(batch);
         } else {
-            //waiting_Label.setVisible(true);
             pollForUpdates();
         }
         stage.draw();
@@ -313,17 +313,36 @@ public class GameView extends Scene {
         try {
             if (isWaiting && request.getHasChanged(gameID, grid.getTurn())) {
                 Grid newGrid = request.getGameState(gameID);
+                // Only one player left
+                if (newGrid.isGameWon()){
+                    gameOver(newGrid.getWinningPlayer() == null ? -1 : newGrid.getWinningPlayer().getPlayerID());
+                }
+                // Player out of health
+                if (newGrid.getPlayer(playerID).getHealthPoint() <= 0) {
+                    gameOver(-1);
+                }
+                // Update the local grid
                 for (Player newPlayer : newGrid.getPlayers()) {
                     updatePlayer(newPlayer);
                 }
                 this.grid.setTurn(newGrid.getTurn());
                 this.isWaiting = false;
+
+                // Enable disabled UI
                 for (Actor actor : stage.getActors()) {
                     actor.setVisible(true);
                 } waiting_Label.setVisible(false);
             }
         } catch (IOException e) {
             e.printStackTrace();
+        }
+    }
+
+    private void gameOver(int winnerID) {
+        if (winnerID == playerID) {
+            sm.Push(new WinView());
+        } else {
+            sm.Push(new LoseView());
         }
     }
 }
