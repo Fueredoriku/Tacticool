@@ -26,8 +26,8 @@ public class WaitingRoomView extends Scene {
     private final Request request;
     private final ActorFactory actorFactory;
 
-    public WaitingRoomView(int gamePin){
-        this.gameID = gamePin;
+    public WaitingRoomView(int gameID){
+        this.gameID = gameID;
         this.request = new Request();
         this.actorFactory = new ActorFactory();
     }
