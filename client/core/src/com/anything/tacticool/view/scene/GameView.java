@@ -175,8 +175,7 @@ public class GameView extends Scene {
                 new ClickListener() {
                     @Override
                     public void clicked(InputEvent event, float x, float y) {
-                        constructActionList();
-                        System.out.println(inputs);
+                        System.out.println(ap.inputs);
                         try {
                             post();
                         } catch (IOException e) {
@@ -214,7 +213,7 @@ public class GameView extends Scene {
     }
 
     private void post() throws IOException{
-        request.postMoves(new Serializer().serializeActions(inputs), gameID, playerID);
+        request.postMoves(new Serializer().serializeActions(ap.inputs), gameID, playerID);
         this.isWaiting = true;
     }
 
@@ -259,19 +258,22 @@ public class GameView extends Scene {
             oldPlayer.getTexture().updatePos(player.getCurrentX(), player.getCurrentY());
             player.getActions().remove(0);
             oldPlayer.getActions().remove(0);
-            undoInputs();
         }
+        undoInputs();
     }
 
     @Override
     public void onRender(SpriteBatch batch){
-        addFirstInput();
-        textureHandler.createBatch(tileIterator, batch);
-        textureHandler.createBatch(ap.getInputIterator(), batch);
-        textureHandler.createBatch(playerIterator, batch);
-        drawHUD(batch);
-        stage.draw();
-        //System.out.println(grid.getPlayer(playerID).getCurrentX() + " " + grid.getPlayer(playerID).getCurrentY());
+        if (!isWaiting) {
+            addFirstInput();
+
+            textureHandler.createBatch(tileIterator, batch);
+            textureHandler.createBatch(ap.getInputIterator(), batch);
+            textureHandler.createBatch(playerIterator, batch);
+            drawHUD(batch);
+            stage.draw();
+        }
+
         if (isWaiting) {
             pollForUpdates();
         }
@@ -279,11 +281,12 @@ public class GameView extends Scene {
 
     private void pollForUpdates() {
         try {
-            if (request.getHasChanged(gameID, grid.getTurn())) {
+            if (isWaiting && request.getHasChanged(gameID, grid.getTurn())) {
                 Grid newGrid = request.getGameState(gameID);
                 for (Player newPlayer : newGrid.getPlayers()) {
                     updatePlayer(newPlayer);
                 }
+                this.grid.setTurn(newGrid.getTurn());
                 this.isWaiting = false;
             }
         } catch (IOException e) {

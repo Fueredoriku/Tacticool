@@ -41,11 +41,13 @@ public class DBController extends DatabaseManager{
 
     public int createGame(String map, boolean ready, int width, int height) {
         try (Statement stmt = getConn().createStatement()){
-            String sql = String.format("INSERT INTO GameTable(map,ready,mapH,mapW,actions) VALUES ('%s', '%s', %d, %d, '%s');", map, ready, width, height, null);
-            stmt.execute(sql);
+            String sql = String.format("INSERT INTO GameTable(map,ready,mapH,mapW,actions) VALUES ('%s', '%s', %d, %d, '%s');", map, 0, width, height, null);
+            boolean test = stmt.execute(sql);
+            System.out.println(test);
             sql = "SELECT LAST_INSERT_ID()";
             ResultSet rs = stmt.executeQuery(sql);
             rs.next();
+            System.out.println(rs);
             return rs.getInt(1);
         } catch (SQLException e) {
             e.printStackTrace();

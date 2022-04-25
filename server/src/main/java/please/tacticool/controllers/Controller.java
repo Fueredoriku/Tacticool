@@ -73,12 +73,10 @@ public class Controller {
         try {
             ActionHandler ac = new DBController().getGame(Integer.parseInt(gameID));
             ac.addNewPlayer(Integer.parseInt(playerID));
-            System.out.println("GOT HERE MOFO");
             return new ResponseEntity<>(String.valueOf(ac.getGameID()), HttpStatus.OK);
         }catch (Exception e){
             ActionHandler ac = ActionHandler.createGame();
             ac.addNewPlayer(Integer.parseInt(playerID));
-            System.out.println("NOPE; WE GOT HERE MILF");
             return new ResponseEntity<>(String.valueOf(ac.getGameID()), HttpStatus.CREATED);
         }
     }
