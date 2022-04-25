@@ -46,6 +46,7 @@ public class GridElementIterator implements Iterator{
     }
 
     public void add(SpriteConnector sprite){
+        System.out.println(sprite.getHighlight() + " hello");
         spriteConnectors.add(sprite);
     }
 
@@ -66,4 +67,14 @@ public class GridElementIterator implements Iterator{
         spriteConnectors.clear();
     }
 
+    public SpriteConnector getLastMoveSprite() {
+        int i = spriteConnectors.size()-1;
+        while (i>=0){
+            if (spriteConnectors.get(i).getSpriteConnectorEnum().equals(SpriteConnectorEnum.HIGHLIGHTTILE)) {
+                return spriteConnectors.get(i);
+            }
+            i--;
+        }
+        return null;
+    }
 }

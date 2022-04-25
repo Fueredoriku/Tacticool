@@ -6,7 +6,7 @@ public record GameBalance() {
 
     //Rifle
     public static int RifleActionCost = 2;
-    public static int RifleDamage = 3;
+    public static int RifleDamage = 100;
 
     //Bazooka
     public static int BazookaActionCost = 3;

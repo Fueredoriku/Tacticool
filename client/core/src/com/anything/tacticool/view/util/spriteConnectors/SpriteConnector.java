@@ -28,7 +28,7 @@ public abstract class SpriteConnector {
 
     public SpriteConnector getHighlight() {
         if (highlightEnum != null) {
-            return new SimpleSprite(this.highlightEnum, this.x, this.y);
+            return new SimpleSprite(ActionPointSingleton.Singleton.getCurrentActionType(), this.x, this.y);
         } else {
             return null;
         }
