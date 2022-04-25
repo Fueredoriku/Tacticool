@@ -92,8 +92,8 @@ public class MainView extends Scene {
 
     //Method for joining game
     private void joinGame() throws IOException {
-        request.joinGame(gameID, playerID); //!\ UNCOMMENT FOR TESTING, DO NOT REMOVE /!\
-        sm.Push(new WaitingRoomView(gameID));
+        int gamePin = request.joinGame(gameID, playerID); //!\ UNCOMMENT FOR TESTING, DO NOT REMOVE /!\
+        sm.Push(new WaitingRoomView(gamePin, playerID));
     }
 
     //Method for opening settings

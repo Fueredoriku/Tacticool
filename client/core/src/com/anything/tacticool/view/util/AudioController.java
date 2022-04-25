@@ -65,6 +65,13 @@ public class AudioController {
          music.play();
      }
 
+     public static void playGameMusic() {
+        music = Gdx.audio.newMusic(Gdx.files.internal(game_musicPath));
+         music.setLooping(true);
+         music.setVolume(AudioController.musicVolume);
+         music.play();
+     }
+
      public static void endMusic() {
          music.stop();
          music.dispose();

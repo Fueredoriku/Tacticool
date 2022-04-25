@@ -13,10 +13,13 @@ public class ActorSprite extends SpriteConnector {
     Actor actor;
     private ActionPointSingleton ap;
 
-    public ActorSprite(SpriteConnectorEnum spriteConnectorEnum, int x, int y, Actor actor) {
+    public ActorSprite(SpriteConnectorEnum spriteConnectorEnum, int x, int y, Actor actor, float tileScale) {
         super(spriteConnectorEnum, x, y);
         ap = ActionPointSingleton.getInstance();
         this.actor = actor;
+
+        actor.setPosition(x*tileScale, y*tileScale);
+        actor.setSize(tileScale,tileScale);
 
         actor.addListener(new ClickListener(){
             @Override

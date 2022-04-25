@@ -6,6 +6,7 @@ import com.anything.tacticool.model.InputAction;
 import com.anything.tacticool.model.Player;
 import com.anything.tacticool.view.util.ActionPointSingleton;
 import com.anything.tacticool.view.util.ActorFactory;
+import com.anything.tacticool.view.util.AudioController;
 import com.anything.tacticool.view.util.GridElementIterator;
 import com.anything.tacticool.view.util.spriteConnectors.ActorSprite;
 import com.anything.tacticool.view.util.spriteConnectors.SimpleSprite;
@@ -20,6 +21,7 @@ import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
+import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
@@ -37,22 +39,21 @@ import httpRequests.Serializer;
 
 public class GameView extends Scene {
 
+    private boolean isWaiting;
+
     private GridElementIterator tileIterator;
-    private GridElementIterator actorIterator;
+    private GridElementIterator playerIterator;
     private ActionPointSingleton ap;
-    private int width;
-    private int height;
 
     private Stage stage;
     private Texture apHUD;
     private Sprite apSprite;
+    private int playerID;
 
     private TextureHandler textureHandler;
     private BitmapFont font;
     private Skin skin;
 
-    private TextButton resetButton;
-    private TextButton submitButton;
     private float uiWidth;
     private float uiHeight;
 
@@ -60,39 +61,35 @@ public class GameView extends Scene {
     private ArrayList<InputAction> inputs;
     private List<Player> players;
     private Grid grid;
-    private int gameID = 2;
+    private int gameID;
     private Player mainPlayer;
-    private List<Actor> actors;
 
     private ActorFactory actorFactory;
 
-    public GameView(){
+    public GameView(int playerID, int gameID){
         super();
-        request = new Request();/*
+        this.isWaiting = false;
+
+        this.playerID = playerID;
+        this.gameID = gameID;
+        request = new Request();
+
+        // Instantiate grid
         try{
             grid = request.getGameState(gameID);
         }
         catch (IOException e){
             System.out.println(e);
-        }*/
+        }
 
-        //temporary for test
         tileIterator = new GridElementIterator();
+        playerIterator = new GridElementIterator();
         skin = new Skin(Gdx.files.internal("ui/uiskin.json"));
         skin.getFont("default-font").getData().setScale(3f);
-        grid = new Grid("1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1",5,5, false);
-        mainPlayer = new Player(513,3,4,4);
-        Player enemy = new Player(543,3,2,2);
-        players = new ArrayList<>();
-        players.add(mainPlayer);
-        players.add(enemy);
-        mainPlayer.addAction(new InputAction(ActionType.MOVE, 3,3));
-        grid.setPlayers(players);
 
         this.inputs = new ArrayList<>();
-
         actorFactory = new ActorFactory();
-        constructBoard(grid.getWidth(), grid.getHeigth());
+
         textureHandler = new TextureHandler(grid.getWidth(), grid.getHeigth());
         ap = ActionPointSingleton.getInstance();
         apHUD = new Texture("aphud.png");
@@ -101,25 +98,46 @@ public class GameView extends Scene {
         uiWidth = Gdx.graphics.getWidth()/6f;
         uiHeight = Gdx.graphics.getHeight()/12f;
 
-        //prepareScene();
+        constructBoard(grid.getWidth(), grid.getHeigth());
 
+        // Find the character the player controls
+        for (Player player : grid.getPlayers()) {
+            if (player.getPlayerID() == playerID) {
+                mainPlayer = player;
+            }
+        }
 
+        //temporary for test
+        //grid = new Grid("1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1",5,5, false);
+        //mainPlayer = new Player(513,3,4,4);
+        //Player enemy = new Player(543,3,2,2);
+        //players = new ArrayList<>();
+        //players.add(mainPlayer);
+        //players.add(enemy);
+        //mainPlayer.addAction(new InputAction(ActionType.MOVE, -1,0));
+        //enemy.addAction(new InputAction(ActionType.MOVE, 1,0));
+        //grid.setPlayers(players);
     }
 
     public void constructBoard(int width, int height){
+        float tileScale;
+        if (Gdx.graphics.getWidth() / width < Gdx.graphics.getHeight() / height) {
+            tileScale = (Gdx.graphics.getWidth() / width);
+        } else {
+            tileScale = (Gdx.graphics.getHeight() / height);
+        }
         for (int i = 0; i < grid.getBoard().length; i++){
             Actor newActor = new Actor();
             tileIterator.add(SpriteConnectorFactory.createActorSpriteWithHiglight(
                     SpriteConnectorEnum.GRASS, SpriteConnectorEnum.HIGHLIGHTTILE,
-                    i%width, (int)Math.floor(i/width), newActor));
+                    i%width, height - 1 - (int)Math.floor(i/width), newActor, tileScale));
         }
 
         players = grid.getPlayers();
         for (int i = 0; i < players.size(); i++){
             SpriteConnector newPlayer = new SimpleSprite(SpriteConnectorEnum.PLAYER, players.get(i).getCurrentX(), players.get(i).getCurrentY());
             players.get(i).setTexture(newPlayer);
-            //tileIterator.add(newPlayer);
-
+            playerIterator.add(newPlayer);
         }
     }
 
@@ -127,6 +145,8 @@ public class GameView extends Scene {
     public void prepareScene(){
         stage = new Stage(new ScreenViewport());
         buildButtons();
+        prepareSound();
+
         while (tileIterator.hasNext()){
             try {
                 stage.addActor(tileIterator.next().getActor());
@@ -135,22 +155,29 @@ public class GameView extends Scene {
             }
         }
         tileIterator.reset();
-
         Gdx.input.setInputProcessor(stage);
+    }
+
+    private void prepareSound() {
+        AudioController.playGameMusic();
+    }
+
+    @Override
+    public void disposeEarly() {
+        AudioController.endMusic();
     }
 
 
     private void buildButtons(){
-
         TextButton submit_button = actorFactory.textButton(
                 new TextButton("Submit", skin),
                 uiWidth, uiHeight,Gdx.graphics.getWidth() - uiWidth*1.1f, Gdx.graphics.getHeight() - uiHeight*1.1f,
                 new ClickListener() {
                     @Override
                     public void clicked(InputEvent event, float x, float y) {
-                        constructActionList();
+                        System.out.println(ap.inputs);
                         try {
-                            request.postMoves(new Serializer().serializeActions(inputs), gameID, mainPlayer.getPlayerID());
+                            post();
                         } catch (IOException e) {
                             e.printStackTrace();
                         }
@@ -163,41 +190,44 @@ public class GameView extends Scene {
                 new ClickListener() {
                     @Override
                     public void clicked(InputEvent event, float x, float y) {
-                        inputs.clear();
+                        undoInputs();
                     }
                 }
         );
+
+        TextButton settings_Button = actorFactory.textButton(
+            new TextButton("Settings", skin),
+                uiWidth, uiHeight,Gdx.graphics.getWidth() - uiWidth*1.1f, Gdx.graphics.getHeight() - 3*uiHeight*1.1f,
+                new ClickListener() {
+                    @Override
+                    public void clicked(InputEvent event, float x, float y) {
+                        sm.Push(new Settings());
+                    }
+                }
+        );
+
         actorFactory.stageActors(stage, new Actor[]{
-                submit_button, reset_input_button
+                submit_button, reset_input_button, settings_Button
         });
         Gdx.input.setInputProcessor(stage);
+    }
 
-        /*
-        resetButton = new TextButton("Reset Moves", skin);
-        submitButton = new TextButton("Submit Moves", skin);
-        resetButton.setSize(uiWidth, uiHeight);
-        submitButton.setSize(uiWidth, uiHeight);
-        resetButton.setPosition(Gdx.graphics.getWidth(), Gdx.graphics.getHeight()-10);
-        submitButton.setPosition(Gdx.graphics.getWidth(), Gdx.graphics.getHeight()-30);
-        resetButton.addListener(new ClickListener() {
-            @Override
-            public void clicked(InputEvent event, float x, float y) {
-                ap.reset();
-            }
-        });
+    private void post() throws IOException{
+        request.postMoves(new Serializer().serializeActions(ap.inputs), gameID, playerID);
+        this.isWaiting = true;
+    }
 
-        submitButton.addListener(new ClickListener() {
-            @Override
-            public void clicked(InputEvent event, float x, float y) {
-                //TODO: Submit moves to controller
-                constructActionList();
-                //request.poster(inputs);
-            }
-        });
+    private void undoInputs() {
+        ap.inputs.clear();
+        ap.reset();
+        inputs.clear();
+        isWaiting = false;
+    }
 
-
-*/
-       // stage.addActor(resetButton);
+    private void addFirstInput() {
+        if (ap.inputs.size() == 0) {
+            ap.addAction(new SimpleSprite(SpriteConnectorEnum.HIGHLIGHTTILE, grid.getPlayer(playerID).getCurrentX(), grid.getPlayer(playerID).getCurrentY()));
+        }
     }
 
     private void drawHUD(SpriteBatch batch){
@@ -215,30 +245,52 @@ public class GameView extends Scene {
 
     private void constructActionList(){
         inputs.clear();
-        /*
-        while (ap.getInputIterator().hasNext()) {
-            InputAction action = new InputAction(ActionType.MOVE, ap.getInputIterator().next().getX(), ap.getInputIterator().next().getY());
-            inputs.add(action);
-        }*/
         inputs = ap.getInputs();
     }
 
     public void updatePlayer(Player player){
+        Player oldPlayer = grid.getPlayer(player.getPlayerID());
+
         while (player.getActions().size() > 0){
-            player.setCurrentPos(player.getCurrentX() + player.getActions().get(0).getTargetX(), player.getCurrentY() + player.getActions().get(0).getTargetY());
-            player.getTexture().updatePos(player.getCurrentX(), player.getCurrentY());
+            oldPlayer.addAction(player.getActions().get(0));
+
+            oldPlayer.setCurrentPos(player.getActions().get(0).getTargetX(), player.getActions().get(0).getTargetY());
+            oldPlayer.getTexture().updatePos(player.getCurrentX(), player.getCurrentY());
             player.getActions().remove(0);
+            oldPlayer.getActions().remove(0);
         }
+        undoInputs();
     }
 
     @Override
     public void onRender(SpriteBatch batch){
-        updatePlayers();
-        textureHandler.createBatch(tileIterator, batch);
-        //textureHandler.createBatch(actorIterator, batch);
-        textureHandler.createBatch(ap.getInputIterator(), batch);
-        drawHUD(batch);
-        stage.draw();
+        if (!isWaiting) {
+            addFirstInput();
 
+            textureHandler.createBatch(tileIterator, batch);
+            textureHandler.createBatch(ap.getInputIterator(), batch);
+            textureHandler.createBatch(playerIterator, batch);
+            drawHUD(batch);
+            stage.draw();
+        }
+
+        if (isWaiting) {
+            pollForUpdates();
+        }
+    }
+
+    private void pollForUpdates() {
+        try {
+            if (isWaiting && request.getHasChanged(gameID, grid.getTurn())) {
+                Grid newGrid = request.getGameState(gameID);
+                for (Player newPlayer : newGrid.getPlayers()) {
+                    updatePlayer(newPlayer);
+                }
+                this.grid.setTurn(newGrid.getTurn());
+                this.isWaiting = false;
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 }

@@ -22,7 +22,7 @@ public class GridElementIterator implements Iterator{
 
     @Override
     public boolean hasNext() {
-        if (index < spriteConnectors.size()-1) {
+        if (index < spriteConnectors.size()) {
             return true;
         }
         return false;
@@ -34,7 +34,7 @@ public class GridElementIterator implements Iterator{
             throw new NoSuchElementException("Iteration already over, can't call next()");
         }
         index ++;
-        return spriteConnectors.get(index);
+        return spriteConnectors.get(index - 1);
     }
 
     public SpriteConnector getLastSprite(){
