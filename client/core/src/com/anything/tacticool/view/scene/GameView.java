@@ -313,6 +313,9 @@ public class GameView extends Scene {
         try {
             if (isWaiting && request.getHasChanged(gameID, grid.getTurn())) {
                 Grid newGrid = request.getGameState(gameID);
+                if (newGrid.isGameWon()){
+                    gameOver(newGrid.getWinningPlayer().getPlayerID());
+                }
                 for (Player newPlayer : newGrid.getPlayers()) {
                     updatePlayer(newPlayer);
                 }
