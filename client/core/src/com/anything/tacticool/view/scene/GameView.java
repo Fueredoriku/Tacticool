@@ -24,6 +24,7 @@ import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Dialog;
+import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.SelectBox;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
@@ -67,6 +68,7 @@ public class GameView extends Scene {
     private Player mainPlayer;
 
     private ActorFactory actorFactory;
+    private Label waiting_Label;
 
     public GameView(int playerID, int gameID){
         super();
@@ -108,17 +110,6 @@ public class GameView extends Scene {
                 mainPlayer = player;
             }
         }
-
-        //temporary for test
-        //grid = new Grid("1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1",5,5, false);
-        //mainPlayer = new Player(513,3,4,4);
-        //Player enemy = new Player(543,3,2,2);
-        //players = new ArrayList<>();
-        //players.add(mainPlayer);
-        //players.add(enemy);
-        //mainPlayer.addAction(new InputAction(ActionType.MOVE, -1,0));
-        //enemy.addAction(new InputAction(ActionType.MOVE, 1,0));
-        //grid.setPlayers(players);
     }
 
     public void constructBoard(int width, int height){
@@ -199,7 +190,7 @@ public class GameView extends Scene {
 
         TextButton settings_Button = actorFactory.textButton(
             new TextButton("Settings", skin),
-                uiWidth, uiHeight,Gdx.graphics.getWidth() - uiWidth*1.1f, Gdx.graphics.getHeight() - 6*uiHeight*1.1f,
+                uiWidth, uiHeight,Gdx.graphics.getWidth() - uiWidth*1.1f, Gdx.graphics.getHeight() - 10*uiHeight*1.1f,
                 new ClickListener() {
                     @Override
                     public void clicked(InputEvent event, float x, float y) {
@@ -230,9 +221,14 @@ public class GameView extends Scene {
                 }
         );
 
+        waiting_Label = (Label) actorFactory.label(
+                "Waiting for other players", skin, uiWidth, uiHeight, Gdx.graphics.getWidth()/2f, Gdx.graphics.getHeight()/2f, true
+        );
+
+        waiting_Label.setVisible(false);
 
         actorFactory.stageActors(stage, new Actor[]{
-                submit_button, reset_input_button, settings_Button, move_Button, rifle_Button
+                waiting_Label, submit_button, reset_input_button, settings_Button, move_Button, rifle_Button
         });
         Gdx.input.setInputProcessor(stage);
     }
@@ -244,6 +240,10 @@ public class GameView extends Scene {
     private void post() throws IOException{
         request.postMoves(new Serializer().serializeActions(ap.inputs), gameID, playerID);
         this.isWaiting = true;
+        for (Actor actor : stage.getActors()) {
+            actor.setVisible(false);
+        }
+        waiting_Label.setVisible(true);
     }
 
     private void undoInputs() {
@@ -262,6 +262,7 @@ public class GameView extends Scene {
     private void drawHUD(SpriteBatch batch){
         batch.draw(apSprite, 0, Gdx.graphics.getHeight()-10);
         font.draw(batch, ""+ap.actionPoint, 10, Gdx.graphics.getHeight()-10);
+        font.draw(batch, "Health: " + grid.getPlayer(playerID).getHealthPoint(), Gdx.graphics.getWidth() - uiWidth*1.1f, Gdx.graphics.getHeight() - 4f*uiHeight*1.1f);
     }
 
     private void updatePlayers(){
@@ -299,14 +300,13 @@ public class GameView extends Scene {
             textureHandler.createBatch(tileIterator, batch);
             textureHandler.createBatch(ap.getInputIterator(), batch);
             textureHandler.createBatch(playerIterator, batch);
-            drawHUD(batch);
             stage.act();
-            stage.draw();
-        }
-
-        if (isWaiting) {
+            drawHUD(batch);
+        } else {
+            //waiting_Label.setVisible(true);
             pollForUpdates();
         }
+        stage.draw();
     }
 
     private void pollForUpdates() {
@@ -318,6 +318,9 @@ public class GameView extends Scene {
                 }
                 this.grid.setTurn(newGrid.getTurn());
                 this.isWaiting = false;
+                for (Actor actor : stage.getActors()) {
+                    actor.setVisible(true);
+                } waiting_Label.setVisible(false);
             }
         } catch (IOException e) {
             e.printStackTrace();
