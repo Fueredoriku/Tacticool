@@ -42,13 +42,10 @@ public class ActionPointSingleton {
         if (highlightElements.isEmpty()) {
             highlightElements.add(spriteConnector);
         }else if (checkDiff(spriteConnector)) {
-            System.out.println(currentActionType);
             inputs.add(new InputAction(currentActionType, spriteConnector.getX()-highlightElements.getLastMoveSprite().getX(), spriteConnector.getY()-highlightElements.getLastMoveSprite().getY()));
-            System.out.println(spriteConnector.getSpriteConnectorEnum());
             spriteConnector.setHighlightEnum(ActionPointSingleton.currentActionTypeEnum);
             highlightElements.add(spriteConnector);
             actionPoint--;
-            System.out.println(inputs);
             }
     }
 

@@ -110,17 +110,6 @@ public class GameView extends Scene {
                 mainPlayer = player;
             }
         }
-
-        //temporary for test
-        //grid = new Grid("1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1",5,5, false);
-        //mainPlayer = new Player(513,3,4,4);
-        //Player enemy = new Player(543,3,2,2);
-        //players = new ArrayList<>();
-        //players.add(mainPlayer);
-        //players.add(enemy);
-        //mainPlayer.addAction(new InputAction(ActionType.MOVE, -1,0));
-        //enemy.addAction(new InputAction(ActionType.MOVE, 1,0));
-        //grid.setPlayers(players);
     }
 
     public void constructBoard(int width, int height){
