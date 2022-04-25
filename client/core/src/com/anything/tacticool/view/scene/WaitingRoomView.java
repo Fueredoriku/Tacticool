@@ -20,16 +20,18 @@ import httpRequests.Request;
 public class WaitingRoomView extends Scene {
 
     private final int gameID;
+    private final int playerID;
     private Stage stage;
     private Skin skin;
 
     private final Request request;
     private final ActorFactory actorFactory;
 
-    public WaitingRoomView(int gamePin){
+    public WaitingRoomView(int gamePin, int playerID){
         this.gameID = gamePin;
         this.request = new Request();
         this.actorFactory = new ActorFactory();
+        this.playerID = playerID;
     }
 
     @Override
@@ -104,16 +106,17 @@ public class WaitingRoomView extends Scene {
         );
 
         actorFactory.stageActors(stage, new Actor[] {game_pin_label, start_game_button, leave_game_button});
+        Gdx.input.setInputProcessor(stage);
     }
 
     private void startGame() throws IOException {
         // TODO start the game
         request.getGameState(gameID);
+        sm.Push(new GameView(playerID, gameID));
     }
 
     private void leaveGame() throws IOException {
         // TODO : Leave the game
-        request.getGameState(gameID);
         sm.Pop();
     }
 

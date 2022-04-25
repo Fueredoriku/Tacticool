@@ -39,6 +39,8 @@ import httpRequests.Serializer;
 
 public class GameView extends Scene {
 
+    private boolean isWaiting;
+
     private GridElementIterator tileIterator;
     private GridElementIterator playerIterator;
     private ActionPointSingleton ap;
@@ -66,6 +68,8 @@ public class GameView extends Scene {
 
     public GameView(int playerID, int gameID){
         super();
+        this.isWaiting = false;
+
         this.playerID = playerID;
         this.gameID = gameID;
         request = new Request();
@@ -77,15 +81,6 @@ public class GameView extends Scene {
         catch (IOException e){
             System.out.println(e);
         }
-
-        // Find the character the player controls
-        for (Player player : grid.getPlayers()) {
-            if (player.getPlayerID() == playerID) {
-                mainPlayer = player;
-            }
-        }
-
-        constructBoard(grid.getWidth(), grid.getHeigth());
 
         tileIterator = new GridElementIterator();
         playerIterator = new GridElementIterator();
@@ -102,6 +97,15 @@ public class GameView extends Scene {
         font = new BitmapFont();
         uiWidth = Gdx.graphics.getWidth()/6f;
         uiHeight = Gdx.graphics.getHeight()/12f;
+
+        constructBoard(grid.getWidth(), grid.getHeigth());
+
+        // Find the character the player controls
+        for (Player player : grid.getPlayers()) {
+            if (player.getPlayerID() == playerID) {
+                mainPlayer = player;
+            }
+        }
 
         //temporary for test
         //grid = new Grid("1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1",5,5, false);
@@ -172,8 +176,9 @@ public class GameView extends Scene {
                     @Override
                     public void clicked(InputEvent event, float x, float y) {
                         constructActionList();
+                        System.out.println(inputs);
                         try {
-                            request.postMoves(new Serializer().serializeActions(inputs), gameID, playerID);
+                            post();
                         } catch (IOException e) {
                             e.printStackTrace();
                         }
@@ -208,15 +213,22 @@ public class GameView extends Scene {
         Gdx.input.setInputProcessor(stage);
     }
 
+    private void post() throws IOException{
+        request.postMoves(new Serializer().serializeActions(inputs), gameID, playerID);
+        this.isWaiting = true;
+    }
+
     private void undoInputs() {
         ap.inputs.clear();
         ap.reset();
         inputs.clear();
-        addFirstInput();
+        isWaiting = false;
     }
 
     private void addFirstInput() {
-        ap.addAction(new SimpleSprite(SpriteConnectorEnum.HIGHLIGHTTILE, mainPlayer.getCurrentX(), mainPlayer.getCurrentY()));
+        if (ap.inputs.size() == 0) {
+            ap.addAction(new SimpleSprite(SpriteConnectorEnum.HIGHLIGHTTILE, grid.getPlayer(playerID).getCurrentX(), grid.getPlayer(playerID).getCurrentY()));
+        }
     }
 
     private void drawHUD(SpriteBatch batch){
@@ -234,32 +246,48 @@ public class GameView extends Scene {
 
     private void constructActionList(){
         inputs.clear();
-        /*
-        while (ap.getInputIterator().hasNext()) {
-            InputAction action = new InputAction(ActionType.MOVE, ap.getInputIterator().next().getX(), ap.getInputIterator().next().getY());
-            inputs.add(action);
-        }*/
         inputs = ap.getInputs();
     }
 
     public void updatePlayer(Player player){
+        Player oldPlayer = grid.getPlayer(player.getPlayerID());
+
         while (player.getActions().size() > 0){
-            System.out.println(player.getActions().size());
-            player.setCurrentPos(player.getCurrentX() + player.getActions().get(0).getTargetX(), player.getCurrentY() + player.getActions().get(0).getTargetY());
-            player.getTexture().updatePos(player.getCurrentX(), player.getCurrentY());
+            oldPlayer.addAction(player.getActions().get(0));
+
+            oldPlayer.setCurrentPos(player.getActions().get(0).getTargetX(), player.getActions().get(0).getTargetY());
+            oldPlayer.getTexture().updatePos(player.getCurrentX(), player.getCurrentY());
             player.getActions().remove(0);
+            oldPlayer.getActions().remove(0);
             undoInputs();
         }
     }
 
     @Override
     public void onRender(SpriteBatch batch){
-        updatePlayers();
+        addFirstInput();
         textureHandler.createBatch(tileIterator, batch);
         textureHandler.createBatch(ap.getInputIterator(), batch);
         textureHandler.createBatch(playerIterator, batch);
         drawHUD(batch);
         stage.draw();
+        //System.out.println(grid.getPlayer(playerID).getCurrentX() + " " + grid.getPlayer(playerID).getCurrentY());
+        if (isWaiting) {
+            pollForUpdates();
+        }
+    }
 
+    private void pollForUpdates() {
+        try {
+            if (request.getHasChanged(gameID, grid.getTurn())) {
+                Grid newGrid = request.getGameState(gameID);
+                for (Player newPlayer : newGrid.getPlayers()) {
+                    updatePlayer(newPlayer);
+                }
+                this.isWaiting = false;
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 }

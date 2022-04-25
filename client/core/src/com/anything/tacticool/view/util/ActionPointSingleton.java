@@ -37,11 +37,10 @@ public class ActionPointSingleton {
     public void addAction(SpriteConnector spriteConnector){
         if (highlightElements.isEmpty()) {
             highlightElements.add(spriteConnector);
-            actionPoint--;
         }else if (checkDiff(spriteConnector)) {
+            inputs.add(new InputAction(ActionType.MOVE, spriteConnector.getX()-highlightElements.getLastSprite().getX(), spriteConnector.getY()-highlightElements.getLastSprite().getY()));
             highlightElements.add(spriteConnector);
             actionPoint--;
-            inputs.add(new InputAction(ActionType.MOVE, highlightElements.getLastSprite().getX()-spriteConnector.getX(), highlightElements.getLastSprite().getY()-spriteConnector.getY()));
             }
     }
 

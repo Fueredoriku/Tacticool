@@ -86,7 +86,7 @@ public class LoginView extends Scene{
         //TODO connect to server
         try {
             sm.Push(new MainView(1));
-            sm.Push(new MainView(request.getPlayerIDFromLogin(username,"")));
+            sm.Push(new MainView(request.getPlayerIDFromLogin(username,"password")));
         } catch (IOException e) {
             e.printStackTrace();
         }
