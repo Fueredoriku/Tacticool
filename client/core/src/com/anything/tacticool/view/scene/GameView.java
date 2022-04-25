@@ -240,7 +240,7 @@ public class GameView extends Scene {
     private void post() throws IOException{
         request.postMoves(new Serializer().serializeActions(ap.inputs), gameID, playerID);
         this.isWaiting = true;
-        // Diasble UI
+        // Disable UI
         for (Actor actor : stage.getActors()) {
             actor.setVisible(false);
         }
